@@ -1,7 +1,41 @@
 {
   "manifest_version": 3,
-  "name": "Minimal Manifest",
+  "name": "chukyo-manabo-extensions",
   "version": "1.0.0",
-  "description": "A basic example extension with only required keys"
+  "description": "A basic example extension with only required keys",
+  "content_scripts": [
+    {
+      "js": ["shib_login.js"],
+      "matches": [
+        "https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"
+      ]
+    },
+    {
+      "js": ["albo_relogin.js"],
+      "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
+    },
+    {
+      "js": ["albo_error_login.js"],
+      "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
+    },
+    {
+      "js": ["manabo_relogin.js"],
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/close*"]
+    },
 
+    {
+      "js": ["Powerful_Syusseki_Caller.js"],
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
+    },
+    {
+      "js": ["manabo_blue_jump.js"],
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
+    },
+    {
+      "js": ["manabo_auto_poll.js"],
+      "matches": [
+        "https://manabo.cnc.chukyo-u.ac.jp/addon/survey/class/attend/*"
+      ]
+    }
+  ]
 }
