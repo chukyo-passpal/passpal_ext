@@ -5,27 +5,22 @@
   "description": "A basic example extension with only required keys",
   "content_scripts": [
     {
+      "js": ["Powerful_Syusseki_Caller.js"],
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
+    },
+    {
       "js": ["shib_login.js"],
       "matches": [
         "https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"
       ]
     },
     {
-      "js": ["albo_relogin.js"],
-      "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
-    },
-    {
-      "js": ["albo_error_login.js"],
+      "js": ["albo_relogin.js", "albo_error_login.js"],
       "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
     },
     {
       "js": ["manabo_relogin.js"],
       "matches": ["https://manabo.cnc.chukyo-u.ac.jp/close*"]
-    },
-
-    {
-      "js": ["Powerful_Syusseki_Caller.js"],
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
     },
     {
       "js": ["manabo_blue_jump.js"],
@@ -36,6 +31,17 @@
       "matches": [
         "https://manabo.cnc.chukyo-u.ac.jp/addon/survey/class/attend/*"
       ]
+    },
+    {
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
+      "js": ["video_controller.js"],
+      "run_at": "document_idle"
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["notify_caller.js"],
+      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
     }
   ]
 }

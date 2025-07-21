@@ -1,14 +1,18 @@
+// ==UserScript==
 // @name         Powerful Syusseki Caller
 // @namespace   https://manabo.cnc.chukyo-u.ac.jp/class/
 // @version      2024-06-24
 // @description  中京大学の授業支援サイト、マナボの出席ポップアップを強制出現させます。
 // @author       Nao Matsuda
 // @match       https://manabo.cnc.chukyo-u.ac.jp/class/*
+// @icon         https://creativecommons.jp/wp-content/uploads/2012/12/img_miku_web.jpg
+// @grant        none
+// ==/UserScript==
 
-(function() {
-    'use strict';
+(function () {
+  "use strict";
 
-    const html_PSCBtn = `
+  const html_PSCBtn = `
     <style>
     .psc-btn {
         -moz-appearance: none;
@@ -142,39 +146,62 @@
     </span>
 </button>`;
 
-    const btn_text_content = {default: "出席ウィンドウの強制取得", loaded : "取得が完了しました！"};
+  const btn_text_content = {
+    default: "出席ウィンドウの強制取得",
+    loaded: "取得が完了しました！",
+  };
 
-    // Your code here...
-    const d_body = document.querySelector("body");
-    const d_PSCDisplay = d_body.appendChild(document.createElement("div"));
-    d_PSCDisplay.id = "psc-display";
+  // Your code here...
+  const d_body = document.querySelector("body");
+  const d_PSCDisplay = d_body.appendChild(document.createElement("div"));
+  d_PSCDisplay.id = "psc-display";
 
-    d_PSCDisplay.style.position = "fixed";
-    d_PSCDisplay.style.top = 0;
-    d_PSCDisplay.style.left = 0;
-    d_PSCDisplay.style.width = "100%";
-    d_PSCDisplay.style.height = "100%";
-    d_PSCDisplay.style.pointerEvents = "none";
+  d_PSCDisplay.style.position = "fixed";
+  d_PSCDisplay.style.top = 0;
+  d_PSCDisplay.style.left = 0;
+  d_PSCDisplay.style.width = "100%";
+  d_PSCDisplay.style.height = "100%";
+  d_PSCDisplay.style.pointerEvents = "none";
 
-    d_PSCDisplay.innerHTML = html_PSCBtn;
+  d_PSCDisplay.innerHTML = html_PSCBtn;
 
-    const d_PSCButton = d_PSCDisplay.querySelector(".psc-btn");
-    const d_PSCButton_text = d_PSCButton.querySelector(".psc-btn-text");
+  const d_PSCButton = d_PSCDisplay.querySelector(".psc-btn");
+  const d_PSCButton_text = d_PSCButton.querySelector(".psc-btn-text");
 
-    d_PSCButton_text.innerHTML = btn_text_content.default;
-    let detectMash = false;
-    d_PSCButton.onclick = ((e) => {
-        if (detectMash === false) {
-            detectMash = true;
-            d_PSCButton_text.innerHTML = btn_text_content.loaded;
+  d_PSCButton_text.innerHTML = btn_text_content.default;
+  let detectMash = false;
+  d_PSCButton.onclick = (e) => {
+    if (detectMash === false) {
+      detectMash = true;
+      d_PSCButton_text.innerHTML = btn_text_content.loaded;
 
-            notify.init();
 
-            setTimeout(() => {
-                detectMash = false;
-                d_PSCButton_text.innerHTML = btn_text_content.default;
-                document.querySelector(".button-send-entry").click()
-            }, 500);
-        }
-    });
+      const injectScript = (filePath, tag) => {
+        const node =
+          document.getElementsByTagName(tag)[0] || document.documentElement;
+        const script = document.createElement("script");
+        script.setAttribute("type", "text/javascript");
+        // chrome.runtime.getURLを使用して、拡張機能内のファイルへの完全なURLを取得する
+        script.setAttribute("src", filePath);
+
+        // 注入したスクリプトは実行後にDOMから削除する
+        script.onload = () => {
+          script.remove();
+        };
+        script.onerror = () => {
+          console.error(`Failed to load script: ${filePath}`);
+          script.remove();
+        };
+
+        node.appendChild(script);
+      };
+
+      // `notify_caller.js`をページの<body>に注入して実行する
+      injectScript(chrome.runtime.getURL("notify_coller.js"), "body");
+      setTimeout(() => {
+        detectMash = false;
+        d_PSCButton_text.innerHTML = btn_text_content.default;
+      }, 3000);
+    }
+  };
 })();
