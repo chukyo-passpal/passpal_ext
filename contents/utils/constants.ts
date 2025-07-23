@@ -65,3 +65,34 @@ export const UI = {
     DARK_MODE_TOGGLE_ID: "dark-mode-toggle",
     DARK_MODE_TEXT_ID: "dark-mode-toggle-text",
 } as const;
+
+export const VIDEO_CONFIG = {
+    // 再生速度設定
+    MIN_RATE: 0.25,
+    MAX_RATE: 16.0,
+    RATE_STEP: 0.25,
+
+    // 音量設定
+    VOLUME_STEP: 0.1,
+
+    // シーク設定
+    SEEK_SMALL: 5, // 矢印キー
+    SEEK_LARGE: 10, // j/lキー
+
+    // UI設定
+    FEEDBACK_DISPLAY_DURATION: 250,
+    BUTTON_HIGHLIGHT_DURATION: 200,
+
+    // DOM属性
+    INITIALIZED_ATTR: "data-v-ctrl-init",
+
+    // CSS クラス
+    CLASSES: {
+        WRAP: "v-ctrl-wrap",
+        FOCUSED: "v-ctrl-focused",
+        HIGHLIGHT: "v-ctrl-highlight",
+        FEEDBACK_CONTAINER: "v-ctrl-feedback-container",
+        SPEED_CONTAINER: "v-ctrl-speed-container",
+        PIP_CONTAINER: "v-ctrl-pip-container",
+    },
+} as const;

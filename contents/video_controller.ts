@@ -10,118 +10,191 @@
  * - 複数動画利用時のアクティブ動画フォーカス機能
  */
 
+/**
+ * ビデオ制御機能を管理するメインクラス
+ */
+
 import React from "react";
 import { createRoot } from "react-dom/client";
 import { VideoSpeedControls, VideoPiPControls, VideoFeedback, ICONS } from "./components/VideoControls";
+import { VIDEO_CONFIG } from "./utils/constants";
+import { VideoFeedbackManager } from "./utils/video/videoFeedback";
+import { VideoKeyboardHandler } from "./utils/video/VideoKeyboardHandler";
 
-export default function videoController() {
-    // --- 1. グローバル設定と状態管理 ---
-    const MIN_RATE = 0.25;
-    const MAX_RATE = 16.0;
-    const RATE_STEP = 0.25;
-    const INITIALIZED_ATTR = "data-v-ctrl-init";
+export class VideoControllerClass {
+    private focusedVideo: HTMLVideoElement | null = null;
+    private savedScrollPosition = { x: 0, y: 0 };
+    private feedbackManager: VideoFeedbackManager;
+    private keyboardHandler: VideoKeyboardHandler;
+    private observer: MutationObserver | null = null;
 
-    /** @type {HTMLVideoElement | null} */
-    let focusedVideo: HTMLVideoElement | null = null;
-    let savedScrollX = 0;
-    let savedScrollY = 0;
-    let feedbackTimeout: NodeJS.Timeout | null = null;
+    constructor() {
+        this.feedbackManager = new VideoFeedbackManager();
+        this.keyboardHandler = new VideoKeyboardHandler(this.feedbackManager);
+        this.initialize();
+    }
 
-    // 注意: これらはReactコンポーネントのICONSと同期する必要があります
+    /**
+     * 初期化
+     */
+    private initialize(): void {
+        this.setupEventListeners();
+        this.setupMutationObserver();
+        this.initializeExistingVideos();
+    }
 
-    // --- 3. ヘルパー関数 ---
-    const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
+    /**
+     * イベントリスナーの設定
+     */
+    private setupEventListeners(): void {
+        // フルスクリーン変更の監視
+        document.addEventListener("fullscreenchange", this.handleFullscreenChange.bind(this));
 
-    const setFocusedVideo = (newVideo: HTMLVideoElement | null): void => {
-        if (!newVideo || !document.contains(newVideo)) return;
-        document.querySelectorAll(".v-ctrl-wrap.v-ctrl-focused").forEach((el) => {
-            el.classList.remove("v-ctrl-focused");
-        });
-        focusedVideo = newVideo;
-        if (focusedVideo && focusedVideo.parentElement) {
-            const parentWrap = focusedVideo.parentElement;
-            parentWrap.classList.add("v-ctrl-focused");
-            parentWrap.focus({ preventScroll: true });
-        }
-    };
+        // キーボードショートカット
+        document.addEventListener("keydown", this.handleKeydown.bind(this), true);
+    }
 
-    const highlightButtonByKey = (videoWrapper: Element | null, key: string): void => {
-        if (!videoWrapper) return;
-        const button = videoWrapper.querySelector(`[data-vctrl="${key}"]`) as HTMLElement;
-        if (button) {
-            if ((button as any).highlightTimeout) clearTimeout((button as any).highlightTimeout);
-
-            button.classList.add("v-ctrl-highlight");
-
-            (button as any).highlightTimeout = setTimeout(() => {
-                button.classList.remove("v-ctrl-highlight");
-            }, 200);
-        }
-    };
-
-    // ★追加: フィードバック表示用の関数（React版）
-    const showFeedback = (videoWrapper: Element | null, icon: React.ReactNode, text: string = ""): void => {
-        if (!videoWrapper) return;
-        const feedbackContainer = videoWrapper.querySelector(".v-ctrl-feedback-container");
-        if (!feedbackContainer) return;
-
-        const root = (feedbackContainer as any).__reactRoot;
-        if (!root) return;
-
-        root.render(
-            React.createElement(VideoFeedback, {
-                isVisible: true,
-                icon: icon,
-                text: text,
-            })
-        );
-
-        if (feedbackTimeout) clearTimeout(feedbackTimeout);
-        feedbackTimeout = setTimeout(() => {
-            root.render(
-                React.createElement(VideoFeedback, {
-                    isVisible: false,
-                    icon: icon,
-                    text: text,
-                })
-            );
-        }, 250);
-    };
-
-    document.addEventListener("fullscreenchange", () => {
+    /**
+     * フルスクリーン変更処理
+     */
+    private handleFullscreenChange(): void {
         const fsElement = document.fullscreenElement;
         if (fsElement) {
             if (typeof (fsElement as any).focus === "function") {
                 (fsElement as any).focus({ preventScroll: true });
             }
         } else {
-            window.scrollTo(savedScrollX, savedScrollY);
-            if (focusedVideo && focusedVideo.parentElement) {
-                focusedVideo.parentElement.focus({ preventScroll: true });
+            window.scrollTo(this.savedScrollPosition.x, this.savedScrollPosition.y);
+            if (this.focusedVideo && this.focusedVideo.parentElement) {
+                this.focusedVideo.parentElement.focus({ preventScroll: true });
             }
         }
-    });
+    }
 
-    // --- 4. UIの初期化（React版） ---
-    function initializeVideoControls(video: HTMLVideoElement): void {
-        if (video.hasAttribute(INITIALIZED_ATTR) || !video.parentElement) return;
+    /**
+     * キーボードイベント処理
+     */
+    private handleKeydown(e: KeyboardEvent): void {
+        const activeEl = document.activeElement;
+
+        // 入力フィールドでは処理しない
+        if (
+            e.ctrlKey ||
+            e.metaKey ||
+            e.altKey ||
+            (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || (activeEl as any).isContentEditable))
+        ) {
+            return;
+        }
+
+        const targetVideo = this.getTargetVideo();
+        if (!targetVideo) return;
+
+        const wrapper = targetVideo.parentElement;
+        if (!wrapper || !wrapper.classList.contains(VIDEO_CONFIG.CLASSES.WRAP)) return;
+
+        const handled = this.keyboardHandler.handleKeydown(e, targetVideo, wrapper, this.savedScrollPosition);
+
+        if (handled) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    }
+
+    /**
+     * 対象ビデオを取得
+     */
+    private getTargetVideo(): HTMLVideoElement | null {
+        // フォーカスされたビデオがあればそれを使用
+        if (this.focusedVideo && document.contains(this.focusedVideo)) {
+            return this.focusedVideo;
+        }
+
+        const allVideos = Array.from(document.querySelectorAll(`video[${VIDEO_CONFIG.INITIALIZED_ATTR}]`)) as HTMLVideoElement[];
+
+        // フルスクリーン中のビデオを優先
+        const fsElement = document.fullscreenElement;
+        if (fsElement) {
+            const fsVideo = fsElement.matches("video") ? (fsElement as HTMLVideoElement) : (fsElement.querySelector("video") as HTMLVideoElement);
+            if (fsVideo) return fsVideo;
+        }
+
+        // 再生中のビデオを優先
+        const playingVideo = allVideos.find((v) => !v.paused);
+        if (playingVideo) return playingVideo;
+
+        // 最初のビデオをフォールバック
+        if (allVideos.length > 0) {
+            const firstVideo = allVideos[0];
+            this.setFocusedVideo(firstVideo);
+            return firstVideo;
+        }
+
+        return null;
+    }
+
+    /**
+     * フォーカスビデオを設定
+     */
+    private setFocusedVideo(video: HTMLVideoElement | null): void {
+        if (!video || !document.contains(video)) return;
+
+        // 既存のフォーカスを削除
+        document.querySelectorAll(`.${VIDEO_CONFIG.CLASSES.FOCUSED}`).forEach((el) => {
+            el.classList.remove(VIDEO_CONFIG.CLASSES.FOCUSED);
+        });
+
+        this.focusedVideo = video;
+
+        if (this.focusedVideo && this.focusedVideo.parentElement) {
+            const parentWrap = this.focusedVideo.parentElement;
+            parentWrap.classList.add(VIDEO_CONFIG.CLASSES.FOCUSED);
+            parentWrap.focus({ preventScroll: true });
+        }
+    }
+
+    /**
+     * ビデオコントロールの初期化処理
+     */
+    private initializeVideoControls(video: HTMLVideoElement): void {
+        if (video.hasAttribute(VIDEO_CONFIG.INITIALIZED_ATTR) || !video.parentElement) {
+            return;
+        }
 
         const parent = video.parentElement;
-        parent.classList.add("v-ctrl-wrap");
-
+        parent.classList.add(VIDEO_CONFIG.CLASSES.WRAP);
         parent.setAttribute("tabindex", "-1");
         parent.style.outline = "none";
 
-        // フィードバック表示用のコンテナを作成
+        // フィードバック表示コンテナ
+        this.createFeedbackContainer(parent);
+
+        // スピードコントロール
+        this.createSpeedControls(parent, video);
+
+        // PiPコントロール
+        if (document.pictureInPictureEnabled) {
+            this.createPiPControls(parent, video);
+        }
+
+        // イベントリスナー
+        parent.addEventListener("click", () => this.setFocusedVideo(video));
+        video.addEventListener("play", () => this.setFocusedVideo(video));
+
+        video.setAttribute(VIDEO_CONFIG.INITIALIZED_ATTR, "true");
+    }
+
+    /**
+     * フィードバックコンテナの作成
+     */
+    private createFeedbackContainer(parent: Element): void {
         const feedbackContainer = document.createElement("div");
-        feedbackContainer.className = "v-ctrl-feedback-container";
+        feedbackContainer.className = VIDEO_CONFIG.CLASSES.FEEDBACK_CONTAINER;
         parent.appendChild(feedbackContainer);
 
-        // Reactコンポーネントをレンダリング
         const feedbackRoot = createRoot(feedbackContainer);
         (feedbackContainer as any).__reactRoot = feedbackRoot;
 
-        // 初期状態のフィードバックをレンダリング
         feedbackRoot.render(
             React.createElement(VideoFeedback, {
                 isVisible: false,
@@ -129,223 +202,101 @@ export default function videoController() {
                 text: "",
             })
         );
+    }
 
-        // スピードコントロール用のコンテナを作成
+    /**
+     * スピードコントロールの作成
+     */
+    private createSpeedControls(parent: Element, video: HTMLVideoElement): void {
         const speedContainer = document.createElement("div");
-        speedContainer.className = "v-ctrl-speed-container";
+        speedContainer.className = VIDEO_CONFIG.CLASSES.SPEED_CONTAINER;
         parent.appendChild(speedContainer);
 
         const speedRoot = createRoot(speedContainer);
         speedRoot.render(React.createElement(VideoSpeedControls, { video: video }));
-
-        // PiPコントロール用のコンテナを作成
-        if (document.pictureInPictureEnabled) {
-            const pipContainer = document.createElement("div");
-            pipContainer.className = "v-ctrl-pip-container";
-            parent.appendChild(pipContainer);
-
-            const pipRoot = createRoot(pipContainer);
-            pipRoot.render(React.createElement(VideoPiPControls, { video: video }));
-        }
-
-        parent.addEventListener("click", () => setFocusedVideo(video));
-
-        video.addEventListener("play", () => {
-            setFocusedVideo(video);
-        });
-
-        video.setAttribute(INITIALIZED_ATTR, "true");
     }
 
-    // --- 5. キーボードショートカット ---
-    document.addEventListener(
-        "keydown",
-        (e) => {
-            const activeEl = document.activeElement;
-            if (
-                e.ctrlKey ||
-                e.metaKey ||
-                e.altKey ||
-                (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || (activeEl as any).isContentEditable))
-            ) {
-                return;
-            }
+    /**
+     * PiPコントロールの作成
+     */
+    private createPiPControls(parent: Element, video: HTMLVideoElement): void {
+        const pipContainer = document.createElement("div");
+        pipContainer.className = VIDEO_CONFIG.CLASSES.PIP_CONTAINER;
+        parent.appendChild(pipContainer);
 
-            let targetVideo: HTMLVideoElement | null = null;
-            if (focusedVideo && document.contains(focusedVideo)) {
-                targetVideo = focusedVideo;
-            } else {
-                const allVideos = Array.from(document.querySelectorAll(`video[${INITIALIZED_ATTR}]`)) as HTMLVideoElement[];
-                const fsElement = document.fullscreenElement;
-                if (fsElement) {
-                    targetVideo = (fsElement as Element).matches("video")
-                        ? (fsElement as HTMLVideoElement)
-                        : ((fsElement as Element).querySelector("video") as HTMLVideoElement);
-                }
-                if (!targetVideo) {
-                    targetVideo = allVideos.find((v) => !v.paused) || null;
-                }
-                if (!targetVideo && allVideos.length > 0) {
-                    targetVideo = allVideos[0];
-                    if (targetVideo) setFocusedVideo(targetVideo);
-                }
-            }
+        const pipRoot = createRoot(pipContainer);
+        pipRoot.render(React.createElement(VideoPiPControls, { video: video }));
+    }
 
-            if (!targetVideo) return;
-
-            const wrap = targetVideo.parentElement;
-            // ★修正: wrapが存在しない場合は何もしない
-            if (!wrap || !wrap.classList.contains("v-ctrl-wrap")) return;
-
-            let handled = true;
-            const setRate = (rate: number) => (targetVideo!.playbackRate = clamp(rate, MIN_RATE, MAX_RATE));
-
-            switch (e.key.toLowerCase()) {
-                case "j":
-                    targetVideo.currentTime = Math.max(0, targetVideo.currentTime - 10);
-                    showFeedback(wrap, ICONS.rewind, "10s");
-                    break;
-                case "l":
-                    targetVideo.currentTime = Math.min(targetVideo.duration, targetVideo.currentTime + 10);
-                    showFeedback(wrap, ICONS.forward, "10s");
-                    break;
-                case " ":
-                case "k":
-                    const isPaused = targetVideo.paused;
-                    isPaused ? targetVideo.play() : targetVideo.pause();
-                    showFeedback(wrap, isPaused ? ICONS.play : ICONS.pause);
-                    break;
-                case "s":
-                case ",":
-                    setRate(targetVideo.playbackRate - RATE_STEP);
-                    highlightButtonByKey(wrap, "s");
-                    showFeedback(wrap, "", `${targetVideo.playbackRate.toFixed(2)}x`);
-                    break;
-                case "d":
-                case ".":
-                    setRate(targetVideo.playbackRate + RATE_STEP);
-                    highlightButtonByKey(wrap, "d");
-                    showFeedback(wrap, "", `${targetVideo.playbackRate.toFixed(2)}x`);
-                    break;
-                case "arrowleft":
-                    targetVideo.currentTime = Math.max(0, targetVideo.currentTime - 5);
-                    showFeedback(wrap, ICONS.rewind, "5s");
-                    break;
-                case "arrowright":
-                    targetVideo.currentTime = Math.min(targetVideo.duration, targetVideo.currentTime + 5);
-                    showFeedback(wrap, ICONS.forward, "5s");
-                    break;
-                case "arrowup":
-                    targetVideo.volume = clamp(targetVideo.volume + 0.1, 0, 1);
-                    const upIcon = targetVideo.volume >= 0.5 ? ICONS.volumeUp : ICONS.volumeDown;
-                    showFeedback(wrap, targetVideo.volume === 0 ? ICONS.volumeMute : upIcon, `${Math.round(targetVideo.volume * 100)}%`);
-                    break;
-                case "arrowdown":
-                    targetVideo.volume = clamp(targetVideo.volume - 0.1, 0, 1);
-                    const downIcon = targetVideo.volume >= 0.5 ? ICONS.volumeUp : ICONS.volumeDown;
-                    showFeedback(wrap, targetVideo.volume === 0 ? ICONS.volumeMute : downIcon, `${Math.round(targetVideo.volume * 100)}%`);
-                    break;
-                case "m":
-                    targetVideo.muted = !targetVideo.muted;
-                    if (targetVideo.muted) {
-                        showFeedback(wrap, ICONS.volumeMute);
-                    } else {
-                        const currentVolumeIcon = targetVideo.volume >= 0.5 ? ICONS.volumeUp : ICONS.volumeDown;
-                        showFeedback(wrap, targetVideo.volume === 0 ? ICONS.volumeMute : currentVolumeIcon, `${Math.round(targetVideo.volume * 100)}%`);
-                    }
-                    break;
-                case "p":
-                    if (document.pictureInPictureEnabled) {
-                        (async () => {
-                            try {
-                                await (document.pictureInPictureElement === targetVideo
-                                    ? document.exitPictureInPicture()
-                                    : targetVideo.requestPictureInPicture());
-                            } catch (err) {
-                                console.error("PiPの切り替えに失敗しました:", err);
-                            }
-                        })();
-                        highlightButtonByKey(wrap, "p");
-                    }
-                    break;
-                case "f":
-                    if (!document.fullscreenElement) {
-                        savedScrollX = window.scrollX;
-                        savedScrollY = window.scrollY;
-                        if (wrap && wrap.classList.contains("v-ctrl-wrap")) {
-                            wrap.requestFullscreen().catch((err) => console.error("Fullscreen request failed:", err));
-                        } else {
-                            targetVideo.requestFullscreen().catch((err) => console.error("Fullscreen request failed:", err));
-                        }
-                    } else {
-                        document.exitFullscreen();
-                    }
-                    break;
-                case "0":
-                case "1":
-                case "2":
-                case "3":
-                case "4":
-                case "5":
-                case "6":
-                case "7":
-                case "8":
-                case "9":
-                    if (targetVideo.duration) {
-                        const seekTime = targetVideo.duration * (parseInt(e.key) / 10);
-                        targetVideo.currentTime = seekTime;
-                        showFeedback(wrap, "", `${parseInt(e.key) * 10}%`);
-                    }
-                    break;
-                default:
-                    handled = false;
-                    break;
-            }
-
-            if (handled) {
-                e.preventDefault();
-                e.stopPropagation();
-            }
-        },
-        true
-    );
-
-    // --- 6. ページ上のビデオの監視とセットアップ ---
-    const setupVideo = (video: HTMLVideoElement) => {
+    /**
+     * ビデオのセットアップ
+     */
+    private setupVideo(video: HTMLVideoElement): void {
         if (video.readyState > 0) {
-            initializeVideoControls(video);
+            this.initializeVideoControls(video);
         } else {
-            video.addEventListener("loadedmetadata", () => initializeVideoControls(video), { once: true });
+            video.addEventListener("loadedmetadata", () => this.initializeVideoControls(video), { once: true });
         }
-    };
+    }
 
-    const observer = new MutationObserver((mutations) => {
-        for (const mutation of mutations) {
-            if (mutation.type === "childList") {
-                for (const node of mutation.addedNodes) {
-                    if (node.nodeType !== Node.ELEMENT_NODE) continue;
-                    const element = node as Element;
-                    const videos = element.matches("video") ? [element] : element.querySelectorAll(`video:not([${INITIALIZED_ATTR}])`);
-                    videos.forEach((video) => setupVideo(video as HTMLVideoElement));
+    /**
+     * MutationObserverの設定
+     */
+    private setupMutationObserver(): void {
+        this.observer = new MutationObserver((mutations) => {
+            for (const mutation of mutations) {
+                if (mutation.type === "childList") {
+                    for (const node of mutation.addedNodes) {
+                        if (node.nodeType !== Node.ELEMENT_NODE) continue;
+
+                        const element = node as Element;
+                        const videos = element.matches("video") ? [element] : element.querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`);
+
+                        videos.forEach((video) => this.setupVideo(video as HTMLVideoElement));
+                    }
+                }
+
+                if (mutation.type === "attributes" && mutation.attributeName === VIDEO_CONFIG.INITIALIZED_ATTR) {
+                    const video = mutation.target as Element;
+                    if (video.matches("video") && video.getAttribute(VIDEO_CONFIG.INITIALIZED_ATTR) === "true") {
+                        this.setFocusedVideo(video as HTMLVideoElement);
+                    }
                 }
             }
-            if (mutation.type === "attributes" && mutation.attributeName === INITIALIZED_ATTR) {
-                const video = mutation.target as Element;
-                if (video.matches("video") && video.getAttribute(INITIALIZED_ATTR) === "true") {
-                    setFocusedVideo(video as HTMLVideoElement);
-                }
-            }
+        });
+
+        this.observer.observe(document.body, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeFilter: [VIDEO_CONFIG.INITIALIZED_ATTR],
+        });
+    }
+
+    /**
+     * 既存のビデオを初期化
+     */
+    private initializeExistingVideos(): void {
+        document.querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`).forEach((video) => this.setupVideo(video as HTMLVideoElement));
+    }
+
+    /**
+     * クリーンアップ
+     */
+    destroy(): void {
+        this.feedbackManager.destroy();
+
+        if (this.observer) {
+            this.observer.disconnect();
+            this.observer = null;
         }
-    });
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: true,
-        attributeFilter: [INITIALIZED_ATTR],
-    });
-
-    document.querySelectorAll(`video:not([${INITIALIZED_ATTR}])`).forEach((video) => setupVideo(video as HTMLVideoElement));
+        // イベントリスナーを削除（実装時はより詳細な管理が必要）
+        document.removeEventListener("fullscreenchange", this.handleFullscreenChange);
+        document.removeEventListener("keydown", this.handleKeydown);
+    }
 }
 
-videoController();
+window.addEventListener("load", async () => {
+    new VideoControllerClass();
+});
