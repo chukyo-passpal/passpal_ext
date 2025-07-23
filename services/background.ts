@@ -1,19 +1,23 @@
-const OFFSCREEN_DOCUMENT_PATH = "/pages/offscreen.html";
+import type { SignInMessage, FirebaseAuthMessage, AuthResponse, FirebaseError, MessageHandler } from "../types/auth";
+
+const OFFSCREEN_DOCUMENT_PATH: string = "/pages/offscreen.html";
 
 // 並行処理の問題を回避するためのグローバルプロミス
-let creatingOffscreenDocument;
-let creating;
+let creating: Promise<void> | null = null;
 
 // Chromeは単一のoffscreenDocumentのみを許可します。これはドキュメントが
 // 既にアクティブかどうかを示すブール値を返すヘルパー関数です。
-async function hasDocument() {
+async function hasDocument(): Promise<boolean> {
     // サービスワーカーによって制御されているすべてのウィンドウをチェックして、
     // その中の1つが指定されたパスのoffscreenドキュメントかどうかを確認します
-    const matchedClients = await clients.matchAll();
-    return matchedClients.some((c) => c.url === chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH));
+    if (!("clients" in self)) {
+        return false;
+    }
+    const matchedClients = await (self as any).clients.matchAll();
+    return matchedClients.some((c: any) => c.url === chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH));
 }
 
-async function setupOffscreenDocument(path) {
+async function setupOffscreenDocument(path: string): Promise<void> {
     // ドキュメントがない場合、既にセットアップされているのでスキップできます
     if (!(await hasDocument())) {
         // offscreenドキュメントを作成
@@ -31,33 +35,40 @@ async function setupOffscreenDocument(path) {
     }
 }
 
-async function closeOffscreenDocument() {
+async function closeOffscreenDocument(): Promise<void> {
     if (!(await hasDocument())) {
         return;
     }
     await chrome.offscreen.closeDocument();
 }
 
-function getAuth(loginHint) {
+function getAuth(loginHint?: string): Promise<AuthResponse> {
     return new Promise(async (resolve, reject) => {
-        const auth = await chrome.runtime.sendMessage({
+        const message: FirebaseAuthMessage = {
             type: "firebase-auth",
             target: "offscreen",
             loginHint: loginHint,
-        });
-        auth?.name !== "FirebaseError" ? resolve(auth) : reject(auth);
+        };
+
+        const auth = (await chrome.runtime.sendMessage(message)) as AuthResponse;
+
+        if (auth && "name" in auth && auth.name === "FirebaseError") {
+            reject(auth as FirebaseError);
+        } else {
+            resolve(auth);
+        }
     });
 }
 
-async function firebaseAuth(loginHint = "") {
+async function firebaseAuth(loginHint: string = ""): Promise<AuthResponse | FirebaseError | void> {
     await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
 
     const auth = await getAuth(loginHint)
-        .then((auth) => {
+        .then((auth: AuthResponse) => {
             console.log("User Authenticated", auth);
             return auth;
         })
-        .catch((err) => {
+        .catch((err: FirebaseError) => {
             if (err.code === "auth/operation-not-allowed") {
                 console.error(
                     "signInWithPopupを使用するには、Firebase" +
@@ -74,12 +85,22 @@ async function firebaseAuth(loginHint = "") {
     return auth;
 }
 
-chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
+const messageHandler: MessageHandler = (message: SignInMessage, _sender, _sendResponse) => {
     // メッセージの種類によって処理を分岐
     switch (message.type) {
         case "sign-in":
-            return firebaseAuth(message.loginHint);
+            firebaseAuth(message.loginHint)
+                .then((result) => {
+                    _sendResponse(result);
+                })
+                .catch((error) => {
+                    _sendResponse(error);
+                });
+            return true; // 非同期レスポンスを示す
         default:
-            console.log("unknown message type", message.type);
+            console.log("unknown message type", (message as any).type);
+            return false;
     }
-});
+};
+
+chrome.runtime.onMessage.addListener(messageHandler);
