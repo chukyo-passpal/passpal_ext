@@ -24,8 +24,7 @@ window.addEventListener("load", async () => {
         return;
     }
 
-    // メールアドレスから学籍番号を抽出 (例: a123456@m.chukyo-u.ac.jp -> a123456)
-    const USERNAME = loginCredentials.studentId.split("@")[0].toUpperCase();
+    const USERNAME = loginCredentials.studentId;
     const PASSWORD = loginCredentials.password;
 
     const errorMessage = document.querySelector(SELECTORS.SHIBBOLETH.ERROR_MESSAGE);
