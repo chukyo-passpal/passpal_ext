@@ -176,3 +176,18 @@ export interface ConfigUpdateEvent {
   readonly newValue: any;
   readonly timestamp: Date;
 }
+
+// ===== UI関連の型 =====
+
+/** ボタン設定 */
+export interface ButtonConfig {
+  readonly className: string;
+  readonly text: string;
+}
+
+/** 出席ボタンの設定 */
+export interface AttendanceButton {
+  readonly defaultText: string;
+  readonly loadedText: string;
+  readonly resetDelay: number;
+}
