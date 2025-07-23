@@ -7,8 +7,8 @@ export interface ExtensionSettings {
     shibLoginEnabled: boolean;
 }
 
-const defaultSettings: ExtensionSettings = {
-    darkModeEnabled: true,
+export const defaultSettings: ExtensionSettings = {
+    darkModeEnabled: false,
     autoReauthEnabled: true,
     videControlsEnabled: true,
     attendanceCallerEnabled: true,

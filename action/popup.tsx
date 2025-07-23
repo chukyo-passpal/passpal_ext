@@ -1,23 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-
-interface ExtensionSettings {
-    darkModeEnabled: boolean;
-    autoReauthEnabled: boolean;
-    videControlsEnabled: boolean;
-    attendanceCallerEnabled: boolean;
-    autoPollEnabled: boolean;
-    shibLoginEnabled: boolean;
-}
-
-const defaultSettings: ExtensionSettings = {
-    darkModeEnabled: true,
-    autoReauthEnabled: true,
-    videControlsEnabled: true,
-    attendanceCallerEnabled: true,
-    autoPollEnabled: true,
-    shibLoginEnabled: true,
-};
+import { defaultSettings, type ExtensionSettings } from "../contents/utils/settings";
 
 const SettingsPopup: React.FC = () => {
     const [settings, setSettings] = useState<ExtensionSettings>(defaultSettings);
@@ -28,6 +11,13 @@ const SettingsPopup: React.FC = () => {
         chrome.storage.sync.get(defaultSettings, (result) => {
             setSettings(result as ExtensionSettings);
             setLoading(false);
+            
+            // ダークモード設定に基づいてクラスを適用
+            if (result.darkModeEnabled) {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
         });
     }, []);
 
@@ -37,6 +27,15 @@ const SettingsPopup: React.FC = () => {
 
         // 設定を保存
         chrome.storage.sync.set({ [key]: value });
+        
+        // ダークモード設定の変更時にクラスを即座に更新
+        if (key === 'darkModeEnabled') {
+            if (value) {
+                document.documentElement.classList.add('dark-mode');
+            } else {
+                document.documentElement.classList.remove('dark-mode');
+            }
+        }
     };
 
     const handleApplySettings = () => {
