@@ -23,7 +23,7 @@
     },
     "content_scripts": [
         {
-            "js": ["contents/Powerful_Syusseki_Caller_React.tsx"],
+            "js": ["contents/Powerful_Syusseki_Caller.tsx"],
             "css": ["css/powerful_syusseki_button.css"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
         },
