@@ -34,7 +34,7 @@
 ## 🛠️ 技術スタック
 
 - **開発言語**: TypeScript/JavaScript
-- **フレームワーク**: Vanilla JS（軽量実装）
+- **UIライブラリ**: React 19 + TypeScript
 - **スタイリング**: CSS3 + TailwindCSS
 - **ビルドツール**: Extension Framework
 - **パッケージマネージャー**: Bun
