@@ -53,6 +53,11 @@ export const MESSAGES = {
   },
 } as const;
 
+// Storage keys
+export const STORAGE_KEYS = {
+  THEME: 'theme',
+} as const;
+
 // UI constants
 export const UI = {
   DARK_MODE_TOGGLE_ID: 'dark-mode-toggle',

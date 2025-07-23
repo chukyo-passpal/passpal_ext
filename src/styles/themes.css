@@ -1,0 +1,431 @@
+/* PassPal Extension - Dark Mode Themes */
+
+/* --- ダークモードボタンスタイル --- */
+.dmt-btn {
+    /* --- 基本設定 --- */
+    -moz-appearance: none !important;
+    -webkit-appearance: none !important;
+    appearance: none !important;
+    border: none !important;
+    cursor: pointer !important;
+    outline: none !important;
+    pointer-events: initial !important;
+    -webkit-user-select: none !important;
+    user-select: none !important;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 0.8 !important;
+
+    /* --- 位置とZ-index --- */
+    position: fixed !important;
+    bottom: 15px !important;
+    right: calc(15px + 21rem) !important;
+    z-index: 10000 !important;
+
+    /* --- サイズと形状 --- */
+    width: 120px !important;
+    height: 40px !important;
+    border-radius: 20px !important;
+    overflow: hidden !important;
+
+    /* --- アニメーション --- */
+    transition: box-shadow .5s ease-out !important;
+
+    /* --- デフォルト（ライトモード）の色 --- */
+    background-color: #1E1E1E !important;
+    box-shadow: inset -120px 0 0 0 #FFFFFF !important;
+}
+
+/* --- ON/OFFテキスト表示用の擬似要素 --- */
+.dmt-btn::before,
+.dmt-btn::after {
+    position: absolute !important;
+    top: 0 !important;
+    width: 50% !important;
+    height: 100% !important;
+    z-index: 2 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    font-family: 'Oswald', sans-serif, sans-serif !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+}
+
+.dmt-btn::before {
+    content: 'OFF' !important;
+    left: 0 !important;
+    color: #1E1E1E !important;
+}
+
+.dmt-btn::after {
+    content: 'ON' !important;
+    right: 0 !important;
+    color: #FFFFFF !important;
+}
+
+/* ボタン内の子要素は常に非表示 */
+.dmt-btn > * { 
+    display: none !important; 
+}
+
+/* --- ダークモード時のボタンスタイル --- */
+body.dark-mode .dmt-btn {
+    box-shadow: inset 0 0 0 0 #FFFFFF !important;
+}
+
+body.dark-mode .dmt-btn::before {
+    color: #1E1E1E !important;
+}
+
+body.dark-mode .dmt-btn::after {
+    color: #FFFFFF !important;
+}
+
+/* --- ダークモードカラーパレット --- */
+body.dark-mode {
+    --bg-color: #1b1c1d;
+    --bg-secondary-color: #282a2c;
+    --bg-tertiary-color: #33373a;
+    --text-color: #f3f3f3;
+    --text-secondary-color: #a2a9b0;
+    --link-color: #6c95c2;
+    --border-color: #4a4f54;
+    --header-color: #3a3f44;
+    --hover-bg-color: #3a3f44;
+    --active-bg-color: #5a5f64;
+    --input-bg-color: #222426;
+    --accent-color: #337ab7;
+    --danger-color: #e57373;
+    --danger-bg-color: #3c2f2f;
+    --danger-border-color: #a94442;
+    --warning-bg-color: #4a4331;
+    --warning-border-color: #8a6d3b;
+    --warning-text-color: #f3f3f3;
+}
+
+/* --- ダークモード時のグローバルスタイル --- */
+body.dark-mode, 
+body.dark-mode .container, 
+body.dark-mode .main,
+body.dark-mode #tinymce, 
+body.dark-mode iframe {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode a {
+    color: var(--link-color) !important;
+    text-decoration: underline !important;
+}
+
+body.dark-mode a:hover {
+    color: #a9c7e8 !important;
+}
+
+/* --- フォーム関連 --- */
+body.dark-mode input[type="text"],
+body.dark-mode input[type="password"],
+body.dark-mode select,
+body.dark-mode textarea,
+body.dark-mode .form-control-fill {
+    background-color: var(--input-bg-color) !important;
+    color: var(--text-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode fieldset {
+    background-color: var(--bg-secondary-color) !important;
+    border: 1px solid var(--border-color) !important;
+    padding: 1.5em;
+    margin-bottom: 1.5em;
+}
+
+body.dark-mode legend {
+    color: var(--text-color) !important;
+    border: none !important;
+    background-color: var(--header-color);
+    padding: 0.3em 0.8em;
+    width: auto;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+/* --- パネル --- */
+body.dark-mode .panel,
+body.dark-mode .panel-default {
+    background-color: var(--bg-secondary-color);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .panel-heading {
+    background-color: var(--header-color);
+    color: var(--text-color);
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .panel-body, 
+body.dark-mode .well {
+    background-color: var(--bg-secondary-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .panel-body > p > a {
+    display: block; 
+    padding: 8px; 
+    margin: -8px;
+}
+
+body.dark-mode .panel-body > p > a:hover {
+    background-color: var(--hover-bg-color);
+}
+
+body.dark-mode .panel-body span.selected {
+    background-color: var(--active-bg-color) !important;
+    display: inline-block;
+    padding: 2px 5px;
+    border-radius: 4px;
+}
+
+/* --- リストグループ --- */
+body.dark-mode .list-group-item,
+body.dark-mode .list-group-item-heading {
+    background-color: var(--bg-secondary-color);
+    border-color: var(--border-color);
+}
+
+body.dark-mode .list-group-item-heading {
+    background-color: var(--header-color) !important;
+}
+
+body.dark-mode .list-group-item:hover,
+body.dark-mode a.list-group-item:hover,
+body.dark-mode .list-group-item-heading:hover,
+body.dark-mode .list-group.classes .list-group-item:hover,
+body.dark-mode .list-group.classes-staff .list-group-item:hover {
+    background-color: var(--hover-bg-color) !important;
+}
+
+body.dark-mode .list-group-item:hover a {
+    color: #a9c7e8 !important; 
+}
+
+body.dark-mode .list-group-item a {
+    display: block;
+}
+
+/* --- テーブル --- */
+body.dark-mode table,
+body.dark-mode .table-bordered {
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode th,
+body.dark-mode .table-default th,
+body.dark-mode .table-bordered th,
+body.dark-mode .table-calendar th,
+body.dark-mode .table-class-content thead th {
+    background-color: var(--header-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode td,
+body.dark-mode .table-default td,
+body.dark-mode .table-bordered td,
+body.dark-mode .table-calendar td,
+body.dark-mode .table-class-content td,
+body.dark-mode .table-bordered tbody td,
+body.dark-mode table tbody td,
+body.dark-mode .table-quiz td {
+    background-color: var(--bg-secondary-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color);
+}
+
+body.dark-mode table tbody tr:nth-of-type(even) td,
+body.dark-mode .table-bordered tbody tr:nth-of-type(even) td {
+    background-color: var(--bg-tertiary-color) !important;
+}
+
+body.dark-mode .table-class-content tbody tr:nth-of-type(2n+1) {
+    background-color: var(--bg-secondary-color) !important;
+}
+
+body.dark-mode .table-class-content tbody tr:nth-of-type(2n) {
+    background-color: var(--bg-color) !important;
+}
+
+body.dark-mode .table-class-content tbody tr:hover td {
+    background-color: var(--hover-bg-color) !important;
+}
+
+/* --- アラート・情報ボックス --- */
+body.dark-mode .alert-info {
+    background-color: var(--bg-secondary-color) !important;
+    border: 1px solid var(--accent-color) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode .alert-danger {
+    background-color: var(--danger-bg-color) !important;
+    border-color: var(--danger-border-color) !important;
+    color: var(--danger-color) !important;
+}
+
+body.dark-mode .alert-warning {
+    background-color: var(--warning-bg-color) !important;
+    border-color: var(--warning-border-color) !important;
+    color: var(--warning-text-color) !important;
+}
+
+body.dark-mode .alert-default {
+    background-color: var(--bg-tertiary-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .table-info {
+    background-color: var(--bg-secondary-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode span[style*="color: #ff0000"],
+body.dark-mode .text-danger,
+body.dark-mode .required {
+    color: var(--danger-color) !important;
+}
+
+/* --- ボタン --- */
+body.dark-mode .btn-default {
+    background-color: var(--bg-tertiary-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode .btn-default:hover {
+    background-color: var(--hover-bg-color) !important;
+}
+
+body.dark-mode .btn-primary {
+    background-color: var(--accent-color) !important;
+    border-color: #286090 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .btn-primary:hover {
+    background-color: #204d74 !important;
+}
+
+body.dark-mode .btn-danger {
+    background-color: var(--danger-border-color) !important;
+    border-color: #a94442 !important;
+}
+
+body.dark-mode .btn-danger:hover {
+    background-color: #8b3b39 !important;
+}
+
+/* --- スクロールバー --- */
+body.dark-mode ::-webkit-scrollbar { 
+    width: 12px; 
+}
+
+body.dark-mode ::-webkit-scrollbar-track { 
+    background: var(--bg-secondary-color); 
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb { 
+    background: var(--header-color); 
+    border-radius: 6px; 
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover { 
+    background: var(--hover-bg-color); 
+}
+
+/* --- MaNaBo 固有スタイル --- */
+body.dark-mode .login-main { 
+    background-color: var(--bg-color) !important; 
+}
+
+body.dark-mode img[alt="CHUKYO MaNaBo"] {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+body.dark-mode .nav1, 
+body.dark-mode .nav2, 
+body.dark-mode footer, 
+body.dark-mode #page_controller {
+    background: var(--bg-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode .nav3 {
+    background-color: var(--bg-tertiary-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+body.dark-mode .breadcrumb { 
+    background-color: transparent; 
+}
+
+body.dark-mode .breadcrumb > .active { 
+    color: var(--text-secondary-color); 
+}
+
+body.dark-mode .dropdown-menu { 
+    background-color: var(--bg-secondary-color); 
+}
+
+body.dark-mode .dropdown-menu > li > a:hover { 
+    background-color: var(--hover-bg-color) !important; 
+}
+
+/* --- ALBO 固有スタイル --- */
+body.dark-mode #container,
+body.dark-mode #header,
+body.dark-mode #contents_main,
+body.dark-mode .contents-box_bg,
+body.dark-mode .contents-box-main,
+body.dark-mode .contents-box_bg_ss,
+body.dark-mode .pickup-box_bg,
+body.dark-mode .newslist-area,
+body.dark-mode #footer,
+body.dark-mode .calendar-box,
+body.dark-mode .scdllist-box,
+body.dark-mode .service-menu .service-text {
+    background-color: var(--bg-secondary-color) !important;
+    color: var(--text-color) !important;
+    border-color: var(--border-color) !important;
+}
+
+body.dark-mode #header_id, 
+body.dark-mode #header_menu_bg {
+    background: var(--bg-color) !important;
+}
+
+body.dark-mode .tab-newslist tr,
+body.dark-mode .tab-newslist td,
+body.dark-mode .tab-newslist th,
+body.dark-mode .scdllist td,
+body.dark-mode .scdllist th {
+    background-color: var(--bg-secondary-color) !important;
+    border-color: var(--border-color) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode .tab-newslist tr:hover td,
+body.dark-mode .tab-newslist tr:hover th {
+    background-color: var(--hover-bg-color) !important;
+}
+
+body.dark-mode .calendar {
+    background-color: var(--bg-secondary-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+body.dark-mode .calendar td {
+    background-color: var(--bg-secondary-color);
+    border-color: var(--border-color);
+    color: var(--text-color);
+}
