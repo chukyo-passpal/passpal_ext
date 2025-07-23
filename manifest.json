@@ -35,15 +35,11 @@
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         },
         {
-            "js": ["src/albo_relogin.js", "src/albo_error_login.js"],
+            "js": ["src/modules/auth/albo-auth.js"],
             "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
         },
         {
-            "js": ["src/manabo_relogin.js"],
-            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/close*"]
-        },
-        {
-            "js": ["src/manabo_blue_jump.js"],
+            "js": ["src/modules/auth/manabo-redirect.js"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         },
         {
