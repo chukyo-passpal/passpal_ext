@@ -4,6 +4,7 @@
   "description": "PassPalのブラウザ拡張機能",
   "version": "0.0.1",
   "devDependencies": {
+    "@tailwindcss/postcss": "^4.1.11",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
@@ -25,7 +26,6 @@
     "build": "extension build"
   },
   "dependencies": {
-    "@tailwindcss/cli": "^4.1.11",
     "shadcn-ui": "^0.9.5"
   }
 }
