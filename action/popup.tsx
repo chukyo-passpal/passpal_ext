@@ -1,25 +1,44 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
-import { defaultSettings, type ExtensionSettings } from "../contents/utils/settings";
-import GoogleLogInButton from "./components/signInButton";
+import { defaultSettings, type ExtensionSettings, isUserAuthenticated, clearAuthenticationData } from "../contents/utils/settings";
+import AuthenticationFlow from "./components/AuthenticationFlow";
 
 const SettingsPopup: React.FC = () => {
     const [settings, setSettings] = useState<ExtensionSettings>(defaultSettings);
     const [loading, setLoading] = useState(true);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [authChecking, setAuthChecking] = useState(true);
 
     useEffect(() => {
-        // 設定を読み込み
-        chrome.storage.sync.get(defaultSettings, (result) => {
-            setSettings(result as ExtensionSettings);
-            setLoading(false);
+        const initializeApp = async () => {
+            try {
+                // 認証状態をチェック
+                const authenticated = await isUserAuthenticated();
+                console.log("User authenticated:", authenticated);
+                setIsAuthenticated(authenticated);
 
-            // ダークモード設定に基づいてクラスを適用
-            if (result.darkModeEnabled) {
-                document.documentElement.classList.add("dark-mode");
-            } else {
-                document.documentElement.classList.remove("dark-mode");
+                // 設定を読み込み
+                chrome.storage.sync.get(defaultSettings, (result) => {
+                    setSettings(result as ExtensionSettings);
+                    setLoading(false);
+
+                    // ダークモード設定に基づいてクラスを適用
+                    if (result.darkModeEnabled) {
+                        document.documentElement.classList.add("dark-mode");
+                    } else {
+                        document.documentElement.classList.remove("dark-mode");
+                    }
+                });
+            } catch (error) {
+                console.error("Initialization error:", error);
+                setIsAuthenticated(false);
+                setLoading(false);
+            } finally {
+                setAuthChecking(false);
             }
-        });
+        };
+
+        initializeApp();
     }, []);
 
     const handleSettingChange = (key: keyof ExtensionSettings, value: boolean) => {
@@ -51,20 +70,49 @@ const SettingsPopup: React.FC = () => {
         window.close();
     };
 
-    if (loading) {
+    const handleAuthComplete = () => {
+        setIsAuthenticated(true);
+    };
+
+    const handleLogout = async () => {
+        try {
+            await clearAuthenticationData();
+            setIsAuthenticated(false);
+        } catch (error) {
+            console.error("Logout error:", error);
+        }
+    };
+
+    if (authChecking || loading) {
         return (
-            <div>
-                <div>設定を読み込み中...</div>
+            <div className="popup-container">
+                <div className="loading-container">
+                    <div>読み込み中...</div>
+                </div>
             </div>
         );
     }
 
+    // 認証されていない場合は認証フローを表示
+    if (!isAuthenticated) {
+        return (
+            <div className="popup-container">
+                <AuthenticationFlow onAuthComplete={handleAuthComplete} />
+            </div>
+        );
+    }
+
+    // 認証済みの場合は設定画面を表示
     return (
         <div className="popup-container">
             <div className="popup-header">
-                <h2>PassPal Extension 設定</h2>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <h2>PassPal Extension 設定</h2>
+                    <button className="logout-button" onClick={handleLogout}>
+                        ログアウト
+                    </button>
+                </div>
             </div>
-            <GoogleLogInButton />
             <div className="settings-list">
                 <SettingItem
                     icon={<span>🌙</span>}

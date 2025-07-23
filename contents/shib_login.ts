@@ -1,18 +1,32 @@
 //  Shibbolethログインページで自動的にログインします。
 
 import { SELECTORS } from "./utils/constants";
-import { getSetting } from "./utils/settings";
+import { getSetting, isUserAuthenticated } from "./utils/settings";
 
 window.addEventListener("load", async () => {
-    const shibLoginEnabled = await getSetting('shibLoginEnabled');
-    
+    const shibLoginEnabled = await getSetting("shibLoginEnabled");
+
     if (!shibLoginEnabled) {
         return;
     }
 
-    // TODO: ユーザー名とパスワードを設定する
-    const USERNAME = "T324036"; // あなたのユーザー名に書き換えてください
-    const PASSWORD = "ZjQY2g3F"; // あなたのパスワードに書き換えてください
+    // 認証状態を確認
+    const authenticated = await isUserAuthenticated();
+    if (!authenticated) {
+        console.log("User not authenticated, skipping auto-login");
+        return;
+    }
+
+    // 保存された認証情報を取得
+    const loginCredentials = await getSetting("loginCredentials");
+    if (!loginCredentials || !loginCredentials.studentId || !loginCredentials.password) {
+        console.log("No login credentials found, skipping auto-login");
+        return;
+    }
+
+    // メールアドレスから学籍番号を抽出 (例: a123456@m.chukyo-u.ac.jp -> a123456)
+    const USERNAME = loginCredentials.studentId.split("@")[0].toUpperCase();
+    const PASSWORD = loginCredentials.password;
 
     const errorMessage = document.querySelector(SELECTORS.SHIBBOLETH.ERROR_MESSAGE);
     if (errorMessage) {

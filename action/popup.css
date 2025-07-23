@@ -211,3 +211,288 @@ input:checked + .toggle-slider:before {
     transform: translateY(0);
     box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }
+
+/* Authentication Flow Styles */
+.authentication-flow {
+    width: 100%;
+}
+
+.login-step {
+    padding: 20px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 24px;
+}
+
+.login-header h2 {
+    color: #333;
+    font-size: 20px;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+}
+
+.login-header p {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.input-group label {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+}
+
+.login-input {
+    padding: 12px 16px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.2s ease;
+}
+
+.login-input:focus {
+    outline: none;
+    border-color: #667eea;
+}
+
+.login-input.error {
+    border-color: #e74c3c;
+}
+
+.error-message {
+    color: #e74c3c;
+    font-size: 12px;
+    margin-top: 4px;
+}
+
+.login-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+}
+
+.login-button.primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.login-button.primary:hover:not(:disabled) {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.login-button.secondary {
+    background: #f8f9fa;
+    color: #666;
+    border: 1px solid #e0e0e0;
+}
+
+.login-button.secondary:hover:not(:disabled) {
+    background: #e9ecef;
+}
+
+.login-button.google {
+    background: #4285f4;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.login-button.google:hover:not(:disabled) {
+    background: #3367d6;
+}
+
+.login-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none !important;
+}
+
+.google-icon {
+    font-size: 16px;
+}
+
+.email-display {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.email-display label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.email-value {
+    font-size: 14px;
+    font-weight: 500;
+    color: #333;
+    margin-top: 4px;
+}
+
+.user-info {
+    background: #f8f9fa;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+.user-detail {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.user-detail:last-of-type {
+    margin-bottom: 12px;
+}
+
+.user-detail .label {
+    font-size: 12px;
+    color: #666;
+    font-weight: 500;
+}
+
+.user-detail .value {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+}
+
+.auth-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.auth-status .status-icon {
+    font-size: 14px;
+}
+
+.auth-status span:last-child {
+    font-size: 12px;
+    color: #27ae60;
+    font-weight: 500;
+}
+
+.login-note {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    border-radius: 6px;
+    padding: 12px;
+    margin-top: 8px;
+}
+
+.login-note p {
+    margin: 0;
+    font-size: 12px;
+    color: #856404;
+    line-height: 1.4;
+}
+
+.loading-container {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.logout-button {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.logout-button:hover {
+    background: #c82333;
+}
+
+/* Dark Mode Support for Authentication */
+.dark-mode .login-header h2 {
+    color: #ffffff;
+}
+
+.dark-mode .login-header p {
+    color: #aaa;
+}
+
+.dark-mode .input-group label {
+    color: #ffffff;
+}
+
+.dark-mode .login-input {
+    background: #2a2a2a;
+    border-color: #444;
+    color: #ffffff;
+}
+
+.dark-mode .login-input:focus {
+    border-color: #667eea;
+}
+
+.dark-mode .email-display,
+.dark-mode .user-info {
+    background: #2a2a2a;
+    border-color: #444;
+}
+
+.dark-mode .email-display label {
+    color: #aaa;
+}
+
+.dark-mode .email-value {
+    color: #ffffff;
+}
+
+.dark-mode .user-detail .label {
+    color: #aaa;
+}
+
+.dark-mode .user-detail .value {
+    color: #ffffff;
+}
+
+.dark-mode .auth-status {
+    border-top-color: #444;
+}
+
+.dark-mode .login-note {
+    background: #2a2a2a;
+    border-color: #555;
+}
+
+.dark-mode .login-note p {
+    color: #ccc;
+}

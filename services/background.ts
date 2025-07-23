@@ -61,28 +61,18 @@ function getAuth(loginHint?: string): Promise<AuthResponse> {
 }
 
 async function firebaseAuth(loginHint: string = ""): Promise<AuthResponse | FirebaseError | void> {
+    await closeOffscreenDocument();
     await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);
-
-    const auth = await getAuth(loginHint)
-        .then((auth: AuthResponse) => {
-            console.log("User Authenticated", auth);
-            return auth;
-        })
-        .catch((err: FirebaseError) => {
-            if (err.code === "auth/operation-not-allowed") {
-                console.error(
-                    "signInWithPopupを使用するには、Firebase" +
-                        "コンソールでOAuthプロバイダーを有効にする必要があります。このサンプル" +
-                        "はデフォルトでGoogleを使用します。"
-                );
-            } else {
-                console.error(err);
-                return err;
-            }
-        })
-        .finally(closeOffscreenDocument);
-
-    return auth;
+    try {
+        const auth = await getAuth(loginHint);
+        console.log("User Authenticated", auth);
+        await closeOffscreenDocument();
+        return auth;
+    } catch (error) {
+        const err = error as FirebaseError;
+        console.error("Authentication failed:", err);
+        await closeOffscreenDocument();
+    }
 }
 
 const messageHandler: MessageHandler = (message: SignInMessage, _sender, _sendResponse) => {
@@ -91,9 +81,11 @@ const messageHandler: MessageHandler = (message: SignInMessage, _sender, _sendRe
         case "sign-in":
             firebaseAuth(message.loginHint)
                 .then((result) => {
+                    console.log("Authentication result:", result);
                     _sendResponse(result);
                 })
                 .catch((error) => {
+                    console.error("Authentication failed:", error);
                     _sendResponse(error);
                 });
             return true; // 非同期レスポンスを示す
