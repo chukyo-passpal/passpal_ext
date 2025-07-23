@@ -1,72 +1,75 @@
 {
-  "manifest_version": 3,
-  "name": "chukyo-manabo-extensions",
-  "version": "1.0.0",
-  "description": "A basic example extension with only required keys",
-  "permissions": [
-    "storage"
-  ],
-  "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'self';"
-  },
-  "content_scripts": [
-    {
-      "js": ["Powerful_Syusseki_Caller.js"],
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
+    "$schema": "https://json.schemastore.org/chrome-manifest.json",
+    "manifest_version": 3,
+    "version": "0.0.1",
+    "name": "chukyo-manabo-extensions",
+    "description": "中京大学の学習支援ツールPassPalのブラウザ拡張機能",
+    "icons": {
+        "48": "images/extension_48.png"
     },
-    {
-      "js": ["shib_login.js"],
-      "matches": [
-        "https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"
-      ]
+    "permissions": ["activeTab", "scripting", "storage"],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
     },
+    "host_permissions": [
+        "https://manabo.cnc.chukyo-u.ac.jp/*",
+        "https://shib.chukyo-u.ac.jp/*",
+        "https://cubics-pt-out.mng.chukyo-u.ac.jp/*",
+        "https://cubics-as-out.mng.chukyo-u.ac.jp/*"
+    ],
+    "background": {
+        "chromium:service_worker": "background.ts",
+        "firefox:scripts": ["background.ts"]
+    },
+    "content_scripts": [
         {
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"],
-      "js": ["manabo_icon_jump.js"]
-    },
-    {
-      "js": ["albo_relogin.js", "albo_error_login.js"],
-      "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
-    },
-    {
-      "js": ["manabo_relogin.js"],
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/close*"]
-    },
-    {
-      "js": ["manabo_blue_jump.js"],
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
-    },
-    {
-      "js": ["manabo_auto_poll.js"],
-      "matches": [
-        "https://manabo.cnc.chukyo-u.ac.jp/addon/survey/class/attend/*"
-      ]
-    },
-    {
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
-      "js": ["video_controller.js"],
-      "run_at": "document_idle"
-    },
-    {
-      "matches": [
-        "https://cubics-pt-out.mng.chukyo-u.ac.jp/*",
-        "https://manabo.cnc.chukyo-u.ac.jp/*"
-      ],
-      "css": ["dark_mode.css"],
-      "js": ["dark_mode.js"]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["notify_caller.js"],
-      "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
-    },
-    {
-      "resources": ["dark_mode.css"],
-      "matches": [
-        "https://cubics-pt-out.mng.chukyo-u.ac.jp/*",
-        "https://manabo.cnc.chukyo-u.ac.jp/*"
-      ]
-    }
-  ]
+            "js": ["Powerful_Syusseki_Caller.js"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
+        },
+        {
+            "js": ["shib_login.js"],
+            "matches": ["https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"]
+        },
+        {
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"],
+            "js": ["manabo_icon_jump.js"]
+        },
+        {
+            "js": ["albo_relogin.js", "albo_error_login.js"],
+            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
+        },
+        {
+            "js": ["manabo_relogin.js"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/close*"]
+        },
+        {
+            "js": ["manabo_blue_jump.js"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
+        },
+        {
+            "js": ["manabo_auto_poll.js"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/addon/survey/class/attend/*"]
+        },
+        {
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
+            "js": ["video_controller.js"],
+            "run_at": "document_idle"
+        },
+        {
+            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/*", "https://manabo.cnc.chukyo-u.ac.jp/*"],
+            "css": ["dark_mode.css"],
+            "js": ["dark_mode.js"]
+        }
+    ],
+    "web_accessible_resources": [
+        {
+            "resources": ["notify_caller.js"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
+        },
+        {
+            "resources": ["dark_mode.css"],
+            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/*", "https://manabo.cnc.chukyo-u.ac.jp/*"]
+        }
+    ],
+    "author": "Nao Matsuda"
 }
