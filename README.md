@@ -1,6 +1,6 @@
 # PassPal Extension - 中京大学学習支援ツール拡張機能
 
-中京大学の学習支援システム（PassPal/MaNaBo）をより便利で使いやすくするブラウザ拡張機能です。
+中京大学の学習支援システム（MaNaBo/ALBO）をより便利で使いやすくするChrome拡張機能です。
 
 ## 🚀 主な機能
 
@@ -31,6 +31,7 @@
 - **MaNaBo**: `https://manabo.cnc.chukyo-u.ac.jp/*`
 - **Shibboleth認証**: `https://shib.chukyo-u.ac.jp/*`
 - **ALBO（学内ポータル）**: `https://cubics-pt-out.mng.chukyo-u.ac.jp/*`
+- **ALBO（追加）**: `https://cubics-as-out.mng.chukyo-u.ac.jp/*`
 
 ## 🛠️ 技術スタック
 
@@ -103,8 +104,12 @@ passpal_ext/
 │   ├── popup.html                   # ポップアップHTMLテンプレート
 │   ├── popup.tsx                    # メイン設定ポップアップ（React）
 │   ├── popup.css                    # ポップアップスタイル
-│   └── components/
-│       └── signInButton.tsx         # Google認証コンポーネント
+│   └── components/                  # 認証関連コンポーネント
+│       ├── AuthenticationFlow.tsx   # 認証フローメイン
+│       ├── LoginStep1.tsx           # ログインステップ1
+│       ├── LoginStep2.tsx           # ログインステップ2
+│       ├── LoginStep3.tsx           # ログインステップ3
+│       └── types.tsx                # 認証関連型定義
 ├── contents/                        # コンテンツスクリプト群
 │   ├── Powerful_Syusseki_Caller.tsx # 出席ポップアップ強制表示（React）
 │   ├── video_controller.ts          # 動画コントロール機能
@@ -124,6 +129,7 @@ passpal_ext/
 │       ├── dom.ts                   # DOM操作ヘルパー
 │       ├── redirect.ts              # リダイレクト処理
 │       ├── scriptInjection.ts       # スクリプト注入機能
+│       ├── settings.ts              # 設定関連ヘルパー
 │       └── video/                   # 動画関連ユーティリティ
 │           ├── VideoKeyboardHandler.ts # キーボードショートカット
 │           └── videoFeedback.ts     # フィードバック機能
@@ -142,6 +148,8 @@ passpal_ext/
 │   └── extension_128.png
 ├── types/                           # グローバル型定義
 │   └── auth.ts                      # 認証関連型
+├── dist/                            # ビルド出力ディレクトリ
+├── bun.lock                         # Bunパッケージロック
 ├── postcss.config.mjs               # PostCSS設定
 └── tsconfig.json                    # TypeScript設定
 ```
