@@ -10,6 +10,10 @@
  * - 複数動画利用時のアクティブ動画フォーカス機能
  */
 
+import React from "react";
+import { createRoot } from "react-dom/client";
+import { VideoSpeedControls, VideoPiPControls, VideoFeedback, ICONS } from "./components/VideoControls";
+
 export default function videoController() {
     // --- 1. グローバル設定と状態管理 ---
     const MIN_RATE = 0.25;
@@ -23,103 +27,7 @@ export default function videoController() {
     let savedScrollY = 0;
     let feedbackTimeout: NodeJS.Timeout | null = null;
 
-    //操作フィードバック用のSVGアイコン集
-    const ICONS = {
-        play: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M320-200v-560l440 280-440 280Z"/></svg>',
-        pause: '<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M560-200v-560h160v560H560Zm-320 0v-560h160v560H240Z"/></svg>',
-        forward:
-            '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M383-480 200-664l56-56 240 240-240 240-56-56 183-184Zm264 0L464-664l56-56 240 240-240 240-56-56 183-184Z"/></svg>',
-        rewind: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M440-240 200-480l240-240 56 56-183 184 183 184-56 56Zm264 0L464-480l240-240 56 56-183 184 183 184-56 56Z"/></svg>',
-        volumeUp:
-            '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M560-131v-82q90-26 145-100t55-168q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 127-78 224.5T560-131ZM120-360v-240h160l200-200v640L280-360H120Zm440 40v-322q47 22 73.5 66t26.5 96q0 51-26.5 94.5T560-320ZM400-606l-86 86H200v80h114l86 86v-252ZM300-480Z"/></svg>',
-        volumeDown:
-            '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M200-360v-240h160l200-200v640L360-360H200Zm440 40v-322q45 21 72.5 65t27.5 97q0 53-27.5 96T640-320ZM480-606l-86 86H280v80h114l86 86v-252ZM380-480Z"/></svg>',
-        volumeMute:
-            '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M792-56 671-177q-25 16-53 27.5T560-131v-82q14-5 27.5-10t25.5-12L480-368v208L280-360H120v-240h128L56-792l56-56 736 736-56 56Zm-8-232-58-58q17-31 25.5-65t8.5-70q0-94-55-168T560-749v-82q124 28 202 125.5T840-481q0 53-14.5 102T784-288ZM650-422l-90-90v-130q47 22 73.5 66t26.5 96q0 15-2.5 29.5T650-422ZM480-592 376-696l104-104v208Zm-80 238v-94l-72-72H200v80h114l86 86Zm-36-130Z"/></svg>',
-        // ★追加: PiP用のアイコン
-        pip: '<svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e3e3e3"><path d="M80-520v-80h144L52-772l56-56 172 172v-144h80v280H80Zm80 360q-33 0-56.5-23.5T80-240v-200h80v200h320v80H160Zm640-280v-280H440v-80h360q33 0 56.5 23.5T880-720v280h-80ZM560-160v-200h320v200H560Z"/></svg>',
-    };
-
-    // --- 2. スタイルの定義と注入 ---
-    document.head.appendChild(
-        Object.assign(document.createElement("style"), {
-            textContent: `
-      .v-ctrl-wrap { position: relative; }
-      
-      .v-ctrl-ui {
-        position: absolute; top: 10px; z-index: 2147483647;
-        display: flex; gap: 5px; align-items: center;
-      }
-      .v-ctrl-speed { left: 10px; }
-      .v-ctrl-pip { right: 10px; }
-      
-      .v-ctrl-ui button, .v-ctrl-rate-display {
-        background: rgba(0, 0, 0, 0.5); 
-        color: white; border: 1px solid #fff8;
-        border-radius: 4px; cursor: pointer; font-weight: bold;
-        font-size: 14px; padding: 4px 8px; font-family: monospace;
-        transition: background-color 0.1s ease;
-        display: flex; /* ★追加: アイコンを中央に配置するため */
-        align-items: center; /* ★追加: アイコンを中央に配置するため */
-        justify-content: center; /* ★追加: アイコンを中央に配置するため */
-      }
-      
-      .v-ctrl-ui button:hover, .v-ctrl-rate-display:hover {
-        background-color: rgba(0, 123, 255, 0.5);
-      }
-      
-      .v-ctrl-ui button.v-ctrl-highlight {
-        background-color: rgba(0, 123, 255, 0.5);
-      }
-      
-      .v-ctrl-rate-display { cursor: text; }
-      .v-ctrl-rate-display:focus { outline: 2px solid #007bff; }
-      .v-ctrl-pip button.active { background: #d9534f; border-color: #d43f3a; }
-
-      .v-ctrl-wrap:fullscreen {
-        background-color: black; display: flex;
-        align-items: center; justify-content: center;
-      }
-      .v-ctrl-wrap:fullscreen video {
-        width: 100%; height: 100%; object-fit: contain;
-      }
-
-      
-      .v-ctrl-feedback {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(0, 0, 0, 0.3);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 20px;
-        font-family: sans-serif;
-        font-weight: bold;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 10px;
-        opacity: 0;
-        visibility: hidden;
-        transition: opacity 0.2s ease-out, visibility 0.2s ease-out;
-        pointer-events: none;
-        z-index: 2147483647;
-      }
-      .v-ctrl-feedback.v-ctrl-show {
-        opacity: 1;
-        visibility: visible;
-      }
-      .v-ctrl-feedback svg {
-          width: 32px;
-          height: 32px;
-          fill: white;
-      }
-      
-    `,
-        })
-    );
+    // 注意: これらはReactコンポーネントのICONSと同期する必要があります
 
     // --- 3. ヘルパー関数 ---
     const clamp = (value: number, min: number, max: number): number => Math.min(Math.max(value, min), max);
@@ -151,18 +59,32 @@ export default function videoController() {
         }
     };
 
-    // ★追加: フィードバック表示用の関数
-    const showFeedback = (videoWrapper: Element | null, icon: string, text: string = ""): void => {
+    // ★追加: フィードバック表示用の関数（React版）
+    const showFeedback = (videoWrapper: Element | null, icon: React.ReactNode, text: string = ""): void => {
         if (!videoWrapper) return;
-        const feedbackDisplay = videoWrapper.querySelector(".v-ctrl-feedback");
-        if (!feedbackDisplay) return;
+        const feedbackContainer = videoWrapper.querySelector(".v-ctrl-feedback-container");
+        if (!feedbackContainer) return;
 
-        feedbackDisplay.innerHTML = `${icon}${text ? `<span>${text}</span>` : ""}`;
-        feedbackDisplay.classList.add("v-ctrl-show");
+        const root = (feedbackContainer as any).__reactRoot;
+        if (!root) return;
+
+        root.render(
+            React.createElement(VideoFeedback, {
+                isVisible: true,
+                icon: icon,
+                text: text,
+            })
+        );
 
         if (feedbackTimeout) clearTimeout(feedbackTimeout);
         feedbackTimeout = setTimeout(() => {
-            feedbackDisplay.classList.remove("v-ctrl-show");
+            root.render(
+                React.createElement(VideoFeedback, {
+                    isVisible: false,
+                    icon: icon,
+                    text: text,
+                })
+            );
         }, 250);
     };
 
@@ -180,7 +102,7 @@ export default function videoController() {
         }
     });
 
-    // --- 4. UIの初期化 ---
+    // --- 4. UIの初期化（React版） ---
     function initializeVideoControls(video: HTMLVideoElement): void {
         if (video.hasAttribute(INITIALIZED_ATTR) || !video.parentElement) return;
 
@@ -190,114 +112,47 @@ export default function videoController() {
         parent.setAttribute("tabindex", "-1");
         parent.style.outline = "none";
 
-        // ★追加: フィードバック表示用の要素を作成して追加
-        const feedbackDisplay = Object.assign(document.createElement("div"), {
-            className: "v-ctrl-feedback",
-        });
-        parent.appendChild(feedbackDisplay);
+        // フィードバック表示用のコンテナを作成
+        const feedbackContainer = document.createElement("div");
+        feedbackContainer.className = "v-ctrl-feedback-container";
+        parent.appendChild(feedbackContainer);
+
+        // Reactコンポーネントをレンダリング
+        const feedbackRoot = createRoot(feedbackContainer);
+        (feedbackContainer as any).__reactRoot = feedbackRoot;
+
+        // 初期状態のフィードバックをレンダリング
+        feedbackRoot.render(
+            React.createElement(VideoFeedback, {
+                isVisible: false,
+                icon: ICONS.play,
+                text: "",
+            })
+        );
+
+        // スピードコントロール用のコンテナを作成
+        const speedContainer = document.createElement("div");
+        speedContainer.className = "v-ctrl-speed-container";
+        parent.appendChild(speedContainer);
+
+        const speedRoot = createRoot(speedContainer);
+        speedRoot.render(React.createElement(VideoSpeedControls, { video: video }));
+
+        // PiPコントロール用のコンテナを作成
+        if (document.pictureInPictureEnabled) {
+            const pipContainer = document.createElement("div");
+            pipContainer.className = "v-ctrl-pip-container";
+            parent.appendChild(pipContainer);
+
+            const pipRoot = createRoot(pipContainer);
+            pipRoot.render(React.createElement(VideoPiPControls, { video: video }));
+        }
 
         parent.addEventListener("click", () => setFocusedVideo(video));
 
         video.addEventListener("play", () => {
             setFocusedVideo(video);
         });
-
-        const createUIContainer = (className: string, elements: HTMLElement[]): HTMLDivElement => {
-            const div = Object.assign(document.createElement("div"), {
-                className: `v-ctrl-ui ${className}`,
-            });
-            elements.forEach((el: HTMLElement) => div.appendChild(el));
-            return div;
-        };
-
-        const setPlaybackRate = (rate: number | string): void => {
-            video.playbackRate = clamp(parseFloat(String(rate)) || 1.0, MIN_RATE, MAX_RATE);
-        };
-
-        const speedDisplay = Object.assign(document.createElement("span"), {
-            className: "v-ctrl-rate-display",
-            title: "クリックして速度を直接入力",
-        });
-        const updateSpeedDisplay = () => {
-            if (document.activeElement !== speedDisplay) {
-                speedDisplay.textContent = video.playbackRate.toFixed(2) + "x";
-            }
-        };
-        speedDisplay.onclick = (e) => {
-            e.stopPropagation();
-            speedDisplay.contentEditable = "true";
-            speedDisplay.focus();
-            document.execCommand("selectAll", false, undefined);
-        };
-        speedDisplay.addEventListener("blur", () => {
-            speedDisplay.contentEditable = "false";
-            setPlaybackRate(speedDisplay.textContent);
-            updateSpeedDisplay();
-        });
-        speedDisplay.addEventListener("keydown", (e) => {
-            e.stopPropagation();
-            if (e.key === "Enter") {
-                e.preventDefault();
-                speedDisplay.blur();
-            } else if (e.key === "Escape") {
-                speedDisplay.blur();
-                updateSpeedDisplay();
-            }
-        });
-
-        const decreaseBtn = Object.assign(document.createElement("button"), {
-            textContent: "-",
-        });
-        decreaseBtn.dataset.vctrl = "s";
-        decreaseBtn.onclick = (e) => {
-            e.stopPropagation();
-            setPlaybackRate(video.playbackRate - RATE_STEP);
-        };
-
-        const increaseBtn = Object.assign(document.createElement("button"), {
-            textContent: "+",
-        });
-        increaseBtn.dataset.vctrl = "d";
-        increaseBtn.onclick = (e) => {
-            e.stopPropagation();
-            setPlaybackRate(video.playbackRate + RATE_STEP);
-        };
-
-        const speedControls = createUIContainer("v-ctrl-speed", [decreaseBtn, speedDisplay, increaseBtn]);
-        video.addEventListener("ratechange", updateSpeedDisplay);
-        updateSpeedDisplay();
-
-        let pipControl = null;
-        if (document.pictureInPictureEnabled) {
-            const pipButton = Object.assign(document.createElement("button"), {
-                // ★変更: textContent の代わりに innerHTML を使用
-                innerHTML: ICONS.pip,
-                onclick: async (e: Event) => {
-                    e.stopPropagation();
-                    try {
-                        await (document.pictureInPictureElement === video ? document.exitPictureInPicture() : video.requestPictureInPicture());
-                    } catch (err) {
-                        console.error("PiP Error:", err);
-                    }
-                },
-            });
-            pipButton.dataset.vctrl = "p";
-
-            pipControl = createUIContainer("v-ctrl-pip", [pipButton]);
-
-            // ★変更: ボタンのテキスト更新を、ツールチップの更新に変更
-            const updatePipButton = () => {
-                const isPiP = document.pictureInPictureElement === video;
-                pipButton.classList.toggle("active", isPiP);
-                pipButton.title = isPiP ? "ピクチャーインピクチャーを終了 (p)" : "ピクチャーインピクチャー (p)";
-            };
-            video.addEventListener("enterpictureinpicture", updatePipButton);
-            video.addEventListener("leavepictureinpicture", updatePipButton);
-            updatePipButton();
-        }
-
-        if (speedControls) parent.appendChild(speedControls);
-        if (pipControl) parent.appendChild(pipControl);
 
         video.setAttribute(INITIALIZED_ATTR, "true");
     }

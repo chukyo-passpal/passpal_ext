@@ -49,6 +49,7 @@
         },
         {
             "js": ["contents/video_controller.ts"],
+            "css": ["css/video_controller.css"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
             "run_at": "document_idle"
         },
@@ -60,7 +61,7 @@
     ],
     "web_accessible_resources": [
         {
-            "resources": ["scripts/notify_caller.js"],
+            "resources": ["scripts/notify_caller.js", "css/video_controller.css"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         }
     ]

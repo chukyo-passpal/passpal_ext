@@ -1,0 +1,109 @@
+/* Video Controller Styles */
+.v-ctrl-wrap {
+    position: relative;
+}
+
+.v-ctrl-ui {
+    position: absolute;
+    top: 10px;
+    z-index: 2147483647;
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.v-ctrl-speed {
+    left: 10px;
+}
+
+.v-ctrl-pip {
+    right: 10px;
+}
+
+.v-ctrl-ui button,
+.v-ctrl-rate-display {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: 1px solid #fff8;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 4px 8px;
+    font-family: monospace;
+    transition: background-color 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.v-ctrl-ui button:hover,
+.v-ctrl-rate-display:hover {
+    background-color: rgba(0, 123, 255, 0.5);
+}
+
+.v-ctrl-ui button.v-ctrl-highlight {
+    background-color: rgba(0, 123, 255, 0.5);
+}
+
+.v-ctrl-rate-display {
+    cursor: text;
+}
+
+.v-ctrl-rate-display:focus {
+    outline: 2px solid #007bff;
+}
+
+.v-ctrl-pip button.active {
+    background: #d9534f;
+    border-color: #d43f3a;
+}
+
+.v-ctrl-wrap:fullscreen {
+    background-color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.v-ctrl-wrap:fullscreen video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.v-ctrl-feedback {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.3);
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 20px;
+    font-family: sans-serif;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.2s ease-out,
+        visibility 0.2s ease-out;
+    pointer-events: none;
+    z-index: 2147483647;
+}
+
+.v-ctrl-feedback.v-ctrl-show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.v-ctrl-feedback svg {
+    width: 32px;
+    height: 32px;
+    fill: white;
+}
