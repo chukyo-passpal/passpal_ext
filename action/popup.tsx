@@ -47,7 +47,57 @@ const SettingsPopup: React.FC = () => {
         );
     }
 
-    return <div></div>;
+    return (
+        <div className="popup-container">
+            <div className="popup-header">
+                <h2>PassPal Extension 設定</h2>
+            </div>
+            <div className="settings-list">
+                <SettingItem
+                    icon={<span>🌙</span>}
+                    title="ダークモード"
+                    description="大学システムにダークテーマを適用します"
+                    checked={settings.darkModeEnabled}
+                    onChange={(checked) => handleSettingChange('darkModeEnabled', checked)}
+                />
+                <SettingItem
+                    icon={<span>🔄</span>}
+                    title="自動再認証"
+                    description="MaNaBo/ALBOシステムの自動再認証を有効にします"
+                    checked={settings.autoReauthEnabled}
+                    onChange={(checked) => handleSettingChange('autoReauthEnabled', checked)}
+                />
+                <SettingItem
+                    icon={<span>🎬</span>}
+                    title="動画コントロール"
+                    description="高度な動画再生コントロールを追加します"
+                    checked={settings.videControlsEnabled}
+                    onChange={(checked) => handleSettingChange('videControlsEnabled', checked)}
+                />
+                <SettingItem
+                    icon={<span>📞</span>}
+                    title="出席呼び出し"
+                    description="出席確認ポップアップを強制表示します"
+                    checked={settings.attendanceCallerEnabled}
+                    onChange={(checked) => handleSettingChange('attendanceCallerEnabled', checked)}
+                />
+                <SettingItem
+                    icon={<span>📊</span>}
+                    title="自動投票"
+                    description="出席アンケートの自動送信を行います"
+                    checked={settings.autoPollEnabled}
+                    onChange={(checked) => handleSettingChange('autoPollEnabled', checked)}
+                />
+                <SettingItem
+                    icon={<span>🔑</span>}
+                    title="Shibbolethログイン"
+                    description="Shibboleth認証の自動化を行います"
+                    checked={settings.shibLoginEnabled}
+                    onChange={(checked) => handleSettingChange('shibLoginEnabled', checked)}
+                />
+            </div>
+        </div>
+    );
 };
 
 interface SettingItemProps {
@@ -60,17 +110,25 @@ interface SettingItemProps {
 
 const SettingItem: React.FC<SettingItemProps> = ({ icon, title, description, checked, onChange }) => {
     return (
-        <div>
-            <div>
-                <div>{icon}</div>
-                <div>
-                    <label htmlFor={title}>{title}</label>
-                    <div>{description}</div>
+        <div className="setting-item">
+            <div className="setting-content">
+                <div className="setting-icon">{icon}</div>
+                <div className="setting-info">
+                    <div className="setting-title">{title}</div>
+                    <div className="setting-description">{description}</div>
                 </div>
             </div>
-            <label>
-                <input type="checkbox" id={title} checked={checked} onChange={(e) => onChange(e.target.checked)} />
-            </label>
+            <div className="setting-toggle">
+                <label className="toggle-switch">
+                    <input 
+                        type="checkbox" 
+                        id={title} 
+                        checked={checked} 
+                        onChange={(e) => onChange(e.target.checked)} 
+                    />
+                    <span className="toggle-slider"></span>
+                </label>
+            </div>
         </div>
     );
 };
