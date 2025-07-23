@@ -1,5 +1,5 @@
-//          alboログアウト確認後、自動でリダイレクト
-// @description  「ログアウトしました。」のメッセージを確認し、ログインページに移動します。
+// alboログアウト確認後、自動でリダイレクト
+// 「ログアウトしました。」のメッセージを確認し、ログインページに移動します。
 
 export default function alboRelogin() {
     // 移動先のURL
@@ -13,3 +13,5 @@ export default function alboRelogin() {
         window.location.href = redirectUrl;
     }
 }
+
+alboRelogin();

@@ -13,3 +13,5 @@ export default function alboErrorLogin() {
         window.location.href = redirectUrl;
     }
 }
+
+alboErrorLogin();
