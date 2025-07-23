@@ -1,6 +1,13 @@
 // アンケートに自動回答し、カスタム確認ダイアログを含めて最後まで自動で送信します。
 
-export default function manaboAutoPoll() {
+import { getSetting } from "./utils/settings";
+
+export default async function manaboAutoPoll() {
+    const autoPollEnabled = await getSetting('autoPollEnabled');
+    
+    if (!autoPollEnabled) {
+        return;
+    }
     /**
      * 回答ロジック：すべての質問で2番目を選択し、テキストエリアを埋める
      */

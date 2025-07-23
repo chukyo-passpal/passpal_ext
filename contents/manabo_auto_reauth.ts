@@ -5,8 +5,15 @@
 import { SELECTORS, URLS } from "./utils/constants";
 import { RedirectManager } from "./utils/redirect";
 import { waitForElement } from "./utils/dom";
+import { getSetting } from "./utils/settings";
 
 window.addEventListener("load", async () => {
+    const autoReauthEnabled = await getSetting('autoReauthEnabled');
+    
+    if (!autoReauthEnabled) {
+        return;
+    }
+
     // ログアウト画面の時はSSO認証画面へ遷移する
     if (location.href.startsWith(URLS.MANABO_LOGOUTED)) {
         RedirectManager.redirectToManaboAuth();

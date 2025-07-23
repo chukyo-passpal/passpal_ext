@@ -39,6 +39,18 @@ const SettingsPopup: React.FC = () => {
         chrome.storage.sync.set({ [key]: value });
     };
 
+    const handleApplySettings = () => {
+        // 現在のタブを更新して設定を反映
+        chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+            if (tabs[0]?.id) {
+                chrome.tabs.reload(tabs[0].id);
+            }
+        });
+
+        // ポップアップを閉じる
+        window.close();
+    };
+
     if (loading) {
         return (
             <div>
@@ -58,43 +70,48 @@ const SettingsPopup: React.FC = () => {
                     title="ダークモード"
                     description="大学システムにダークテーマを適用します"
                     checked={settings.darkModeEnabled}
-                    onChange={(checked) => handleSettingChange('darkModeEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("darkModeEnabled", checked)}
                 />
                 <SettingItem
                     icon={<span>🔄</span>}
                     title="自動再認証"
                     description="MaNaBo/ALBOシステムの自動再認証を有効にします"
                     checked={settings.autoReauthEnabled}
-                    onChange={(checked) => handleSettingChange('autoReauthEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("autoReauthEnabled", checked)}
                 />
                 <SettingItem
                     icon={<span>🎬</span>}
                     title="動画コントロール"
                     description="高度な動画再生コントロールを追加します"
                     checked={settings.videControlsEnabled}
-                    onChange={(checked) => handleSettingChange('videControlsEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("videControlsEnabled", checked)}
                 />
                 <SettingItem
                     icon={<span>📞</span>}
                     title="出席呼び出し"
                     description="出席確認ポップアップを強制表示します"
                     checked={settings.attendanceCallerEnabled}
-                    onChange={(checked) => handleSettingChange('attendanceCallerEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("attendanceCallerEnabled", checked)}
                 />
                 <SettingItem
                     icon={<span>📊</span>}
                     title="自動投票"
                     description="出席アンケートの自動送信を行います"
                     checked={settings.autoPollEnabled}
-                    onChange={(checked) => handleSettingChange('autoPollEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("autoPollEnabled", checked)}
                 />
                 <SettingItem
                     icon={<span>🔑</span>}
                     title="Shibbolethログイン"
                     description="Shibboleth認証の自動化を行います"
                     checked={settings.shibLoginEnabled}
-                    onChange={(checked) => handleSettingChange('shibLoginEnabled', checked)}
+                    onChange={(checked) => handleSettingChange("shibLoginEnabled", checked)}
                 />
+                <div className="apply-button-container">
+                    <button className="apply-button" onClick={handleApplySettings}>
+                        適用
+                    </button>
+                </div>
             </div>
         </div>
     );
@@ -120,12 +137,7 @@ const SettingItem: React.FC<SettingItemProps> = ({ icon, title, description, che
             </div>
             <div className="setting-toggle">
                 <label className="toggle-switch">
-                    <input 
-                        type="checkbox" 
-                        id={title} 
-                        checked={checked} 
-                        onChange={(e) => onChange(e.target.checked)} 
-                    />
+                    <input type="checkbox" id={title} checked={checked} onChange={(e) => onChange(e.target.checked)} />
                     <span className="toggle-slider"></span>
                 </label>
             </div>

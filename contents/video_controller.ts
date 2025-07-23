@@ -20,6 +20,7 @@ import { VideoSpeedControls, VideoPiPControls, VideoFeedback, ICONS } from "./co
 import { VIDEO_CONFIG } from "./utils/constants";
 import { VideoFeedbackManager } from "./utils/video/videoFeedback";
 import { VideoKeyboardHandler } from "./utils/video/VideoKeyboardHandler";
+import { getSetting } from "./utils/settings";
 
 export class VideoControllerClass {
     private focusedVideo: HTMLVideoElement | null = null;
@@ -298,5 +299,9 @@ export class VideoControllerClass {
 }
 
 window.addEventListener("load", async () => {
-    new VideoControllerClass();
+    const videoControlsEnabled = await getSetting('videControlsEnabled');
+    
+    if (videoControlsEnabled) {
+        new VideoControllerClass();
+    }
 });

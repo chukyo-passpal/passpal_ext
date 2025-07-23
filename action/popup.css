@@ -165,4 +165,51 @@ input:checked + .toggle-slider:before {
     .toggle-slider {
         background-color: #555;
     }
+
+    .apply-button-container {
+        background-color: #1a1a1a;
+        border-top-color: #333;
+    }
+
+    .apply-button {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .apply-button:hover {
+        background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    }
+}
+
+/* Apply Button Container */
+.apply-button-container {
+    padding: 16px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Apply Button */
+.apply-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    font-weight: 600;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: inherit;
+    min-width: 80px;
+    width: 100%;
+}
+
+.apply-button:hover {
+    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+}
+
+.apply-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }

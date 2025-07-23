@@ -1,8 +1,15 @@
 //  Shibbolethログインページで自動的にログインします。
 
 import { SELECTORS } from "./utils/constants";
+import { getSetting } from "./utils/settings";
 
 window.addEventListener("load", async () => {
+    const shibLoginEnabled = await getSetting('shibLoginEnabled');
+    
+    if (!shibLoginEnabled) {
+        return;
+    }
+
     // TODO: ユーザー名とパスワードを設定する
     const USERNAME = "T324036"; // あなたのユーザー名に書き換えてください
     const PASSWORD = "ZjQY2g3F"; // あなたのパスワードに書き換えてください

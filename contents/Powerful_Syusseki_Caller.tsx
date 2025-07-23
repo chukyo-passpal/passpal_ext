@@ -2,9 +2,16 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import PowerfulSyussekiButton from "./components/PowerfulSyussekiButton";
 import { executeNotifyCaller } from "./utils/scriptInjection";
+import { getSetting } from "./utils/settings";
 
-(function () {
+(async function () {
     "use strict";
+    
+    const attendanceCallerEnabled = await getSetting('attendanceCallerEnabled');
+    
+    if (!attendanceCallerEnabled) {
+        return;
+    }
 
     const handleButtonClick = async () => {
         // `notify_caller.js`をページの<body>に注入して実行する
