@@ -5,14 +5,15 @@
 ## 🚀 主な機能
 
 ### 📚 MaNaBo（授業支援システム）機能強化
-- **Powerful Syusseki Caller**: 出席ポップアップを強制的に表示
-- **自動ログインリダイレクト**: パスワード入力ページから自動的にShibboleth認証へ遷移
+- **Powerful Syusseki Caller**: 出席ポップアップを強制的に表示（React製UI）
+- **自動再認証**: パスワード入力ページから自動的にShibboleth認証へ遷移
 - **出席調査自動投票**: 出席調査を自動的に提出・確認
 - **ビデオコントローラー**: 動画の高度な操作機能
   - 再生速度の柔軟な変更（0.25x〜16x）
   - 豊富なキーボードショートカット
   - フルスクリーン表示の最適化
   - ピクチャーインピクチャー対応
+  - React製コンポーネントによる高度なUI
 - **アイコンジャンプ**: 素早いナビゲーション機能
 
 ### 🌙 UI/UX改善
@@ -35,14 +36,15 @@
 
 - **開発言語**: TypeScript/JavaScript
 - **UIライブラリ**: React 19 + TypeScript
-- **スタイリング**: CSS3 + TailwindCSS
-- **ビルドツール**: Extension Framework
+- **スタイリング**: TailwindCSS 4.x + shadcn-ui + CSS3
+- **ビルドツール**: Extension Framework 2.0
 - **パッケージマネージャー**: Bun
+- **拡張機能仕様**: Manifest V3
 
 ## 📋 セットアップ・開発環境
 
 ### 前提条件
-- Node.js 18+ または Bun
+- Bun または Node.js 18+
 - Chrome/Firefox ブラウザ
 
 ### インストール
@@ -54,11 +56,14 @@ cd passpal_ext
 # 依存関係のインストール
 bun install
 
-# 開発モードで起動
+# 開発モードで起動（ホットリロード対応）
 bun run dev
 
 # プロダクションビルド
 bun run build
+
+# 拡張機能の起動
+bun run start
 ```
 
 ### ブラウザへの拡張機能読み込み
@@ -91,20 +96,67 @@ bun run build
 
 ```
 passpal_ext/
-├── manifest.json           # 拡張機能のメタデータ
-├── background.ts           # バックグラウンドスクリプト
-├── package.json           # プロジェクト依存関係
-├── css/                   # スタイルシート
-│   ├── dark_mode.css     # ダークモード用CSS
-│   └── global.css        # 共通スタイル
-├── src/                  # メインソースコード
-│   ├── modules/          # 機能モジュール
-│   │   └── auth/         # 認証関連
-│   ├── types/            # TypeScript型定義
-│   ├── utils/            # ユーティリティ関数
-│   └── *.ts              # 各種コンテンツスクリプト
-└── images/               # 拡張機能アイコン
+├── manifest.json                    # 拡張機能のメタデータ
+├── background.ts                    # バックグラウンドスクリプト（Service Worker）
+├── package.json                     # プロジェクト依存関係
+├── CLAUDE.md                        # Claude Code用プロジェクト説明
+├── contents/                        # コンテンツスクリプト群
+│   ├── Powerful_Syusseki_Caller.tsx # 出席ポップアップ強制表示（React）
+│   ├── video_controller.ts          # 動画コントロール機能
+│   ├── dark_mode.ts                 # ダークモード切り替え
+│   ├── shib_login.ts                # Shibboleth自動ログイン
+│   ├── manabo_auto_reauth.ts        # MaNaBo自動再認証
+│   ├── albo_auto_reauth.ts          # ALBO自動再認証
+│   ├── manabo_auto_poll.ts          # 出席調査自動投票
+│   ├── manabo_icon_jump.ts          # ナビゲーション機能
+│   ├── components/                  # React コンポーネント
+│   │   ├── PowerfulSyussekiButton.tsx # 出席ボタンUI
+│   │   └── VideoControls.tsx        # 動画コントロールUI
+│   ├── types/                       # TypeScript型定義
+│   │   └── PowerfulSyusseki.ts      # 出席機能用型
+│   └── utils/                       # ユーティリティ関数
+│       ├── constants.ts             # 共通定数
+│       ├── dom.ts                   # DOM操作ヘルパー
+│       ├── redirect.ts              # リダイレクト処理
+│       ├── scriptInjection.ts       # スクリプト注入機能
+│       └── video/                   # 動画関連ユーティリティ
+│           ├── VideoKeyboardHandler.ts # キーボードショートカット
+│           └── videoFeedback.ts     # フィードバック機能
+├── css/                             # スタイルシート
+│   ├── dark_mode.css               # ダークモード用CSS
+│   ├── powerful_syusseki_button.css # 出席ボタン用CSS
+│   └── video_controller.css        # 動画コントロール用CSS
+├── public/                          # 静的ファイル
+│   └── scripts/
+│       └── notify_caller.js         # 通知スクリプト
+├── images/                          # 拡張機能アイコン
+│   └── extension_128.png
+├── tailwind.config.js               # TailwindCSS設定
+├── postcss.config.mjs               # PostCSS設定
+└── tsconfig.json                    # TypeScript設定
 ```
+
+## 🏗️ アーキテクチャの特徴
+
+### Manifest V3 準拠
+- 最新のChrome拡張機能仕様に対応
+- Service Workerベースのバックグラウンド処理
+- セキュリティ強化されたContent Security Policy
+
+### React 19 + TypeScript
+- モダンなReactアーキテクチャ
+- 厳密なTypeScript型チェック
+- コンポーネントベースの再利用可能な設計
+
+### TailwindCSS + shadcn-ui
+- ユーティリティファーストCSS
+- 一貫したデザインシステム
+- レスポンシブ対応
+
+### セキュアな設計
+- 大学ドメインに限定されたホスト権限
+- 安全なスクリプト注入機構
+- CSP準拠のセキュリティ実装
 
 ## 🤝 コントリビューション
 
@@ -119,6 +171,7 @@ passpal_ext/
 - 本拡張機能は中京大学の学習支援システム専用です
 - 認証情報は適切に管理し、共有しないでください
 - 学内システムの利用規約を遵守してご利用ください
+- セキュリティとプライバシーを最優先に設計されています
 
 ## 📞 サポート・問い合わせ
 
