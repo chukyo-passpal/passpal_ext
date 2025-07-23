@@ -1,5 +1,6 @@
-import type { Theme } from "./types/common";
 import { STORAGE_KEYS, UI } from "./utils/constants";
+
+type Theme = "light" | "dark";
 
 class DarkModeManager {
     private isButtonClickable = true;
