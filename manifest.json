@@ -27,7 +27,7 @@
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
         },
         {
-            "js": ["src/shib_login.js"],
+            "js": ["src/modules/auth/shibboleth.js"],
             "matches": ["https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"]
         },
         {
