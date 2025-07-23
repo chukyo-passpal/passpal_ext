@@ -1,9 +1,5 @@
 /**
  * Manabo認証リダイレクト処理
- * 
- * 元のファイル:
- * - manabo_relogin.ts: ページロード完了後の自動リダイレクト
- * - manabo_blue_jump.ts: パスワード入力欄検出による条件付きリダイレクト
  */
 
 import { SELECTORS } from '../../utils/constants';
@@ -30,7 +26,6 @@ export class ManaboRedirectManager {
 
   /**
    * ページロード完了後のリダイレクト処理
-   * (旧 manabo_relogin.ts の機能)
    */
   static initializeLoadRedirect(): void {
     window.addEventListener('load', () => {
@@ -40,7 +35,6 @@ export class ManaboRedirectManager {
 
   /**
    * パスワード入力欄検出によるリダイレクト処理
-   * (旧 manabo_blue_jump.ts の機能)
    */
   static async initializeConditionalRedirect(
     options: Partial<ManaboRedirectOptions> = {}
@@ -84,22 +78,6 @@ export class ManaboRedirectManager {
       this.initializeLoadRedirect();
     }
   }
-}
-
-// 個別の機能を直接エクスポート（後方互換性のため）
-
-/**
- * 旧 manabo_relogin.ts 相当の処理
- */
-export function manaboRelogin(): void {
-  ManaboRedirectManager.initializeLoadRedirect();
-}
-
-/**
- * 旧 manabo_blue_jump.ts 相当の処理
- */
-export async function manaboBlueJump(): Promise<void> {
-  await ManaboRedirectManager.initializeConditionalRedirect();
 }
 
 // デフォルトエクスポート（自動実行）
