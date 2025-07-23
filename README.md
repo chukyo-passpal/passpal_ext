@@ -98,7 +98,6 @@ bun run start
 passpal_ext/
 ├── manifest.json                    # 拡張機能のメタデータ
 ├── package.json                     # プロジェクト依存関係
-├── CLAUDE.md                        # Claude Code用プロジェクト説明
 ├── extension-env.d.ts               # Extension.js型定義
 ├── action/                          # 拡張機能ポップアップUI
 │   ├── popup.html                   # ポップアップHTMLテンプレート
