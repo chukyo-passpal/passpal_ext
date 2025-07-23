@@ -1,3 +1,12 @@
+// Extend Window interface to include notify property
+declare global {
+    interface Window {
+        notify?: {
+            init: () => void;
+        };
+    }
+}
+
 (function () {
     "use strict";
 

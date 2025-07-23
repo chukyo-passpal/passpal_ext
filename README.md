@@ -36,7 +36,7 @@
 
 - **開発言語**: TypeScript/JavaScript
 - **UIライブラリ**: React 19 + TypeScript
-- **スタイリング**: TailwindCSS 4.x + shadcn-ui + CSS3
+- **スタイリング**: CSS3
 - **ビルドツール**: Extension Framework 2.0
 - **パッケージマネージャー**: Bun
 - **拡張機能仕様**: Manifest V3

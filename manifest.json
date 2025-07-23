@@ -7,6 +7,13 @@
     "icons": {
         "128": "images/extension_128.png"
     },
+    "action": {
+        "default_popup": "action/popup.html",
+        "default_title": "PassPal Extension Settings",
+        "default_icon": {
+            "128": "images/extension_128.png"
+        }
+    },
     "permissions": ["activeTab", "scripting", "storage"],
     "content_security_policy": {
         "extension_pages": "script-src 'self'; object-src 'self';"
