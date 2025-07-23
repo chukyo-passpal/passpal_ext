@@ -17,9 +17,9 @@ export const URLS = {
 export const SELECTORS = {
     // Shibboleth login
     SHIBBOLETH: {
-        USERNAME: "#username",
-        PASSWORD: "#password",
-        LOGIN_BUTTON: "#login",
+        USERNAME: "input#username",
+        PASSWORD: "input#password",
+        LOGIN_BUTTON: "button#login",
         ERROR_MESSAGE: ".c-message",
     },
 
@@ -49,8 +49,9 @@ export const SELECTORS = {
 // Messages
 export const MESSAGES = {
     ALBO: {
-        LOGOUT_TEXT: "ログアウトしました。",
-        ERROR_TEXT: "Internal Server Error",
+        LOGOUT_TEXT: "ログアウト",
+        INTERNAL_ERROR_TEXT: "Internal Server Error",
+        HELLO_PAGE_TEXT: "It works!",
     },
 } as const;
 
