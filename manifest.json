@@ -23,48 +23,44 @@
     },
     "content_scripts": [
         {
-            "js": ["src/Powerful_Syusseki_Caller.js"],
+            "js": ["contents/Powerful_Syusseki_Caller.ts"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"]
         },
         {
-            "js": ["src/modules/auth/shibboleth.js"],
+            "js": ["contents/modules/auth/shibboleth.ts"],
             "matches": ["https://shib.chukyo-u.ac.jp/cloudlink/module.php/core/loginuserpass.php*"]
         },
         {
-            "js": ["src/manabo_icon_jump.js"],
+            "js": ["contents/manabo_icon_jump.ts"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         },
         {
-            "js": ["src/modules/auth/albo-auth.js"],
-            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/uniprove_pt/*"]
+            "js": ["contents/albo_auto_reauth.ts"],
+            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/*"]
         },
         {
-            "js": ["src/modules/auth/manabo-redirect.js"],
+            "js": ["contents/manabo_auto_reauth.ts"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         },
         {
-            "js": ["src/manabo_auto_poll.js"],
+            "js": ["contents/manabo_auto_poll.ts"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/addon/survey/class/attend/*"]
         },
         {
-          "js": ["src/video_controller.js"],
-          "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
+            "js": ["contents/video_controller.ts"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/class/*"],
             "run_at": "document_idle"
         },
         {
-          "js": ["src/dark_mode.js"],
-          "css": ["css/dark_mode.css"],
-          "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/*", "https://manabo.cnc.chukyo-u.ac.jp/*"]
+            "js": ["contents/dark_mode.ts"],
+            "css": ["css/dark_mode.css"],
+            "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
         }
     ],
     "web_accessible_resources": [
         {
-            "resources": ["src/resources/notify_caller.js"],
+            "resources": ["scripts/notify_caller.js"],
             "matches": ["https://manabo.cnc.chukyo-u.ac.jp/*"]
-        },
-        {
-            "resources": ["css/dark_mode.css"],
-            "matches": ["https://cubics-pt-out.mng.chukyo-u.ac.jp/*", "https://manabo.cnc.chukyo-u.ac.jp/*"]
         }
     ]
 }

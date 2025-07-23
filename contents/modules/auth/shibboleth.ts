@@ -18,7 +18,7 @@ const SELECTORS = {
 // ===== インターフェース定義 =====
 
 /** Shibboleth認証の設定オプション */
-export interface ShibbolethAuthOptions {
+interface ShibbolethAuthOptions {
     readonly credentials?: AuthCredentials;
     readonly autoSubmit: boolean;
     readonly checkForErrors: boolean;
@@ -37,7 +37,7 @@ const DEFAULT_OPTIONS: ShibbolethAuthOptions = {
 /**
  * Shibboleth認証を処理するクラス
  */
-export class ShibbolethAuth {
+class ShibbolethAuth {
     private readonly options: ShibbolethAuthOptions;
 
     constructor(options: Partial<ShibbolethAuthOptions> = {}) {
@@ -159,7 +159,7 @@ export class ShibbolethAuth {
  * 従来のshib_login.tsとの互換性を保つためのラッパー関数
  * @deprecated 新しいコードではShibbolethAuthクラスを直接使用してください
  */
-export function legacyShibLogin(): void {
+function legacyShibLogin(): void {
     console.warn("[PassPal] legacyShibLogin()は非推奨です。ShibbolethAuthクラスを使用してください。");
 
     // TODO: 実際の認証情報は環境変数や設定ファイルから取得するように変更する必要があります
@@ -181,7 +181,7 @@ export function legacyShibLogin(): void {
 // ===== エクスポートされるデフォルト関数 =====
 
 /**
- * デフォルトエクスポート - 従来のインターフェースとの互換性を保つ
+ * デフォルトエクスポート
  */
 export default function shibLogin(): void {
     legacyShibLogin();

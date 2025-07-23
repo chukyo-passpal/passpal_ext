@@ -1,10 +1,10 @@
-import type { Theme } from '../../types/common';
-import { STORAGE_KEYS, UI } from '../../utils/constants';
+import type { Theme } from "../../types/common";
+import { STORAGE_KEYS, UI } from "../../utils/constants";
 
-export class DarkModeManager {
+class DarkModeManager {
     private isButtonClickable = true;
     private static readonly TOGGLE_DELAY = 300;
-    
+
     constructor() {
         this.initializeDarkMode();
     }
@@ -42,9 +42,7 @@ export class DarkModeManager {
         const buttonText = document.getElementById(UI.DARK_MODE_TEXT_ID);
         if (!buttonText) return;
 
-        buttonText.textContent = theme === "dark" 
-            ? "ライトモードに切替"
-            : "ダークモードに切替";
+        buttonText.textContent = theme === "dark" ? "ライトモードに切替" : "ダークモードに切替";
     }
 
     private createToggleButton(): void {
@@ -53,7 +51,7 @@ export class DarkModeManager {
 
         const button = this.buildButtonElement();
         target.appendChild(button);
-        
+
         button.addEventListener("click", () => this.handleToggleClick(button));
     }
 
@@ -83,13 +81,13 @@ export class DarkModeManager {
         if (!this.isButtonClickable) return;
 
         this.setButtonClickable(false, button);
-        
+
         const currentTheme = this.getCurrentTheme();
         const newTheme: Theme = currentTheme === "dark" ? "light" : "dark";
-        
+
         this.switchTheme(newTheme);
         this.showTemporaryFeedback();
-        
+
         setTimeout(() => {
             this.updateButtonText(newTheme);
             this.setButtonClickable(true, button);
