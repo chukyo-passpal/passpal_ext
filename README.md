@@ -97,9 +97,15 @@ bun run start
 ```
 passpal_ext/
 ├── manifest.json                    # 拡張機能のメタデータ
-├── background.ts                    # バックグラウンドスクリプト（Service Worker）
 ├── package.json                     # プロジェクト依存関係
 ├── CLAUDE.md                        # Claude Code用プロジェクト説明
+├── extension-env.d.ts               # Extension.js型定義
+├── action/                          # 拡張機能ポップアップUI
+│   ├── popup.html                   # ポップアップHTMLテンプレート
+│   ├── popup.tsx                    # メイン設定ポップアップ（React）
+│   ├── popup.css                    # ポップアップスタイル
+│   └── components/
+│       └── signInButton.tsx         # Google認証コンポーネント
 ├── contents/                        # コンテンツスクリプト群
 │   ├── Powerful_Syusseki_Caller.tsx # 出席ポップアップ強制表示（React）
 │   ├── video_controller.ts          # 動画コントロール機能
@@ -122,16 +128,21 @@ passpal_ext/
 │       └── video/                   # 動画関連ユーティリティ
 │           ├── VideoKeyboardHandler.ts # キーボードショートカット
 │           └── videoFeedback.ts     # フィードバック機能
+├── services/                        # バックグラウンドサービス
+│   └── background.ts                # Service Worker
+├── pages/                           # オフスクリーンドキュメント
+│   ├── offscreen.html               # OAuth認証用HTML
+│   └── offscreen.ts                 # OAuth認証処理
+├── scripts/                         # Web アクセス可能スクリプト
+│   └── notify_caller.ts             # 通知スクリプト
 ├── css/                             # スタイルシート
 │   ├── dark_mode.css               # ダークモード用CSS
 │   ├── powerful_syusseki_button.css # 出席ボタン用CSS
 │   └── video_controller.css        # 動画コントロール用CSS
-├── public/                          # 静的ファイル
-│   └── scripts/
-│       └── notify_caller.js         # 通知スクリプト
 ├── images/                          # 拡張機能アイコン
 │   └── extension_128.png
-├── tailwind.config.js               # TailwindCSS設定
+├── types/                           # グローバル型定義
+│   └── auth.ts                      # 認証関連型
 ├── postcss.config.mjs               # PostCSS設定
 └── tsconfig.json                    # TypeScript設定
 ```
@@ -148,10 +159,10 @@ passpal_ext/
 - 厳密なTypeScript型チェック
 - コンポーネントベースの再利用可能な設計
 
-### TailwindCSS + shadcn-ui
-- ユーティリティファーストCSS
-- 一貫したデザインシステム
-- レスポンシブ対応
+### PostCSS + Autoprefixer
+- モダンCSS処理とベンダープレフィックス自動付与
+- CSS3機能の最適化
+- ブラウザ互換性の確保
 
 ### セキュアな設計
 - 大学ドメインに限定されたホスト権限
