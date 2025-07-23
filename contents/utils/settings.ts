@@ -5,6 +5,11 @@ export interface ExtensionSettings {
     attendanceCallerEnabled: boolean;
     autoPollEnabled: boolean;
     shibLoginEnabled: boolean;
+    loginCredentials?: {
+        email: string;
+        password: string;
+        firebaseToken: string;
+    };
 }
 
 export const defaultSettings: ExtensionSettings = {

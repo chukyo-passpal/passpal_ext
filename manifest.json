@@ -16,8 +16,7 @@
     },
     "permissions": ["activeTab", "scripting", "storage", "offscreen"],
     "content_security_policy": {
-        "extension_pages": "script-src 'self' ; object-src 'self'",
-        "sandbox": "sandbox allow-scripts; script-src 'self' https://apis.google.com https://www.gstatic.com https://www.googleapis.com https://securetoken.googleapis.com; object-src 'self'"
+        "extension_pages": "script-src 'self' ; object-src 'self'"
     },
     "host_permissions": [
         "https://manabo.cnc.chukyo-u.ac.jp/*",
@@ -28,11 +27,6 @@
     "background": {
         "chromium:service_worker": "services/background.ts"
     },
-    "oauth2": {
-        "client_id": "illoneabgknkegloimpffjkfbcagnkgd",
-        "scopes": ["https://www.googleapis.com/auth/userinfo.email", "https://www.googleapis.com/auth/userinfo.profile"]
-    },
-    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkG4bSi4CyHx9xnNa4HMtfUbFC06jp/b725KvhIT4iwd98+cK6zJkcHTiLORNyZObZogE5L+6YzEQHt1UD5eUXojTW5AMjBAt02BqSaKfXXmItGUZm0J9UtUDoHkHidh4VxpD8nllD2YsbebJCbs01LhHBCf+rxYzA4FkI7rIHrekQVQoy8aouQvQJ3+O5kMzt8etY3Bhq19YUsWq4zDYSieKnMwDcz60uIuKrlWz/T5ERE/YcXrCqrhqR2cZY+mwy6OJGLDPQ9URzY/qIIqV9Vr6rHZre82MhGYCHea2j4wixF/G0a3ZGSIgD95cCZdIyBANqe22o0zr76P3kK4c6wIDAQAB",
     "content_scripts": [
         {
             "js": ["contents/Powerful_Syusseki_Caller.tsx"],
