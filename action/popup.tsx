@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { defaultSettings, type ExtensionSettings } from "../contents/utils/settings";
+import GoogleLogInButton from "./components/signInButton";
 
 const SettingsPopup: React.FC = () => {
     const [settings, setSettings] = useState<ExtensionSettings>(defaultSettings);
@@ -11,12 +12,12 @@ const SettingsPopup: React.FC = () => {
         chrome.storage.sync.get(defaultSettings, (result) => {
             setSettings(result as ExtensionSettings);
             setLoading(false);
-            
+
             // ダークモード設定に基づいてクラスを適用
             if (result.darkModeEnabled) {
-                document.documentElement.classList.add('dark-mode');
+                document.documentElement.classList.add("dark-mode");
             } else {
-                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.remove("dark-mode");
             }
         });
     }, []);
@@ -27,13 +28,13 @@ const SettingsPopup: React.FC = () => {
 
         // 設定を保存
         chrome.storage.sync.set({ [key]: value });
-        
+
         // ダークモード設定の変更時にクラスを即座に更新
-        if (key === 'darkModeEnabled') {
+        if (key === "darkModeEnabled") {
             if (value) {
-                document.documentElement.classList.add('dark-mode');
+                document.documentElement.classList.add("dark-mode");
             } else {
-                document.documentElement.classList.remove('dark-mode');
+                document.documentElement.classList.remove("dark-mode");
             }
         }
     };
@@ -63,6 +64,7 @@ const SettingsPopup: React.FC = () => {
             <div className="popup-header">
                 <h2>PassPal Extension 設定</h2>
             </div>
+            <GoogleLogInButton />
             <div className="settings-list">
                 <SettingItem
                     icon={<span>🌙</span>}
