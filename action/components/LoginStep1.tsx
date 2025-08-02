@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button";
-import { StepForward } from "lucide-react";
+import { StepForward, User } from "lucide-react";
+import InputField from "./InputField";
 
 interface LoginStep1Props {
   onNext: (studentId: string) => void;
@@ -46,7 +47,7 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
   };
 
   return (
-    <div className="login-step">
+    <div className="p-6">
       <div className="login-header">
         <h2>PassPal Extension - ログイン</h2>
         <p>学籍番号を入力してください</p>
@@ -54,27 +55,27 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
 
       <div className="login-form">
         <div className="input-group">
-          <label htmlFor="student-id-input">学籍番号</label>
-          <input
+          <InputField
+            icon={<User size={20} />}
+            label="学籍番号"
             id="student-id-input"
             type="text"
+            error={error}
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="例: a123456"
-            className={`login-input ${error ? "error" : ""}`}
+            placeholder="例: t324076"
             maxLength={7}
           />
-          {error && <div className="error-message">{error}</div>}
         </div>
 
         <Button
           variant="primary"
           onClick={handleNext}
-          disabled={!validateStudentId(studentId)}
+          disabled={!studentId.trim()}
         >
           <span className="absolute">次へ</span>
-          <span className="ml-auto mr-2 transition group-hover:group-enabled:translate-x-2">
+          <span className="ml-auto mr-4 transition group-hover:group-enabled:translate-x-2">
             <StepForward size={20} />
           </span>
         </Button>

@@ -17,7 +17,7 @@ const Button: React.FC<ButtonProps> = ({
   return (
     <button
       className={[
-        "group text-[16px] font-base flex cursor-pointer items-center justify-center rounded-full p-4 font-[inherit] font-bold",
+        "group w-full h-12 text-[16px] flex cursor-pointer items-center justify-center rounded-full font-[inherit] font-bold",
         "transition hover:enabled:-translate-y-0.5 hover:enabled:shadow-lg",
         "disabled:!transform-none disabled:cursor-not-allowed disabled:opacity-60",
         VARIANT_STYLES[variant],
