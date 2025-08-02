@@ -1,4 +1,25 @@
-/* Popup Container */
+@import "tailwindcss";
+
+/* Color Theme */
+@theme {
+    /* Primary Color */
+    --color-primary:  #B19CD9;
+    --color-primary-light: #F0EBFF;
+    --color-primary-dark: #8B7BB8;
+    /* Status Color */
+    --color-status-success: #90C695;
+    --color-status-warning: #F5C842;
+    --color-status-error: #E57373;
+    --color-status-info: #81C7D4;
+    /* Neutral Color */
+    --color-neutral-black: #2D2D30;
+    --color-neutral-gray-600: #8B8B8B;
+    --color-neutral-gray-400: #B8B8B8;
+    --color-neutral-gray-200: #E8E8E8;
+    --color-netural-white: #FFFFFF;
+}
+
+ /* Popup Container */
 .popup-container {
     width: 350px;
     background: #ffffff;
