@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button";
-import { StepForward, User } from "lucide-react";
+import { Lock, StepForward, User } from "lucide-react";
 import InputField from "./InputField";
+import ToggleButtonBox from "./ToggleButtonBox";
 
 interface LoginStep1Props {
   onNext: (studentId: string) => void;
@@ -10,6 +11,7 @@ interface LoginStep1Props {
 const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
   const [studentId, setStudentId] = useState<string>("");
   const [error, setError] = useState<string>("");
+  const [checked, setChecked] = useState<boolean>(false);
 
   useEffect(() => {
     // 初期表示時に学籍番号入力フィールドにフォーカスを設定
@@ -79,6 +81,15 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
             <StepForward size={20} />
           </span>
         </Button>
+        <ToggleButtonBox
+          icon={<Lock size={24} />}
+          title="自動ログイン"
+          subTitle="大学サイトに自動でログイン"
+          checked={checked}
+          onChange={(e) => {
+            setChecked(e.target.checked);
+          }}
+        />
       </div>
     </div>
   );
