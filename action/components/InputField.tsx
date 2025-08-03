@@ -1,5 +1,5 @@
 import { Eye, EyeOff } from "lucide-react";
-import { useState } from "react";
+import { useId, useState } from "react";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label?: string;
@@ -14,11 +14,11 @@ const InputField: React.FC<InputFieldProps> = ({
   placeholder,
   type,
   error,
-  id,
   ...props
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const inputType = showPassword ? "text" : type;
+  const id = useId();
 
   return (
     <div className="space-y-1 w-full">

@@ -60,8 +60,7 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
           <InputField
             icon={<User size={20} />}
             label="学籍番号"
-            id="student-id-input"
-            type="text"
+            type="password"
             error={error}
             value={studentId}
             onChange={(e) => setStudentId(e.target.value)}
@@ -73,13 +72,16 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
 
         <Button
           variant="primary"
+          rightIcon={
+            <StepForward
+              size={20}
+              className="transition group-enabled:group-hover:translate-x-1"
+            />
+          }
           onClick={handleNext}
           disabled={!studentId.trim()}
         >
-          <span className="absolute">次へ</span>
-          <span className="ml-auto mr-4 transition group-hover:group-enabled:translate-x-2">
-            <StepForward size={20} />
-          </span>
+          次へ
         </Button>
         <ToggleButtonBox
           icon={<Lock size={24} />}

@@ -10,7 +10,7 @@ interface ToggleButtonProps
 const ToggleButtonBox: React.FC<ToggleButtonProps> = ({
   icon,
   title: label,
-  subTitle: subLabel,
+  subTitle: subTitle,
   ...props
 }) => {
   return (
@@ -25,7 +25,7 @@ const ToggleButtonBox: React.FC<ToggleButtonProps> = ({
           <p className="text-[14px] font-[inherit] font-medium text-neutral-black">
             {label}
           </p>
-          <p className="text-[12px] text-neutral-gray-600">{subLabel}</p>
+          <p className="text-[12px] text-neutral-gray-600">{subTitle}</p>
         </div>
       </div>
       <input type="checkbox" {...props} className="sr-only peer" />
