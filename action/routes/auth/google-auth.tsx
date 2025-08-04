@@ -1,19 +1,29 @@
-import { Link, createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import AuthHeader from "../../components/AuthHeader";
+import { Mail } from "lucide-react";
+import { GoogleSignInButton } from "../../components/GoogleLoginButton";
 
 const GoogleAuthPage = () => {
-  return (
-    <div className="flex flex-col gap-4 p-4">
-      <h1>GoogleAuth</h1>
-      <Link
-        to="/auth/password"
-        className="bg-primary text-white rounded px-4 py-2 text-center"
-      >
-        パスワード入力
-      </Link>
-    </div>
-  );
+	const navigate = useNavigate();
+
+	const handleOnClick = () => {
+		navigate({ to: "/auth/password" });
+	};
+	return (
+		<div className="w-full h-full flex flex-col gap-4">
+			<AuthHeader title="Googleアカウント認証" comment="中京大学のGoogleアカウントでサインインしてください" />
+			<div className="w-full bg-primary-light border border-primary rounded-[8px] p-4">
+				<p className="text-[14px] font-semibold inherit ">対象メールアドレス</p>
+				<p className="flex items-center gap-2 text-primary text-[14px] font-medium font-[inherit]">
+					<Mail size={16} />
+					t324076@m.chukyo-u.ac.jp
+				</p>
+			</div>
+			<GoogleSignInButton onClick={handleOnClick} />
+		</div>
+	);
 };
 
 export const Route = createFileRoute("/auth/google-auth")({
-  component: GoogleAuthPage,
+	component: GoogleAuthPage,
 });

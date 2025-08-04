@@ -2,518 +2,518 @@
 
 /* Color Theme */
 @theme {
-    /* Primary Color */
-    --color-primary:  #B19CD9;
-    --color-primary-light: #F0EBFF;
-    --color-primary-dark: #8B7BB8;
-    /* Status Color */
-    --color-status-success: #90C695;
-    --color-status-warning: #F5C842;
-    --color-status-error: #E57373;
-    --color-status-info: #81C7D4;
-    /* Neutral Color */
-    --color-neutral-black: #2D2D30;
-    --color-neutral-gray-600: #8B8B8B;
-    --color-neutral-gray-400: #B8B8B8;
-    --color-neutral-gray-200: #E8E8E8;
-    --color-netural-white: #FFFFFF;
+	/* Primary Color */
+	--color-primary: #b19cd9;
+	--color-primary-light: #f0ebff;
+	--color-primary-dark: #8b7bb8;
+	/* Status Color */
+	--color-status-success: #90c695;
+	--color-status-warning: #f5c842;
+	--color-status-error: #e57373;
+	--color-status-info: #81c7d4;
+	/* Neutral Color */
+	--color-neutral-black: #2d2d30;
+	--color-neutral-gray-600: #8b8b8b;
+	--color-neutral-gray-400: #b8b8b8;
+	--color-neutral-gray-200: #e8e8e8;
+	--color-netural-white: #ffffff;
 }
 
- /* Popup Container */
+/* Popup Container */
 .popup-container {
-    width: 350px;
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    overflow: hidden;
+	width: 350px;
+	background: #ffffff;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+	overflow: hidden;
 }
 
 /* Header */
 .popup-header {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    padding: 16px 20px;
-    text-align: center;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	padding: 16px 20px;
+	text-align: center;
 }
 
 .popup-header h2 {
-    margin: 0;
-    font-size: 18px;
-    font-weight: 600;
+	margin: 0;
+	font-size: 18px;
+	font-weight: 600;
 }
 
 /* Settings List */
 .settings-list {
-    padding: 8px 0;
+	padding: 8px 0;
 }
 
 /* Setting Item */
 .setting-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 16px 20px;
-    border-bottom: 1px solid #f0f0f0;
-    transition: background-color 0.2s ease;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 16px 20px;
+	border-bottom: 1px solid #f0f0f0;
+	transition: background-color 0.2s ease;
 }
 
 .setting-item:hover {
-    background-color: #f8f9fa;
+	background-color: #f8f9fa;
 }
 
 .setting-item:last-child {
-    border-bottom: none;
+	border-bottom: none;
 }
 
 /* Setting Content */
 .setting-content {
-    display: flex;
-    align-items: center;
-    flex: 1;
+	display: flex;
+	align-items: center;
+	flex: 1;
 }
 
 .setting-icon {
-    font-size: 20px;
-    margin-right: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    background-color: #f8f9fa;
-    border-radius: 50%;
+	font-size: 20px;
+	margin-right: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	background-color: #f8f9fa;
+	border-radius: 50%;
 }
 
 .setting-info {
-    flex: 1;
+	flex: 1;
 }
 
 .setting-title {
-    font-weight: 600;
-    font-size: 14px;
-    color: #333;
-    margin-bottom: 2px;
+	font-weight: 600;
+	font-size: 14px;
+	color: #333;
+	margin-bottom: 2px;
 }
 
 .setting-description {
-    font-size: 12px;
-    color: #666;
-    line-height: 1.4;
+	font-size: 12px;
+	color: #666;
+	line-height: 1.4;
 }
 
 /* Toggle Switch */
 .setting-toggle {
-    margin-left: 16px;
+	margin-left: 16px;
 }
 
 .toggle-switch {
-    position: relative;
-    display: inline-block;
-    width: 44px;
-    height: 24px;
+	position: relative;
+	display: inline-block;
+	width: 44px;
+	height: 24px;
 }
 
 .toggle-switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
+	opacity: 0;
+	width: 0;
+	height: 0;
 }
 
 .toggle-slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: 0.3s;
-    border-radius: 24px;
+	position: absolute;
+	cursor: pointer;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	background-color: #ccc;
+	transition: 0.3s;
+	border-radius: 24px;
 }
 
 .toggle-slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: 0.3s;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	position: absolute;
+	content: "";
+	height: 18px;
+	width: 18px;
+	left: 3px;
+	bottom: 3px;
+	background-color: white;
+	transition: 0.3s;
+	border-radius: 50%;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 input:checked + .toggle-slider {
-    background-color: #667eea;
+	background-color: #667eea;
 }
 
 input:focus + .toggle-slider {
-    box-shadow: 0 0 1px #667eea;
+	box-shadow: 0 0 1px #667eea;
 }
 
 input:checked + .toggle-slider:before {
-    transform: translateX(20px);
+	transform: translateX(20px);
 }
 
 /* Dark Mode Support */
 .dark-mode .popup-container {
-    background: #1a1a1a;
-    color: #ffffff;
+	background: #1a1a1a;
+	color: #ffffff;
 }
 
 .dark-mode .setting-item {
-    border-bottom-color: #333;
+	border-bottom-color: #333;
 }
 
 .dark-mode .setting-item:hover {
-    background-color: #2a2a2a;
+	background-color: #2a2a2a;
 }
 
 .dark-mode .setting-title {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 .dark-mode .setting-description {
-    color: #aaa;
+	color: #aaa;
 }
 
 .dark-mode .setting-icon {
-    background-color: #333;
+	background-color: #333;
 }
 
 .dark-mode .toggle-slider {
-    background-color: #555;
+	background-color: #555;
 }
 
 .dark-mode .apply-button-container {
-    background-color: #1a1a1a;
-    border-top-color: #333;
+	background-color: #1a1a1a;
+	border-top-color: #333;
 }
 
 .dark-mode .apply-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
 .dark-mode .apply-button:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+	background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
 }
 
 /* Apply Button Container */
 .apply-button-container {
-    padding: 16px 20px;
-    display: flex;
-    justify-content: center;
+	padding: 16px 20px;
+	display: flex;
+	justify-content: center;
 }
 
 /* Apply Button */
 .apply-button {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
-    border: none;
-    padding: 10px 24px;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
-    min-width: 80px;
-    width: 100%;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	border: none;
+	padding: 10px 24px;
+	font-size: 14px;
+	font-weight: 600;
+	border-radius: 6px;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-family: inherit;
+	min-width: 80px;
+	width: 100%;
 }
 
 .apply-button:hover {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+	background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
 }
 
 .apply-button:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
+	transform: translateY(0);
+	box-shadow: 0 2px 4px rgba(102, 126, 234, 0.3);
 }
 
 /* Authentication Flow Styles */
 .authentication-flow {
-    width: 100%;
+	width: 100%;
 }
 
 .login-step {
-    padding: 20px;
+	padding: 20px;
 }
 
 .login-header {
-    text-align: center;
-    margin-bottom: 24px;
+	text-align: center;
+	margin-bottom: 24px;
 }
 
 .login-header h2 {
-    color: #333;
-    font-size: 20px;
-    font-weight: 600;
-    margin: 0 0 8px 0;
+	color: #333;
+	font-size: 20px;
+	font-weight: 600;
+	margin: 0 0 8px 0;
 }
 
 .login-header p {
-    color: #666;
-    font-size: 14px;
-    margin: 0;
+	color: #666;
+	font-size: 14px;
+	margin: 0;
 }
 
 .login-form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+	display: flex;
+	flex-direction: column;
+	gap: 16px;
 }
 
 .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
 }
 
 .input-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
 }
 
 .login-input {
-    padding: 12px 16px;
-    border: 2px solid #e0e0e0;
-    border-radius: 8px;
-    font-size: 14px;
-    transition: border-color 0.2s ease;
+	padding: 12px 16px;
+	border: 2px solid #e0e0e0;
+	border-radius: 8px;
+	font-size: 14px;
+	transition: border-color 0.2s ease;
 }
 
 .login-input:focus {
-    outline: none;
-    border-color: #667eea;
+	outline: none;
+	border-color: #667eea;
 }
 
 .login-input.error {
-    border-color: #e74c3c;
+	border-color: #e74c3c;
 }
 
 .error-message {
-    color: #e74c3c;
-    font-size: 12px;
-    margin-top: 4px;
+	color: #e74c3c;
+	font-size: 12px;
+	margin-top: 4px;
 }
 
 .login-button {
-    padding: 12px 24px;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-family: inherit;
+	padding: 12px 24px;
+	border: none;
+	border-radius: 8px;
+	font-size: 14px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	font-family: inherit;
 }
 
 .login-button.primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
 }
 
 .login-button.primary:hover:not(:disabled) {
-    background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
-    transform: translateY(-1px);
-    box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+	background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+	transform: translateY(-1px);
+	box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
 }
 
 .login-button.secondary {
-    background: #f8f9fa;
-    color: #666;
-    border: 1px solid #e0e0e0;
+	background: #f8f9fa;
+	color: #666;
+	border: 1px solid #e0e0e0;
 }
 
 .login-button.secondary:hover:not(:disabled) {
-    background: #e9ecef;
+	background: #e9ecef;
 }
 
 .login-button.google {
-    background: #4285f4;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
+	background: #4285f4;
+	color: white;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
 }
 
 .login-button.google:hover:not(:disabled) {
-    background: #3367d6;
+	background: #3367d6;
 }
 
 .login-button:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-    transform: none !important;
+	opacity: 0.6;
+	cursor: not-allowed;
+	transform: none !important;
 }
 
 .google-icon {
-    font-size: 16px;
+	font-size: 16px;
 }
 
 .email-display {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
+	background: #f8f9fa;
+	padding: 16px;
+	border-radius: 8px;
+	border: 1px solid #e0e0e0;
 }
 
 .email-display label {
-    font-size: 12px;
-    color: #666;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
+	font-size: 12px;
+	color: #666;
+	text-transform: uppercase;
+	letter-spacing: 0.5px;
 }
 
 .email-value {
-    font-size: 14px;
-    font-weight: 500;
-    color: #333;
-    margin-top: 4px;
+	font-size: 14px;
+	font-weight: 500;
+	color: #333;
+	margin-top: 4px;
 }
 
 .user-info {
-    background: #f8f9fa;
-    padding: 16px;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
+	background: #f8f9fa;
+	padding: 16px;
+	border-radius: 8px;
+	border: 1px solid #e0e0e0;
 }
 
 .user-detail {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 8px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 8px;
 }
 
 .user-detail:last-of-type {
-    margin-bottom: 12px;
+	margin-bottom: 12px;
 }
 
 .user-detail .label {
-    font-size: 12px;
-    color: #666;
-    font-weight: 500;
+	font-size: 12px;
+	color: #666;
+	font-weight: 500;
 }
 
 .user-detail .value {
-    font-size: 12px;
-    color: #333;
-    font-weight: 600;
+	font-size: 12px;
+	color: #333;
+	font-weight: 600;
 }
 
 .auth-status {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding-top: 8px;
-    border-top: 1px solid #e0e0e0;
+	display: flex;
+	align-items: center;
+	gap: 8px;
+	padding-top: 8px;
+	border-top: 1px solid #e0e0e0;
 }
 
 .auth-status .status-icon {
-    font-size: 14px;
+	font-size: 14px;
 }
 
 .auth-status span:last-child {
-    font-size: 12px;
-    color: #27ae60;
-    font-weight: 500;
+	font-size: 12px;
+	color: #27ae60;
+	font-weight: 500;
 }
 
 .login-note {
-    background: #fff3cd;
-    border: 1px solid #ffeeba;
-    border-radius: 6px;
-    padding: 12px;
-    margin-top: 8px;
+	background: #fff3cd;
+	border: 1px solid #ffeeba;
+	border-radius: 6px;
+	padding: 12px;
+	margin-top: 8px;
 }
 
 .login-note p {
-    margin: 0;
-    font-size: 12px;
-    color: #856404;
-    line-height: 1.4;
+	margin: 0;
+	font-size: 12px;
+	color: #856404;
+	line-height: 1.4;
 }
 
 .loading-container {
-    padding: 40px 20px;
-    text-align: center;
+	padding: 40px 20px;
+	text-align: center;
 }
 
 .logout-button {
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    font-size: 12px;
-    font-weight: 500;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+	background: #dc3545;
+	color: white;
+	border: none;
+	padding: 6px 12px;
+	font-size: 12px;
+	font-weight: 500;
+	border-radius: 4px;
+	cursor: pointer;
+	transition: background-color 0.2s ease;
 }
 
 .logout-button:hover {
-    background: #c82333;
+	background: #c82333;
 }
 
 /* Dark Mode Support for Authentication */
 .dark-mode .login-header h2 {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 .dark-mode .login-header p {
-    color: #aaa;
+	color: #aaa;
 }
 
 .dark-mode .input-group label {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 .dark-mode .login-input {
-    background: #2a2a2a;
-    border-color: #444;
-    color: #ffffff;
+	background: #2a2a2a;
+	border-color: #444;
+	color: #ffffff;
 }
 
 .dark-mode .login-input:focus {
-    border-color: #667eea;
+	border-color: #667eea;
 }
 
 .dark-mode .email-display,
 .dark-mode .user-info {
-    background: #2a2a2a;
-    border-color: #444;
+	background: #2a2a2a;
+	border-color: #444;
 }
 
 .dark-mode .email-display label {
-    color: #aaa;
+	color: #aaa;
 }
 
 .dark-mode .email-value {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 .dark-mode .user-detail .label {
-    color: #aaa;
+	color: #aaa;
 }
 
 .dark-mode .user-detail .value {
-    color: #ffffff;
+	color: #ffffff;
 }
 
 .dark-mode .auth-status {
-    border-top-color: #444;
+	border-top-color: #444;
 }
 
 .dark-mode .login-note {
-    background: #2a2a2a;
-    border-color: #555;
+	background: #2a2a2a;
+	border-color: #555;
 }
 
 .dark-mode .login-note p {
-    color: #ccc;
+	color: #ccc;
 }
