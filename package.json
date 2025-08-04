@@ -3,6 +3,9 @@
   "version": "0.0.1",
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.11",
+    "@tanstack/react-router": "^1.130.12",
+    "@tanstack/react-router-devtools": "^1.130.13",
+    "@tanstack/router-cli": "^1.130.15",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "autoprefixer": "^10.4.21",
@@ -23,7 +26,8 @@
   "scripts": {
     "dev": "extension dev",
     "start": "extension start",
-    "build": "extension build"
+    "build": "bun run gen-routes && extension build",
+    "gen-routes": "tsr generate"
   },
   "type": "module"
 }
