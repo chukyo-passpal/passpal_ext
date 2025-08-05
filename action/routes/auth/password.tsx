@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import AuthHeader from "../../components/AuthHeader";
 import InputField from "../../components/InputField";
 import Button from "../../components/Button";
-import TextButton from "../../components/textButton";
+import TextButton from "../../components/TextButton";
 import { useState } from "react";
 import { Lock } from "lucide-react";
 

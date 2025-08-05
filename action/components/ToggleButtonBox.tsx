@@ -1,18 +1,16 @@
-import React from "react";
-
 interface ToggleButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	icon: React.ReactNode;
 	title: string;
 	subTitle: string;
 }
 
-const ToggleButtonBox: React.FC<ToggleButtonProps> = ({ icon, title: label, subTitle: subTitle, ...props }) => {
+const ToggleButtonBox: React.FC<ToggleButtonProps> = ({ icon, title, subTitle, ...props }) => {
 	return (
 		<label className="group w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
 			<div className="flex items-center gap-3">
 				{<span className="text-neutral-gray-600 transition group-has-[input:checked]:text-primary">{icon}</span>}
 				<div>
-					<p className="text-[14px] font-[inherit] font-medium text-neutral-black">{label}</p>
+					<p className="text-[14px] font-[inherit] font-medium text-neutral-black">{title}</p>
 					<p className="text-[12px] text-neutral-gray-600">{subTitle}</p>
 				</div>
 			</div>
