@@ -15,7 +15,7 @@ const Button: React.FC<ButtonProps> = ({ variant = "primary", children, leftIcon
 	return (
 		<button
 			className={[
-				"group relative w-full h-12 text-[16px] flex cursor-pointer items-center justify-center rounded-full font-[inherit] font-bold",
+				"group relative w-full h-12 text-[16px] flex cursor-pointer items-center justify-center rounded-full font-bold",
 				"transition hover:enabled:-translate-y-0.5 hover:enabled:shadow-lg",
 				"disabled:!transform-none disabled:cursor-not-allowed disabled:opacity-60",
 				VARIANT_STYLES[variant],

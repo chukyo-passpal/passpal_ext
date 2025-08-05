@@ -14,12 +14,12 @@ const StudentIdPage = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex flex-col gap-4">
+		<div className="w-full h-full flex flex-col gap-6">
 			<AuthHeader title="ログイン" comment="学籍番号を入力してください" />
 			<InputField
 				icon={<User size={20} />}
 				label="学籍番号"
-				type="password"
+				type="text"
 				value={studentId}
 				onChange={(e) => setStudentId(e.target.value)}
 				placeholder="例: t324076"

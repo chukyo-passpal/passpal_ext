@@ -4,7 +4,7 @@ interface TextButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> 
 
 const TextButton: React.FC<TextButtonProps> = ({ children, ...props }) => {
 	return (
-		<button className="text-primary text-left font-[14px] font-medium cursor-pointer hover:underline" {...props}>
+		<button className="text-primary text-left text-[14px] font-medium cursor-pointer hover:underline" {...props}>
 			{children}
 		</button>
 	);

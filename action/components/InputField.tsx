@@ -16,7 +16,7 @@ const InputField: React.FC<InputFieldProps> = ({ icon, label, placeholder, type,
 	return (
 		<div className="space-y-1 w-full">
 			{label && (
-				<label className="block text-[16px] font-[inherit] text-neutral-black" htmlFor={id}>
+				<label className="block text-[14px] text-neutral-black" htmlFor={id}>
 					{label}
 				</label>
 			)}
@@ -26,9 +26,9 @@ const InputField: React.FC<InputFieldProps> = ({ icon, label, placeholder, type,
 					type={inputType}
 					placeholder={placeholder}
 					className={[
-						"peer w-full h-14 border border-neutral-gray-200 border-2 rounded-[8px] transition outline-none",
+						"peer w-full h-14 border-neutral-gray-200 border-2 rounded-[8px] transition outline-none",
 						"placeholder:text-neutral-gray-600 text-[16px]",
-						"text-[16px] font-normal font-[inherit]",
+						"text-[16px] font-normal",
 						"focus:border-primary",
 						error && "border-status-error",
 						icon && "pl-10",
@@ -52,7 +52,7 @@ const InputField: React.FC<InputFieldProps> = ({ icon, label, placeholder, type,
 					</button>
 				)}
 			</div>
-			{error && <p className="text-status-error text-[14px] font-[inherit]">{error}</p>}
+			{error && <p className="text-status-error text-[14px]">{error}</p>}
 		</div>
 	);
 };

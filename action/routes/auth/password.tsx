@@ -19,7 +19,7 @@ const PasswordPage = () => {
 	};
 
 	return (
-		<div className="w-full h-full flex flex-col gap-4">
+		<div className="w-full h-full flex flex-col gap-6">
 			<AuthHeader title="CU_IDのパスワードを入力" comment="t324016@m.chukyo-u.ac.jp" />
 			<InputField
 				icon={<Lock size={20} />}
