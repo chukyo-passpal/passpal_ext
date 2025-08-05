@@ -10,12 +10,12 @@ export const Route = createRootRoute({
 			return (
 				<div className="m-6 p-0">
 					<Outlet />
+					<TanStackRouterDevtools />
 				</div>
 			);
 		}
 		return (
 			<div className="m-5 p-0">
-				<Navigate to="/" />
 				<Outlet />
 				<TanStackRouterDevtools />
 			</div>
