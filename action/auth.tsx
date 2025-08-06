@@ -5,16 +5,11 @@ import {
 	setAuthenticationData,
 	setRecommendedSettings,
 } from "../contents/utils/settings";
-
-interface User {
-	studentId: string;
-	firebaseToken: string;
-}
+import type { LoginCredentials } from "./components/types";
 
 export interface AuthState {
 	isAuthenticated: boolean;
-	user: User | null;
-	login: (user: User, password: string) => Promise<void>;
+	login: (LoginCredentials: LoginCredentials) => Promise<void>;
 	logout: () => Promise<void>;
 }
 
@@ -25,7 +20,6 @@ interface AuthProviderProps {
 const AuthContext = createContext<AuthState | undefined>(undefined);
 
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
-	const [user, setUser] = useState<User | null>(null);
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -46,13 +40,11 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 		initialize();
 	}, []);
 
-	const login = async (user: User, password: string) => {
-		const loginCredentials = { ...user, password };
+	const login = async (loginCredentials: LoginCredentials) => {
 		setIsLoading(true);
 		try {
 			await setAuthenticationData({ loginCredentials });
 			setRecommendedSettings();
-			setUser(user);
 			setIsAuthenticated(true);
 		} catch (error) {
 			console.error("Login error:", error);
@@ -66,7 +58,6 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 		setIsLoading(true);
 		try {
 			await clearAuthenticationData();
-			setUser(null);
 			setIsAuthenticated(false);
 		} catch (error) {
 			console.error("Logout error:", error);
@@ -79,7 +70,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 		return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
 	}
 
-	return <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ isAuthenticated, login, logout }}>{children}</AuthContext.Provider>;
 };
 
 export const useAuth = () => {

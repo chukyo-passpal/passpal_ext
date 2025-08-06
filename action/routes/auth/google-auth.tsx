@@ -5,7 +5,7 @@ import { GoogleSignInButton } from "../../components/GoogleLoginButton";
 import TextButton from "../../components/TextButton";
 import { useEffect, useState } from "react";
 import type { AuthResponse, FirebaseError, SignInMessage } from "../../../types/auth";
-import { getSetting, setAuthenticationData } from "../../../contents/utils/settings";
+import { clearAuthenticationData, getSetting, setAuthenticationData } from "../../../contents/utils/settings";
 
 const GoogleAuthPage = () => {
 	const [studentId, setStudentId] = useState<string | undefined>(undefined);
@@ -71,7 +71,7 @@ const GoogleAuthPage = () => {
 	};
 
 	const handleOnClickBackButton = async () => {
-		await setAuthenticationData({ loginCredentials: {} });
+		clearAuthenticationData();
 		navigate({ to: "/auth/student-id" });
 	};
 

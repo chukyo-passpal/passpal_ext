@@ -5,16 +5,30 @@ import Button from "../../components/Button";
 import TextButton from "../../components/TextButton";
 import { useState } from "react";
 import { Lock } from "lucide-react";
+import { clearAuthenticationData, getSetting, setAuthenticationData } from "../../../contents/utils/settings";
+import type { LoginCredentials } from "../../components/types";
 
 const PasswordPage = () => {
+	const { auth } = Route.useRouteContext();
 	const [password, setPassword] = useState("");
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 
-	const handleOnClickButton = () => {
-		navigate({ to: "/auth/init-setting" });
+	const handleOnClickButton = async () => {
+		setIsLoading(true);
+		try {
+			const LoginInfo = await getSetting("loginCredentials");
+			auth.login({ ...LoginInfo, password } as LoginCredentials);
+			navigate({ to: "/auth/init-setting" });
+		} catch (error) {
+			console.error("Failed to Login:", error);
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	const handleOnClickTextButton = () => {
+		clearAuthenticationData();
 		navigate({ to: "/auth/student-id" });
 	};
 
@@ -30,7 +44,7 @@ const PasswordPage = () => {
 				placeholder="パスワードを入力"
 			/>
 			<Button variant="primary" disabled={!password.trim()} onClick={handleOnClickButton}>
-				ログイン
+				{isLoading ? "ログイン中..." : "ログイン"}
 			</Button>
 			<TextButton onClick={handleOnClickTextButton}>学籍番号入力に戻る</TextButton>
 		</div>
