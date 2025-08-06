@@ -14,6 +14,6 @@ const DashBoardPage = () => {
 	);
 };
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/dashboard")({
 	component: DashBoardPage,
 });

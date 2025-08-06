@@ -12,19 +12,19 @@ import {
 	LogOut,
 	Zap,
 } from "lucide-react";
-import SettingCard from "../components/SettingCard";
-import InputField from "../components/InputField";
+import SettingCard from "../../components/SettingCard";
+import InputField from "../../components/InputField";
 import { useState } from "react";
-import Button from "../components/Button";
-import RadioButtonBox from "../components/RadioButtonBox";
-import ToggleButtonBox from "../components/ToggleButtonBox";
+import Button from "../../components/Button";
+import RadioButtonBox from "../../components/RadioButtonBox";
+import ToggleButtonBox from "../../components/ToggleButtonBox";
 
 const SettingsPage = () => {
 	const navigate = useNavigate();
 	const [password, setPassword] = useState("");
 
 	const handleOnClickBack = () => {
-		navigate({ to: "/" });
+		navigate({ to: "/dashboard" });
 	};
 	return (
 		<div className="w-full h-full flex flex-col gap-5">
@@ -106,6 +106,6 @@ const SettingsPage = () => {
 	);
 };
 
-export const Route = createFileRoute("/settings")({
+export const Route = createFileRoute("/_authenticated/settings")({
 	component: SettingsPage,
 });

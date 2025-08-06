@@ -1,8 +1,8 @@
 import { Eye, EyeOff } from "lucide-react";
-import { useId, useState } from "react";
+import { useId, useState, type ComponentPropsWithRef } from "react";
 import { twMerge } from "tailwind-merge";
 
-interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputFieldProps extends ComponentPropsWithRef<"input"> {
 	label?: string;
 	type?: "text" | "password";
 	icon?: React.ReactNode;

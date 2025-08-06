@@ -1,16 +1,57 @@
-import { Link, createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate, useRouteContext } from "@tanstack/react-router";
 import AuthHeader from "../../components/AuthHeader";
 import InputField from "../../components/InputField";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { User } from "lucide-react";
 import Button from "../../components/Button";
 
 const StudentIdPage = () => {
 	const [studentId, setStudentId] = useState("");
+	const [error, setError] = useState<string>("");
+	const [isLoading, setIsLoading] = useState(false);
+	const inputRef = useRef<HTMLInputElement>(null);
 	const navigate = useNavigate();
 
-	const handleOnClick = () => {
-		navigate({ to: "/auth/google-auth" });
+	useEffect(() => {
+		const initializeStudentId = async () => {
+			try {
+				const result = await chrome.storage.sync.get("studentId");
+				setStudentId(result.studentId);
+				console.log("Restored student ID from sync storage:", result.studentId);
+			} catch (error) {
+				console.error("Failed to restore student ID:", error);
+			}
+		};
+
+		initializeStudentId();
+		inputRef.current?.focus();
+	}, []);
+
+	const validateStudentId = (id: string): boolean => {
+		// 正規表現: 小文字のアルファベット1文字 + 数字6文字
+		const regex = /^[a-z][0-9]{6}$/;
+		return regex.test(id);
+	};
+
+	const handleOnClick = async () => {
+		setError("");
+		setIsLoading(true);
+
+		if (!validateStudentId(studentId)) {
+			setError("小文字のアルファベット1文字+数字6文字で入力してください。（例: a123456）");
+			return;
+		}
+
+		try {
+			chrome.storage.sync.set({ studentId });
+			console.log("Student ID saved successfully:", studentId);
+			navigate({ to: "/auth/google-auth" });
+		} catch (error) {
+			console.error("Failed to save student ID:", error);
+			setError("学籍番号の保存に失敗しました。もう一度お試しください。");
+		} finally {
+			setIsLoading(false);
+		}
 	};
 
 	return (
@@ -24,9 +65,11 @@ const StudentIdPage = () => {
 				onChange={(e) => setStudentId(e.target.value)}
 				placeholder="例: t324076"
 				maxLength={7}
+				ref={inputRef}
+				error={error}
 			/>
-			<Button variant="primary" disabled={!studentId.trim()} onClick={handleOnClick}>
-				次へ
+			<Button variant="primary" disabled={!studentId.trim() || isLoading} onClick={handleOnClick}>
+				{isLoading ? "ログイン中..." : "次へ"}
 			</Button>
 		</div>
 	);

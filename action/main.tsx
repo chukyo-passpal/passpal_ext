@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
+import { AuthProvider, useAuth } from "./auth";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
@@ -13,6 +14,10 @@ const router = createRouter({
 	history: memoryHistory,
 	defaultPreload: "intent",
 	scrollRestoration: true,
+	basepath: "/dashboard",
+	context: {
+		auth: undefined!,
+	},
 });
 
 declare module "@tanstack/react-router" {
@@ -21,12 +26,19 @@ declare module "@tanstack/react-router" {
 	}
 }
 
+const InnerApp = () => {
+	const auth = useAuth();
+	return <RouterProvider router={router} context={{ auth }} />;
+};
+
 const rootElement = document.getElementById("popup-root")!;
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<RouterProvider router={router} />
+			<AuthProvider>
+				<InnerApp />
+			</AuthProvider>
 		</StrictMode>
 	);
 }

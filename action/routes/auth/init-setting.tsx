@@ -9,7 +9,7 @@ const InitSettingPage = () => {
 	const navigate = useNavigate();
 
 	const handleOnClick = () => {
-		navigate({ to: "/" });
+		navigate({ to: "/dashboard" });
 	};
 
 	return (
@@ -50,5 +50,8 @@ const InitSettingPage = () => {
 };
 
 export const Route = createFileRoute("/auth/init-setting")({
+	beforeLoad: ({ context }) => {
+		console.log(context);
+	},
 	component: InitSettingPage,
 });

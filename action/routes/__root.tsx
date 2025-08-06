@@ -1,24 +1,11 @@
-import { createRootRoute, Link, Navigate, Outlet, useLocation } from "@tanstack/react-router";
+import { createRootRouteWithContext, Outlet, redirect, useLocation } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import type { AuthState } from "../auth";
 
-export const Route = createRootRoute({
-	component: () => {
-		const location = useLocation();
-		const isAuthPage = location.pathname.startsWith("/auth");
+interface MyRouterContext {
+	auth: AuthState;
+}
 
-		if (isAuthPage) {
-			return (
-				<div className="m-6 p-0">
-					<Outlet />
-					<TanStackRouterDevtools />
-				</div>
-			);
-		}
-		return (
-			<div className="m-5 p-0">
-				<Outlet />
-				<TanStackRouterDevtools />
-			</div>
-		);
-	},
+export const Route = createRootRouteWithContext<MyRouterContext>()({
+	component: () => <Outlet />,
 });
