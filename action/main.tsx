@@ -6,7 +6,7 @@ import { AuthProvider, useAuth } from "./auth";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
-	initialEntries: ["/"], // 常に '/' から開始
+	initialEntries: ["/dashboard"], // 常に '/' から開始
 });
 
 const router = createRouter({
@@ -14,7 +14,6 @@ const router = createRouter({
 	history: memoryHistory,
 	defaultPreload: "intent",
 	scrollRestoration: true,
-	basepath: "/dashboard",
 	context: {
 		auth: undefined!,
 	},

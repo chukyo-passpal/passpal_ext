@@ -17,7 +17,9 @@ const StudentIdPage = () => {
 		const initialize = async () => {
 			try {
 				const loginInfo = await getSetting("loginCredentials");
+				// studentIdが入力済みの場合google-authの遷移
 				if (loginInfo.studentId) navigate({ to: "/auth/google-auth" });
+				// firebaseTokenが存在する場合passwordに遷移
 				if (loginInfo.firebaseToken) navigate({ to: "/auth/password" });
 			} catch (error) {
 				console.error("Failed to restore:", error);
