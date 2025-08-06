@@ -4,6 +4,7 @@ import InputField from "../../components/InputField";
 import { useEffect, useRef, useState } from "react";
 import { User } from "lucide-react";
 import Button from "../../components/Button";
+import { getSetting, setAuthenticationData } from "../../../contents/utils/settings";
 
 const StudentIdPage = () => {
 	const [studentId, setStudentId] = useState("");
@@ -13,17 +14,17 @@ const StudentIdPage = () => {
 	const navigate = useNavigate();
 
 	useEffect(() => {
-		const initializeStudentId = async () => {
+		const initialize = async () => {
 			try {
-				const result = await chrome.storage.sync.get("studentId");
-				setStudentId(result.studentId);
-				console.log("Restored student ID from sync storage:", result.studentId);
+				const loginInfo = await getSetting("loginCredentials");
+				if (loginInfo.studentId) navigate({ to: "/auth/google-auth" });
+				if (loginInfo.firebaseToken) navigate({ to: "/auth/password" });
 			} catch (error) {
-				console.error("Failed to restore student ID:", error);
+				console.error("Failed to restore:", error);
 			}
 		};
 
-		initializeStudentId();
+		initialize();
 		inputRef.current?.focus();
 	}, []);
 
@@ -43,7 +44,7 @@ const StudentIdPage = () => {
 		}
 
 		try {
-			chrome.storage.sync.set({ studentId });
+			await setAuthenticationData({ loginCredentials: { studentId } });
 			console.log("Student ID saved successfully:", studentId);
 			navigate({ to: "/auth/google-auth" });
 		} catch (error) {

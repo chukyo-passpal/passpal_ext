@@ -2,7 +2,11 @@
 import React, { type ButtonHTMLAttributes } from "react";
 import { twMerge } from "tailwind-merge";
 
-export const GoogleSignInButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = (props) => {
+interface GoogleSignInButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
+	children?: React.ReactNode;
+}
+
+export const GoogleSignInButton: React.FC<GoogleSignInButtonProps> = ({ children, ...props }) => {
 	return (
 		<button
 			{...props}
@@ -33,7 +37,7 @@ export const GoogleSignInButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement
 					<path fill="none" d="M0 0h48v48H0z"></path>
 				</svg>
 			</div>
-			Googleアカウントでサインイン
+			{children}
 		</button>
 	);
 };
