@@ -1,8 +1,11 @@
+import { twMerge } from "tailwind-merge";
+
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 	variant?: "primary" | "secondary" | "danger";
 	children: React.ReactNode;
 	leftIcon?: React.ReactNode;
 	rightIcon?: React.ReactNode;
+	isSquare?: boolean;
 }
 
 const VARIANT_STYLES = {
@@ -11,15 +14,25 @@ const VARIANT_STYLES = {
 	danger: "bg-white text-status-error border border-status-error",
 };
 
-const Button: React.FC<ButtonProps> = ({ variant = "primary", children, leftIcon, rightIcon, ...props }) => {
+const Button: React.FC<ButtonProps> = ({
+	variant = "primary",
+	isSquare = false,
+	children,
+	leftIcon,
+	rightIcon,
+	className,
+	...props
+}) => {
 	return (
 		<button
-			className={[
+			className={twMerge([
 				"group relative w-full h-12 text-[16px] flex cursor-pointer items-center justify-center rounded-full font-bold",
 				"transition hover:enabled:-translate-y-0.5 hover:enabled:shadow-lg",
 				"disabled:!transform-none disabled:cursor-not-allowed disabled:opacity-60",
 				VARIANT_STYLES[variant],
-			].join(" ")}
+				isSquare && "rounded-[6px]",
+				className,
+			])}
 			type="button"
 			{...props}
 		>

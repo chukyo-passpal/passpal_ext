@@ -22,11 +22,9 @@ const RadioButtonBox: React.FC<RadioButtonProps> = ({ icon, title, subTitle, ...
 			</div>
 			<input type="radio" {...props} className="sr-only peer" />
 			<div
-				className={[
-					"relative flex items-center justify-center w-[20px] h-[20px] bg-white rounded-full",
-					"border-[#D1D5DB] border-2",
-					"peer-checked:bg-primary peer-checked:border-primary transition-colors duration-200",
-				].join(" ")}
+				className="relative flex items-center justify-center w-[20px] h-[20px] bg-white rounded-full 
+									border-[#D1D5DB] border-2
+									peer-checked:bg-primary peer-checked:border-primary transition-colors duration-200"
 			>
 				<Check size={12} className="text-white" />
 			</div>

@@ -1,15 +1,16 @@
 // GoogleSignInButton.tsx
 import React, { type ButtonHTMLAttributes } from "react";
+import { twMerge } from "tailwind-merge";
 
 export const GoogleSignInButton: React.FC<ButtonHTMLAttributes<HTMLButtonElement>> = (props) => {
 	return (
 		<button
 			{...props}
-			className={[
+			className={twMerge([
 				"flex items-center justify-center w-full h-[56px] rounded-full border border-neutral-gray-200 text-neutral-black text-[16px] font-semibold cursor-pointer transition",
 				"hover:enabled:-translate-y-0.5 hover:enabled:shadow-lg",
 				"disabled:!transform-none disabled:cursor-not-allowed disabled:opacity-60",
-			].join(" ")}
+			])}
 		>
 			<div className="w-[24px] h-[24px] mr-[12px]">
 				<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="w-full h-full">

@@ -19,7 +19,7 @@ const GoogleAuthPage = () => {
 			<AuthHeader title="Googleアカウント認証" comment="中京大学のGoogleアカウントでサインインしてください" />
 			<div className="w-full bg-primary-light border border-primary rounded-[8px] p-4">
 				<p className="text-[14px] font-semibold inherit ">対象メールアドレス</p>
-				<p className="flex items-center gap-2 text-primary text-[14px] font-medium font-[inherit]">
+				<p className="flex items-center gap-2 text-primary text-[14px] font-medium">
 					<Mail size={16} />
 					t324076@m.chukyo-u.ac.jp
 				</p>

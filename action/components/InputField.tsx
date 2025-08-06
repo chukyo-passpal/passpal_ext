@@ -1,5 +1,6 @@
 import { Eye, EyeOff } from "lucide-react";
 import { useId, useState } from "react";
+import { twMerge } from "tailwind-merge";
 
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
@@ -25,14 +26,14 @@ const InputField: React.FC<InputFieldProps> = ({ icon, label, placeholder, type,
 					id={id}
 					type={inputType}
 					placeholder={placeholder}
-					className={[
+					className={twMerge([
 						"peer w-full h-14 border-neutral-gray-200 border-2 rounded-[8px] transition outline-none",
 						"placeholder:text-neutral-gray-600 text-[16px]",
 						"text-[16px] font-normal",
 						"focus:border-primary",
 						error && "border-status-error",
 						icon && "pl-10",
-					].join(" ")}
+					])}
 					{...props}
 				/>
 				{icon && (

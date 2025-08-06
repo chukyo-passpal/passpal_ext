@@ -3,9 +3,14 @@
   "workspaces": {
     "": {
       "name": "passpal_ext",
+      "dependencies": {
+        "@tanstack/react-router": "^1.130.12",
+        "lucide-react": "^0.536.0",
+        "react": "^19.1.0",
+        "react-dom": "^19.1.0",
+      },
       "devDependencies": {
         "@tailwindcss/postcss": "^4.1.11",
-        "@tanstack/react-router": "^1.130.12",
         "@tanstack/react-router-devtools": "^1.130.13",
         "@tanstack/router-cli": "^1.130.15",
         "@types/react": "^19.1.8",
@@ -13,13 +18,11 @@
         "autoprefixer": "^10.4.21",
         "eslint": "^9.31.0",
         "extension": "^2.0.0-rc.38",
-        "lucide-react": "^0.536.0",
         "node-polyfill-webpack-plugin": "^4.1.0",
         "postcss": "^8.5.6",
         "prettier": "^3.6.2",
-        "react": "^19.1.0",
-        "react-dom": "^19.1.0",
         "sass": "^1.89.2",
+        "tailwind-merge": "^3.3.1",
         "tailwindcss": "^4.1.11",
         "typescript": "5.3.3",
       },
@@ -1493,6 +1496,8 @@
     "svelte-hmr": ["svelte-hmr@0.14.12", "", { "peerDependencies": { "svelte": ">=3.19.0" } }, "sha512-4QSW/VvXuqVcFZ+RhxiR8/newmwOCTlbYIezvkeN6302YFRE8cXy0naamHcjz8Y9Ce3ITTZtrHrIL0AGfyo61w=="],
 
     "svelte-loader": ["svelte-loader@3.2.4", "", { "dependencies": { "loader-utils": "^2.0.4", "svelte-dev-helper": "^1.1.9", "svelte-hmr": "^0.14.2" }, "peerDependencies": { "svelte": "^3.0.0 || ^4.0.0-next.0 || ^5.0.0-next.1" } }, "sha512-e0HdDnkYH/MDx4/IfTSka5AOFg9yYJcPuoZJB5x0l60fkHjVjNvrrxr+rJegDG9J7ZymmdHt00/hdLw+QF299w=="],
+
+    "tailwind-merge": ["tailwind-merge@3.3.1", "", {}, "sha512-gBXpgUm/3rp1lMZZrM/w7D8GKqshif0zAymAhbCyIt8KMe+0v9DQ7cdYLR4FHH/cKpdTXb+A/tKKU3eolfsI+g=="],
 
     "tailwindcss": ["tailwindcss@4.1.11", "", {}, "sha512-2E9TBm6MDD/xKYe+dvJZAmg3yxIEDNRc0jwlNyDg/4Fil2QcSLjFKGVff0lAf1jjeaArlG/M75Ey/EYr/OJtBA=="],
 
