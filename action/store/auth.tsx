@@ -1,5 +1,5 @@
 import { createContext, use, useEffect, useState, type FC, type ReactNode } from "react";
-import { clearAuthenticationData, isUserAuthenticated } from "../../contents/utils/settings";
+import { isUserAuthenticated } from "../../contents/utils/settings";
 import type { LoginCredentials } from "../../contents/utils/settings";
 import useSettingsStore from "./SettingsStore";
 
@@ -18,7 +18,7 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
-	const { setLoginCredentials, setRecommendedSettings } = useSettingsStore();
+	const { setLoginCredentials, setRecommendedSettings, clearSettings } = useSettingsStore();
 
 	useEffect(() => {
 		const initialize = async () => {
@@ -54,7 +54,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const logout = async () => {
 		setIsLoading(true);
 		try {
-			await clearAuthenticationData();
+			clearSettings();
 			setIsAuthenticated(false);
 		} catch (error) {
 			console.error("Logout error:", error);

@@ -2,5 +2,6 @@
   "routesDirectory": "./action/routes",
   "generatedRouteTree": "./action/routeTree.gen.ts",
   "routeFileIgnorePrefix": "-",
-  "quoteStyle": "single"
+  "quoteStyle": "double",
+  "semicolons": true
 }

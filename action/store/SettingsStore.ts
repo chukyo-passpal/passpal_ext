@@ -23,6 +23,9 @@ export interface SettingsActions {
 	setLoginCredentials: (loginInfo: LoginCredentials) => void;
 	setRecommendedSettings: () => void;
 
+	// データ削除
+	clearSettings: () => void;
+
 	// 読みこみ
 	loadSettings: () => Promise<void>;
 }
@@ -83,6 +86,18 @@ export const useSettingsStore = create<ExtensionSettings & SettingsActions>()((s
 			shibLoginEnabled: true,
 		});
 	},
+
+	clearSettings: () =>
+		set({
+			campusLocation: "nagoya",
+			darkModeEnabled: false,
+			videoControlsEnabled: false,
+			shibLoginEnabled: false,
+			autoReauthEnabled: false,
+			autoPollEnabled: false,
+			attendanceCallerEnabled: false,
+			loginCredentials: {},
+		}),
 
 	loadSettings: async () => set(await getSettings()),
 }));

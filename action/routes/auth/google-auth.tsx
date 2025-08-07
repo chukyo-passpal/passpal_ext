@@ -5,23 +5,21 @@ import { GoogleSignInButton } from "../../components/GoogleLoginButton";
 import TextButton from "../../components/TextButton";
 import { useEffect, useState } from "react";
 import type { AuthResponse, FirebaseError, SignInMessage } from "../../../types/auth";
-import { clearAuthenticationData, getSetting, setAuthenticationData } from "../../../contents/utils/settings";
+import useSettingsStore from "../../store/SettingsStore";
 
 const GoogleAuthPage = () => {
-	const [studentId, setStudentId] = useState<string | undefined>(undefined);
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
+	const { loginCredentials, setLoginCredentials, clearSettings } = useSettingsStore();
 	// 学籍番号に@m.chukyo-u.ac.jpを付与してメールアドレスを生成
-	const email = `${studentId}@m.chukyo-u.ac.jp`;
+	const email = `${loginCredentials.studentId}@m.chukyo-u.ac.jp`;
 
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const initializeStudentId = async () => {
 			try {
-				const LoginInfo = await getSetting("loginCredentials");
-				setStudentId(LoginInfo.studentId);
-				console.log("Restored student ID from sync storage:", LoginInfo.studentId);
+				console.log("Restored student ID from sync storage:", loginCredentials.studentId);
 			} catch (error) {
 				console.error("Failed to restore student ID:", error);
 			}
@@ -57,8 +55,8 @@ const GoogleAuthPage = () => {
 				console.error("Auth Error:", error);
 				return;
 			}
-			const token = "user" in authData ? authData.user?.uid || "" : "";
-			await setAuthenticationData({ studentId, firebaseToken: token });
+			const firebaseToken = "user" in authData ? authData.user?.uid || "" : "";
+			setLoginCredentials({ ...loginCredentials, firebaseToken });
 			console.log("Auth Success:", authData);
 			navigate({ to: "/auth/password" });
 		} catch (error: unknown) {
@@ -71,7 +69,7 @@ const GoogleAuthPage = () => {
 	};
 
 	const handleOnClickBackButton = async () => {
-		clearAuthenticationData();
+		clearSettings();
 		navigate({ to: "/auth/student-id" });
 	};
 
@@ -82,7 +80,7 @@ const GoogleAuthPage = () => {
 				<p className="text-[14px] font-semibold inherit ">対象メールアドレス</p>
 				<p className="flex items-center gap-2 text-primary text-[14px] font-medium">
 					<Mail size={16} />
-					{studentId}@m.chukyo-u.ac.jp
+					{email}
 				</p>
 			</div>
 			<GoogleSignInButton onClick={handleOnClickSignInButton} disabled={isLoading}>

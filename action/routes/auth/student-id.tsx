@@ -5,12 +5,14 @@ import { useEffect, useRef, useState } from "react";
 import { User } from "lucide-react";
 import Button from "../../components/Button";
 import { getSetting, setAuthenticationData } from "../../../contents/utils/settings";
+import useSettingsStore from "../../store/SettingsStore";
 
 const StudentIdPage = () => {
 	const [studentId, setStudentId] = useState("");
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
+	const { setLoginCredentials } = useSettingsStore();
 	const navigate = useNavigate();
 
 	useEffect(() => {
@@ -38,7 +40,6 @@ const StudentIdPage = () => {
 
 	const handleOnClick = async () => {
 		setError("");
-		setIsLoading(true);
 
 		if (!validateStudentId(studentId)) {
 			setError("小文字のアルファベット1文字+数字6文字で入力してください。（例: a123456）");
@@ -46,7 +47,8 @@ const StudentIdPage = () => {
 		}
 
 		try {
-			await setAuthenticationData({ studentId });
+			setIsLoading(true);
+			setLoginCredentials({ studentId });
 			console.log("Student ID saved successfully:", studentId);
 			navigate({ to: "/auth/google-auth" });
 		} catch (error) {

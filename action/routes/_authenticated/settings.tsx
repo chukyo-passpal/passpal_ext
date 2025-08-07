@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Info, Key, Lock, LogOut } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import SettingCard from "../../components/SettingCard";
@@ -24,6 +24,15 @@ const SettingsPage = () => {
 		attendanceCallerEnabled: store.toggleAttendanceCaller,
 		shibLoginEnabled: store.toggleShibLogin,
 		autoPollEnabled: store.toggleAutoPoll,
+	};
+
+	const handleOnClickChangePassword = () => {
+		store.setLoginCredentials({ ...store.loginCredentials, password });
+	};
+
+	const handleOnClickLogout = () => {
+		auth.logout();
+		navigate({ to: "/auth/student-id" });
 	};
 
 	const handleOnClickBack = async () => {
@@ -58,10 +67,10 @@ const SettingsPage = () => {
 						onChange={(e) => setPassword(e.target.value)}
 						placeholder="パスワードを入力"
 					/>
-					<Button isSquare={true} className="">
+					<Button isSquare={true} className="" onClick={handleOnClickChangePassword}>
 						パスワードを更新
 					</Button>
-					<Button isSquare={true} leftIcon={<LogOut size={20} />} variant="danger" onClick={auth.logout}>
+					<Button isSquare={true} leftIcon={<LogOut size={20} />} variant="danger" onClick={handleOnClickLogout}>
 						ログアウト
 					</Button>
 				</div>

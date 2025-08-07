@@ -6,10 +6,12 @@ import Button from "../../components/Button";
 import { campusSettings } from "../_authenticated/-settingsConfig";
 import { DynamicIcon } from "lucide-react/dynamic";
 import useSettingsStore from "../../store/SettingsStore";
+import { useState } from "react";
 
 const InitSettingPage = () => {
 	const navigate = useNavigate();
 	const store = useSettingsStore();
+	const [agreementCheck, setAgreementCheck] = useState(false);
 
 	const handleOnClick = () => {
 		navigate({ to: "/dashboard" });
@@ -36,7 +38,12 @@ const InitSettingPage = () => {
 			</div>
 			<div className="flex gap-[12px]">
 				<label>
-					<input type="checkbox" className="sr-only peer" />
+					<input
+						type="checkbox"
+						checked={agreementCheck}
+						className="sr-only peer"
+						onChange={() => setAgreementCheck((prev) => !prev)}
+					/>
 					<div
 						className="w-[20px] h-[20px] border flex items-center justify-center rounded-[4px] cursor-pointer 
 					border-neutral-gray-600 peer-checked:bg-primary transition-colors"
@@ -49,7 +56,7 @@ const InitSettingPage = () => {
 					<a className="text-primary underline">プライバシーポリシー</a>に同意します
 				</p>
 			</div>
-			<Button variant="primary" onClick={handleOnClick}>
+			<Button variant="primary" onClick={handleOnClick} disabled={!agreementCheck}>
 				始める
 			</Button>
 		</div>

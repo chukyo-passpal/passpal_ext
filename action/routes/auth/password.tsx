@@ -5,20 +5,19 @@ import Button from "../../components/Button";
 import TextButton from "../../components/TextButton";
 import { useState } from "react";
 import { Lock } from "lucide-react";
-import { clearAuthenticationData, getSetting } from "../../../contents/utils/settings";
-import type { LoginCredentials } from "../../../contents/utils/settings";
+import useSettingsStore from "../../store/SettingsStore";
 
 const PasswordPage = () => {
 	const { auth } = Route.useRouteContext();
 	const [password, setPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
+	const { loginCredentials, clearSettings } = useSettingsStore();
 
 	const handleOnClickButton = async () => {
 		setIsLoading(true);
 		try {
-			const LoginInfo = await getSetting("loginCredentials");
-			auth.login({ ...LoginInfo, password } as LoginCredentials);
+			auth.login({ ...loginCredentials, password });
 			navigate({ to: "/auth/init-setting" });
 		} catch (error) {
 			console.error("Failed to Login:", error);
@@ -28,7 +27,7 @@ const PasswordPage = () => {
 	};
 
 	const handleOnClickTextButton = () => {
-		clearAuthenticationData();
+		clearSettings();
 		navigate({ to: "/auth/student-id" });
 	};
 
