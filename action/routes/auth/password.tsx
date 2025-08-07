@@ -5,8 +5,8 @@ import Button from "../../components/Button";
 import TextButton from "../../components/TextButton";
 import { useState } from "react";
 import { Lock } from "lucide-react";
-import { clearAuthenticationData, getSetting, setAuthenticationData } from "../../../contents/utils/settings";
-import type { LoginCredentials } from "../../components/types";
+import { clearAuthenticationData, getSetting } from "../../../contents/utils/settings";
+import type { LoginCredentials } from "../../../contents/utils/settings";
 
 const PasswordPage = () => {
 	const { auth } = Route.useRouteContext();

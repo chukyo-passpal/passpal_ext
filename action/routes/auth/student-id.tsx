@@ -46,7 +46,7 @@ const StudentIdPage = () => {
 		}
 
 		try {
-			await setAuthenticationData({ loginCredentials: { studentId } });
+			await setAuthenticationData({ studentId });
 			console.log("Student ID saved successfully:", studentId);
 			navigate({ to: "/auth/google-auth" });
 		} catch (error) {

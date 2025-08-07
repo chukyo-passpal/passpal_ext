@@ -5,7 +5,7 @@ import {
 	setAuthenticationData,
 	setRecommendedSettings,
 } from "../contents/utils/settings";
-import type { LoginCredentials } from "./components/types";
+import type { LoginCredentials } from "../contents/utils/settings";
 
 export interface AuthState {
 	isAuthenticated: boolean;
@@ -43,7 +43,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const login = async (loginCredentials: LoginCredentials) => {
 		setIsLoading(true);
 		try {
-			await setAuthenticationData({ loginCredentials });
+			await setAuthenticationData(loginCredentials);
 			setRecommendedSettings();
 			setIsAuthenticated(true);
 		} catch (error) {

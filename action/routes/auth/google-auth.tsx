@@ -58,7 +58,7 @@ const GoogleAuthPage = () => {
 				return;
 			}
 			const token = "user" in authData ? authData.user?.uid || "" : "";
-			await setAuthenticationData({ loginCredentials: { studentId, firebaseToken: token } });
+			await setAuthenticationData({ studentId, firebaseToken: token });
 			console.log("Auth Success:", authData);
 			navigate({ to: "/auth/password" });
 		} catch (error: unknown) {

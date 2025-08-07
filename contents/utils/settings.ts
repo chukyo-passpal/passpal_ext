@@ -1,3 +1,9 @@
+export interface LoginCredentials {
+	studentId?: string;
+	firebaseToken?: string;
+	password?: string;
+}
+
 export interface ExtensionSettings {
 	campusLocation: "nagoya" | "toyota";
 	darkModeEnabled: boolean;
@@ -6,11 +12,7 @@ export interface ExtensionSettings {
 	attendanceCallerEnabled: boolean;
 	autoPollEnabled: boolean;
 	shibLoginEnabled: boolean;
-	loginCredentials: {
-		studentId?: string;
-		password?: string;
-		firebaseToken?: string;
-	};
+	loginCredentials: LoginCredentials;
 }
 
 export const defaultSettings: ExtensionSettings = {
@@ -37,15 +39,9 @@ export async function getSetting<K extends keyof ExtensionSettings>(key: K): Pro
 	return settings[key];
 }
 
-export async function setAuthenticationData(data: {
-	loginCredentials: {
-		studentId?: string;
-		password?: string;
-		firebaseToken?: string;
-	};
-}): Promise<void> {
+export async function setAuthenticationData(loginCredentials: LoginCredentials): Promise<void> {
 	return new Promise((resolve) => {
-		chrome.storage.sync.set(data, () => {
+		chrome.storage.sync.set({ loginCredentials }, () => {
 			resolve();
 		});
 	});
