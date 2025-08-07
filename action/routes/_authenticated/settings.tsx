@@ -1,29 +1,32 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import {
-	ArrowLeft,
-	Bell,
-	Building,
-	Calendar,
-	Car,
-	ChevronRight,
-	Download,
-	Info,
-	Lock,
-	LogOut,
-	Zap,
-} from "lucide-react";
+import { ArrowLeft, ChevronRight, Info, Key, Lock, LogOut } from "lucide-react";
+import { DynamicIcon } from "lucide-react/dynamic";
 import SettingCard from "../../components/SettingCard";
 import InputField from "../../components/InputField";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "../../components/Button";
 import RadioButtonBox from "../../components/RadioButtonBox";
 import ToggleButtonBox from "../../components/ToggleButtonBox";
+import { defaultSettings, type ExtensionSettings } from "../../../contents/utils/settings";
+import useSettingsStore from "../../store/SettingsStore";
+import { campusSettings, settingGroups } from "./-settingsConfig";
 
 const SettingsPage = () => {
+	const { auth } = Route.useRouteContext();
 	const navigate = useNavigate();
 	const [password, setPassword] = useState("");
+	const store = useSettingsStore();
 
-	const handleOnClickBack = () => {
+	const toggleFunctions: Record<keyof Omit<ExtensionSettings, "campusLocation" | "loginCredentials">, () => void> = {
+		darkModeEnabled: store.toggleDarkMode,
+		autoReauthEnabled: store.toggleAutoReauth,
+		videoControlsEnabled: store.toggleVideoControls,
+		attendanceCallerEnabled: store.toggleAttendanceCaller,
+		shibLoginEnabled: store.toggleShibLogin,
+		autoPollEnabled: store.toggleAutoPoll,
+	};
+
+	const handleOnClickBack = async () => {
 		navigate({ to: "/dashboard" });
 	};
 	return (
@@ -58,7 +61,7 @@ const SettingsPage = () => {
 					<Button isSquare={true} className="">
 						パスワードを更新
 					</Button>
-					<Button isSquare={true} leftIcon={<LogOut size={20} />} variant="danger">
+					<Button isSquare={true} leftIcon={<LogOut size={20} />} variant="danger" onClick={auth.logout}>
 						ログアウト
 					</Button>
 				</div>
@@ -66,28 +69,32 @@ const SettingsPage = () => {
 			<SettingCard title="キャンパス情報">
 				<p className="text-[14px] font-medium">キャンパスを選択</p>
 				<div className="flex flex-col gap-2">
-					<RadioButtonBox
-						icon={<Building size={20} />}
-						label="名古屋キャンパス"
-						description="八事・名古屋"
-						name="campus"
-					/>
-					<RadioButtonBox icon={<Car size={20} />} label="豊田キャンパス" description="豊田・みよし" name="campus" />
+					{campusSettings.map((campus) => (
+						<RadioButtonBox
+							icon={<DynamicIcon name={campus.icon} size={20} />}
+							label={campus.label}
+							description={campus.description}
+							name="campus"
+							checked={campus.value === store.campusLocation}
+							value={campus.value}
+							onChange={store.toggleCampusLocation}
+						/>
+					))}
 				</div>
 			</SettingCard>
-			<SettingCard title="基本設定" border={false}>
-				<ToggleButtonBox label="自動ログイン" description="大学サイトに自動ログイン" icon={<Lock size={24} />} />
-				<ToggleButtonBox label="通知機能" description="重要なお知らせを通知" icon={<Bell size={24} />} />
-				<ToggleButtonBox label="時間割同期" description="時間割を自動で取得・更新" icon={<Calendar size={24} />} />
-			</SettingCard>
-			<SettingCard title="高度な機能" border={false}>
-				<ToggleButtonBox label="自動フォーム入力" description="フォームを自動で入力" icon={<Zap size={24} />} />
-				<ToggleButtonBox
-					label="ファイル自動保存"
-					description="資料を自動でダウンロード"
-					icon={<Download size={24} />}
-				/>
-			</SettingCard>
+			{settingGroups.map((group) => (
+				<SettingCard title={group.title} border={false}>
+					{group.items.map((item) => (
+						<ToggleButtonBox
+							label={item.label}
+							description={item.description}
+							icon={<DynamicIcon name={item.icon} size={24} />}
+							checked={store[item.key]}
+							onChange={toggleFunctions[item.key]}
+						/>
+					))}
+				</SettingCard>
+			))}
 			<SettingCard title="このアプリについて">
 				<button className="group relative w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
 					<div className="flex items-center gap-3">

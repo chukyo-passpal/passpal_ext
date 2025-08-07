@@ -1,12 +1,15 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import AuthHeader from "../../components/AuthHeader";
 import RadioButtonBox from "../../components/RadioButtonBox";
-import { Building, Car, Check } from "lucide-react";
-import ToggleButtonBox from "../../components/ToggleButtonBox";
+import { Check } from "lucide-react";
 import Button from "../../components/Button";
+import { campusSettings } from "../_authenticated/-settingsConfig";
+import { DynamicIcon } from "lucide-react/dynamic";
+import useSettingsStore from "../../store/SettingsStore";
 
 const InitSettingPage = () => {
 	const navigate = useNavigate();
+	const store = useSettingsStore();
 
 	const handleOnClick = () => {
 		navigate({ to: "/dashboard" });
@@ -18,13 +21,17 @@ const InitSettingPage = () => {
 			<div>
 				<p className="text-[14px] font-medium mb-4">キャンパスを選択</p>
 				<div className="flex flex-col gap-2">
-					<RadioButtonBox
-						icon={<Building size={20} />}
-						label="名古屋キャンパス"
-						description="八事・名古屋"
-						name="campus"
-					/>
-					<RadioButtonBox icon={<Car size={20} />} label="豊田キャンパス" description="豊田・みよし" name="campus" />
+					{campusSettings.map((campus) => (
+						<RadioButtonBox
+							icon={<DynamicIcon name={campus.icon} size={20} />}
+							label={campus.label}
+							description={campus.description}
+							name="campus"
+							checked={campus.value === store.campusLocation}
+							value={campus.value}
+							onChange={store.toggleCampusLocation}
+						/>
+					))}
 				</div>
 			</div>
 			<div className="flex gap-[12px]">
@@ -50,8 +57,5 @@ const InitSettingPage = () => {
 };
 
 export const Route = createFileRoute("/auth/init-setting")({
-	beforeLoad: ({ context }) => {
-		console.log(context);
-	},
 	component: InitSettingPage,
 });

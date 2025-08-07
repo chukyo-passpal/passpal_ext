@@ -1,11 +1,7 @@
-import { Children, createContext, use, useEffect, useState, type FC, type ReactNode } from "react";
-import {
-	clearAuthenticationData,
-	isUserAuthenticated,
-	setAuthenticationData,
-	setRecommendedSettings,
-} from "../contents/utils/settings";
-import type { LoginCredentials } from "../contents/utils/settings";
+import { createContext, use, useEffect, useState, type FC, type ReactNode } from "react";
+import { clearAuthenticationData, isUserAuthenticated } from "../../contents/utils/settings";
+import type { LoginCredentials } from "../../contents/utils/settings";
+import useSettingsStore from "./SettingsStore";
 
 export interface AuthState {
 	isAuthenticated: boolean;
@@ -22,6 +18,7 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [isLoading, setIsLoading] = useState(true);
+	const { setLoginCredentials, setRecommendedSettings } = useSettingsStore();
 
 	useEffect(() => {
 		const initialize = async () => {
@@ -43,7 +40,7 @@ export const AuthProvider: FC<AuthProviderProps> = ({ children }) => {
 	const login = async (loginCredentials: LoginCredentials) => {
 		setIsLoading(true);
 		try {
-			await setAuthenticationData(loginCredentials);
+			setLoginCredentials(loginCredentials);
 			setRecommendedSettings();
 			setIsAuthenticated(true);
 		} catch (error) {

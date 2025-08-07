@@ -1,8 +1,10 @@
-import { StrictMode } from "react";
+import { StrictMode, useEffect } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import { AuthProvider, useAuth } from "./auth";
+import { AuthProvider, useAuth } from "./store/auth";
+import { getSettings } from "../contents/utils/settings";
+import useSettingsStore from "./store/SettingsStore";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
@@ -27,6 +29,16 @@ declare module "@tanstack/react-router" {
 
 const InnerApp = () => {
 	const auth = useAuth();
+	const { loadSettings } = useSettingsStore();
+	useEffect(() => {
+		// 設定データ読み込み
+		const initialize = async () => {
+			await loadSettings();
+			console.log("data loaded");
+		};
+		initialize();
+	}, []);
+
 	return <RouterProvider router={router} context={{ auth }} />;
 };
 
