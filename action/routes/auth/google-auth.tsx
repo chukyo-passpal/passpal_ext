@@ -89,7 +89,9 @@ const GoogleAuthPage = () => {
 				{isLoading ? "サインイン中..." : "Googleアカウントでサインイン"}
 			</GoogleSignInButton>
 			{error && <div className="text-status-error">{error}</div>}
-			<TextButton onClick={handleOnClickBackButton}>学籍番号入力に戻る</TextButton>
+			<TextButton onClick={handleOnClickBackButton} disabled={isLoading}>
+				学籍番号入力に戻る
+			</TextButton>
 		</div>
 	);
 };

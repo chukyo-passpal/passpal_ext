@@ -20,11 +20,11 @@ const InitSettingPage = () => {
 				<div className="flex flex-col gap-2">
 					<RadioButtonBox
 						icon={<Building size={20} />}
-						title="名古屋キャンパス"
-						subTitle="八事・名古屋"
+						label="名古屋キャンパス"
+						description="八事・名古屋"
 						name="campus"
 					/>
-					<RadioButtonBox icon={<Car size={20} />} title="豊田キャンパス" subTitle="豊田・みよし" name="campus" />
+					<RadioButtonBox icon={<Car size={20} />} label="豊田キャンパス" description="豊田・みよし" name="campus" />
 				</div>
 			</div>
 			<div className="flex gap-[12px]">

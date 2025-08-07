@@ -2,11 +2,11 @@ import { Check } from "lucide-react";
 
 interface RadioButtonProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	icon: React.ReactNode;
-	title: string;
-	subTitle: string;
+	label: string;
+	description: string;
 }
 
-const RadioButtonBox: React.FC<RadioButtonProps> = ({ icon, title, subTitle, ...props }) => {
+const RadioButtonBox: React.FC<RadioButtonProps> = ({ icon, label, description, ...props }) => {
 	return (
 		<label
 			className="group w-full h-[56px] px-4 flex items-center justify-between rounded-[8px]
@@ -16,8 +16,8 @@ const RadioButtonBox: React.FC<RadioButtonProps> = ({ icon, title, subTitle, ...
 			<div className="flex items-center gap-3">
 				<span className="text-white p-[6px] bg-primary rounded-[8px]">{icon}</span>
 				<div>
-					<p className="text-[14px] font-semibold text-neutral-black">{title}</p>
-					<p className="text-[12px] text-neutral-gray-600">{subTitle}</p>
+					<p className="text-[14px] font-semibold text-neutral-black">{label}</p>
+					<p className="text-[12px] text-neutral-gray-600">{description}</p>
 				</div>
 			</div>
 			<input type="radio" {...props} className="sr-only peer" />

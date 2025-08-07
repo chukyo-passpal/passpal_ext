@@ -76,8 +76,8 @@ const LoginStep1: React.FC<LoginStep1Props> = ({ onNext }) => {
 				</Button>
 				<ToggleButtonBox
 					icon={<Lock size={24} />}
-					title="自動ログイン"
-					subTitle="大学サイトに自動でログイン"
+					label="自動ログイン"
+					description="大学サイトに自動でログイン"
 					checked={checked}
 					onChange={(e) => {
 						setChecked(e.target.checked);
