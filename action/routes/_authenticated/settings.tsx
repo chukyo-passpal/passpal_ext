@@ -68,21 +68,25 @@ const SettingsPage = () => {
 				<div className="flex flex-col gap-2">
 					<RadioButtonBox
 						icon={<Building size={20} />}
-						title="名古屋キャンパス"
-						subTitle="八事・名古屋"
+						label="名古屋キャンパス"
+						description="八事・名古屋"
 						name="campus"
 					/>
-					<RadioButtonBox icon={<Car size={20} />} title="豊田キャンパス" subTitle="豊田・みよし" name="campus" />
+					<RadioButtonBox icon={<Car size={20} />} label="豊田キャンパス" description="豊田・みよし" name="campus" />
 				</div>
 			</SettingCard>
 			<SettingCard title="基本設定" border={false}>
-				<ToggleButtonBox title="自動ログイン" subTitle="大学サイトに自動ログイン" icon={<Lock size={24} />} />
-				<ToggleButtonBox title="通知機能" subTitle="重要なお知らせを通知" icon={<Bell size={24} />} />
-				<ToggleButtonBox title="時間割同期" subTitle="時間割を自動で取得・更新" icon={<Calendar size={24} />} />
+				<ToggleButtonBox label="自動ログイン" description="大学サイトに自動ログイン" icon={<Lock size={24} />} />
+				<ToggleButtonBox label="通知機能" description="重要なお知らせを通知" icon={<Bell size={24} />} />
+				<ToggleButtonBox label="時間割同期" description="時間割を自動で取得・更新" icon={<Calendar size={24} />} />
 			</SettingCard>
 			<SettingCard title="高度な機能" border={false}>
-				<ToggleButtonBox title="自動フォーム入力" subTitle="フォームを自動で入力" icon={<Zap size={24} />} />
-				<ToggleButtonBox title="ファイル自動保存" subTitle="資料を自動でダウンロード" icon={<Download size={24} />} />
+				<ToggleButtonBox label="自動フォーム入力" description="フォームを自動で入力" icon={<Zap size={24} />} />
+				<ToggleButtonBox
+					label="ファイル自動保存"
+					description="資料を自動でダウンロード"
+					icon={<Download size={24} />}
+				/>
 			</SettingCard>
 			<SettingCard title="このアプリについて">
 				<button className="group relative w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
