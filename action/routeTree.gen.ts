@@ -19,201 +19,205 @@ import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticat
 import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated/dashboard";
 
 const AuthRoute = AuthRouteImport.update({
-	id: "/auth",
-	path: "/auth",
-	getParentRoute: () => rootRouteImport,
+  id: "/auth",
+  path: "/auth",
+  getParentRoute: () => rootRouteImport,
 } as any);
 const AuthenticatedRoute = AuthenticatedRouteImport.update({
-	id: "/_authenticated",
-	getParentRoute: () => rootRouteImport,
+  id: "/_authenticated",
+  getParentRoute: () => rootRouteImport,
 } as any);
 const AuthStudentIdRoute = AuthStudentIdRouteImport.update({
-	id: "/student-id",
-	path: "/student-id",
-	getParentRoute: () => AuthRoute,
+  id: "/student-id",
+  path: "/student-id",
+  getParentRoute: () => AuthRoute,
 } as any);
 const AuthPasswordRoute = AuthPasswordRouteImport.update({
-	id: "/password",
-	path: "/password",
-	getParentRoute: () => AuthRoute,
+  id: "/password",
+  path: "/password",
+  getParentRoute: () => AuthRoute,
 } as any);
 const AuthInitSettingRoute = AuthInitSettingRouteImport.update({
-	id: "/init-setting",
-	path: "/init-setting",
-	getParentRoute: () => AuthRoute,
+  id: "/init-setting",
+  path: "/init-setting",
+  getParentRoute: () => AuthRoute,
 } as any);
 const AuthGoogleAuthRoute = AuthGoogleAuthRouteImport.update({
-	id: "/google-auth",
-	path: "/google-auth",
-	getParentRoute: () => AuthRoute,
+  id: "/google-auth",
+  path: "/google-auth",
+  getParentRoute: () => AuthRoute,
 } as any);
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
-	id: "/settings",
-	path: "/settings",
-	getParentRoute: () => AuthenticatedRoute,
+  id: "/settings",
+  path: "/settings",
+  getParentRoute: () => AuthenticatedRoute,
 } as any);
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
-	id: "/dashboard",
-	path: "/dashboard",
-	getParentRoute: () => AuthenticatedRoute,
+  id: "/dashboard",
+  path: "/dashboard",
+  getParentRoute: () => AuthenticatedRoute,
 } as any);
 
 export interface FileRoutesByFullPath {
-	"/auth": typeof AuthRouteWithChildren;
-	"/dashboard": typeof AuthenticatedDashboardRoute;
-	"/settings": typeof AuthenticatedSettingsRoute;
-	"/auth/google-auth": typeof AuthGoogleAuthRoute;
-	"/auth/init-setting": typeof AuthInitSettingRoute;
-	"/auth/password": typeof AuthPasswordRoute;
-	"/auth/student-id": typeof AuthStudentIdRoute;
+  "/auth": typeof AuthRouteWithChildren;
+  "/dashboard": typeof AuthenticatedDashboardRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/auth/google-auth": typeof AuthGoogleAuthRoute;
+  "/auth/init-setting": typeof AuthInitSettingRoute;
+  "/auth/password": typeof AuthPasswordRoute;
+  "/auth/student-id": typeof AuthStudentIdRoute;
 }
 export interface FileRoutesByTo {
-	"/auth": typeof AuthRouteWithChildren;
-	"/dashboard": typeof AuthenticatedDashboardRoute;
-	"/settings": typeof AuthenticatedSettingsRoute;
-	"/auth/google-auth": typeof AuthGoogleAuthRoute;
-	"/auth/init-setting": typeof AuthInitSettingRoute;
-	"/auth/password": typeof AuthPasswordRoute;
-	"/auth/student-id": typeof AuthStudentIdRoute;
+  "/auth": typeof AuthRouteWithChildren;
+  "/dashboard": typeof AuthenticatedDashboardRoute;
+  "/settings": typeof AuthenticatedSettingsRoute;
+  "/auth/google-auth": typeof AuthGoogleAuthRoute;
+  "/auth/init-setting": typeof AuthInitSettingRoute;
+  "/auth/password": typeof AuthPasswordRoute;
+  "/auth/student-id": typeof AuthStudentIdRoute;
 }
 export interface FileRoutesById {
-	__root__: typeof rootRouteImport;
-	"/_authenticated": typeof AuthenticatedRouteWithChildren;
-	"/auth": typeof AuthRouteWithChildren;
-	"/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
-	"/_authenticated/settings": typeof AuthenticatedSettingsRoute;
-	"/auth/google-auth": typeof AuthGoogleAuthRoute;
-	"/auth/init-setting": typeof AuthInitSettingRoute;
-	"/auth/password": typeof AuthPasswordRoute;
-	"/auth/student-id": typeof AuthStudentIdRoute;
+  __root__: typeof rootRouteImport;
+  "/_authenticated": typeof AuthenticatedRouteWithChildren;
+  "/auth": typeof AuthRouteWithChildren;
+  "/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
+  "/_authenticated/settings": typeof AuthenticatedSettingsRoute;
+  "/auth/google-auth": typeof AuthGoogleAuthRoute;
+  "/auth/init-setting": typeof AuthInitSettingRoute;
+  "/auth/password": typeof AuthPasswordRoute;
+  "/auth/student-id": typeof AuthStudentIdRoute;
 }
 export interface FileRouteTypes {
-	fileRoutesByFullPath: FileRoutesByFullPath;
-	fullPaths:
-		| "/auth"
-		| "/dashboard"
-		| "/settings"
-		| "/auth/google-auth"
-		| "/auth/init-setting"
-		| "/auth/password"
-		| "/auth/student-id";
-	fileRoutesByTo: FileRoutesByTo;
-	to:
-		| "/auth"
-		| "/dashboard"
-		| "/settings"
-		| "/auth/google-auth"
-		| "/auth/init-setting"
-		| "/auth/password"
-		| "/auth/student-id";
-	id:
-		| "__root__"
-		| "/_authenticated"
-		| "/auth"
-		| "/_authenticated/dashboard"
-		| "/_authenticated/settings"
-		| "/auth/google-auth"
-		| "/auth/init-setting"
-		| "/auth/password"
-		| "/auth/student-id";
-	fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths:
+    | "/auth"
+    | "/dashboard"
+    | "/settings"
+    | "/auth/google-auth"
+    | "/auth/init-setting"
+    | "/auth/password"
+    | "/auth/student-id";
+  fileRoutesByTo: FileRoutesByTo;
+  to:
+    | "/auth"
+    | "/dashboard"
+    | "/settings"
+    | "/auth/google-auth"
+    | "/auth/init-setting"
+    | "/auth/password"
+    | "/auth/student-id";
+  id:
+    | "__root__"
+    | "/_authenticated"
+    | "/auth"
+    | "/_authenticated/dashboard"
+    | "/_authenticated/settings"
+    | "/auth/google-auth"
+    | "/auth/init-setting"
+    | "/auth/password"
+    | "/auth/student-id";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-	AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
-	AuthRoute: typeof AuthRouteWithChildren;
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+  AuthRoute: typeof AuthRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
-	interface FileRoutesByPath {
-		"/auth": {
-			id: "/auth";
-			path: "/auth";
-			fullPath: "/auth";
-			preLoaderRoute: typeof AuthRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/_authenticated": {
-			id: "/_authenticated";
-			path: "";
-			fullPath: "";
-			preLoaderRoute: typeof AuthenticatedRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
-		"/auth/student-id": {
-			id: "/auth/student-id";
-			path: "/student-id";
-			fullPath: "/auth/student-id";
-			preLoaderRoute: typeof AuthStudentIdRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/auth/password": {
-			id: "/auth/password";
-			path: "/password";
-			fullPath: "/auth/password";
-			preLoaderRoute: typeof AuthPasswordRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/auth/init-setting": {
-			id: "/auth/init-setting";
-			path: "/init-setting";
-			fullPath: "/auth/init-setting";
-			preLoaderRoute: typeof AuthInitSettingRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/auth/google-auth": {
-			id: "/auth/google-auth";
-			path: "/google-auth";
-			fullPath: "/auth/google-auth";
-			preLoaderRoute: typeof AuthGoogleAuthRouteImport;
-			parentRoute: typeof AuthRoute;
-		};
-		"/_authenticated/settings": {
-			id: "/_authenticated/settings";
-			path: "/settings";
-			fullPath: "/settings";
-			preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
-			parentRoute: typeof AuthenticatedRoute;
-		};
-		"/_authenticated/dashboard": {
-			id: "/_authenticated/dashboard";
-			path: "/dashboard";
-			fullPath: "/dashboard";
-			preLoaderRoute: typeof AuthenticatedDashboardRouteImport;
-			parentRoute: typeof AuthenticatedRoute;
-		};
-	}
+  interface FileRoutesByPath {
+    "/auth": {
+      id: "/auth";
+      path: "/auth";
+      fullPath: "/auth";
+      preLoaderRoute: typeof AuthRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_authenticated": {
+      id: "/_authenticated";
+      path: "";
+      fullPath: "";
+      preLoaderRoute: typeof AuthenticatedRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/auth/student-id": {
+      id: "/auth/student-id";
+      path: "/student-id";
+      fullPath: "/auth/student-id";
+      preLoaderRoute: typeof AuthStudentIdRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/auth/password": {
+      id: "/auth/password";
+      path: "/password";
+      fullPath: "/auth/password";
+      preLoaderRoute: typeof AuthPasswordRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/auth/init-setting": {
+      id: "/auth/init-setting";
+      path: "/init-setting";
+      fullPath: "/auth/init-setting";
+      preLoaderRoute: typeof AuthInitSettingRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/auth/google-auth": {
+      id: "/auth/google-auth";
+      path: "/google-auth";
+      fullPath: "/auth/google-auth";
+      preLoaderRoute: typeof AuthGoogleAuthRouteImport;
+      parentRoute: typeof AuthRoute;
+    };
+    "/_authenticated/settings": {
+      id: "/_authenticated/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof AuthenticatedSettingsRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+    "/_authenticated/dashboard": {
+      id: "/_authenticated/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof AuthenticatedDashboardRouteImport;
+      parentRoute: typeof AuthenticatedRoute;
+    };
+  }
 }
 
 interface AuthenticatedRouteChildren {
-	AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
-	AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
+  AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
+  AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
-	AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
-	AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
+  AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
 };
 
-const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(AuthenticatedRouteChildren);
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+);
 
 interface AuthRouteChildren {
-	AuthGoogleAuthRoute: typeof AuthGoogleAuthRoute;
-	AuthInitSettingRoute: typeof AuthInitSettingRoute;
-	AuthPasswordRoute: typeof AuthPasswordRoute;
-	AuthStudentIdRoute: typeof AuthStudentIdRoute;
+  AuthGoogleAuthRoute: typeof AuthGoogleAuthRoute;
+  AuthInitSettingRoute: typeof AuthInitSettingRoute;
+  AuthPasswordRoute: typeof AuthPasswordRoute;
+  AuthStudentIdRoute: typeof AuthStudentIdRoute;
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
-	AuthGoogleAuthRoute: AuthGoogleAuthRoute,
-	AuthInitSettingRoute: AuthInitSettingRoute,
-	AuthPasswordRoute: AuthPasswordRoute,
-	AuthStudentIdRoute: AuthStudentIdRoute,
+  AuthGoogleAuthRoute: AuthGoogleAuthRoute,
+  AuthInitSettingRoute: AuthInitSettingRoute,
+  AuthPasswordRoute: AuthPasswordRoute,
+  AuthStudentIdRoute: AuthStudentIdRoute,
 };
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
-	AuthenticatedRoute: AuthenticatedRouteWithChildren,
-	AuthRoute: AuthRouteWithChildren,
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AuthRoute: AuthRouteWithChildren,
 };
-export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
+export const routeTree = rootRouteImport
+  ._addFileChildren(rootRouteChildren)
+  ._addFileTypes<FileRouteTypes>();

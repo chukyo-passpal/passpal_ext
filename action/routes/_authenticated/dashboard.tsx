@@ -3,11 +3,14 @@ import { useEffect, useState, useCallback } from "react";
 import ClassSchedule from "../../components/dashboard/ClassSchedule";
 import { formatDate, getDayOfWeek } from "../../utils/dateUtils";
 import DashBoardHeader from "../../components/dashboard/DashBoardHeader";
+import { getTokenTimeRemaining } from "../../utils/firebaseUtils";
+import useSettingsStore from "../../store/SettingsStore";
 
 const UPDATE_INTERVAL = 30000; // 30秒
 
 const DashboardPage = () => {
 	const [currentTime, setCurrentTime] = useState<Date>(new Date());
+	const { loginCredentials } = useSettingsStore();
 
 	/**
 	 * 時間を更新
@@ -39,6 +42,7 @@ const DashboardPage = () => {
 
 	// ページフォーカス時に時間を更新
 	useEffect(() => {
+		console.log(getTokenTimeRemaining(loginCredentials.firebaseToken!));
 		const handleVisibilityChange = () => {
 			if (!document.hidden) {
 				updateTime();

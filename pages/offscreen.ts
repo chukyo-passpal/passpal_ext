@@ -1,4 +1,5 @@
-import type { OffscreenMessage, IframeMessage, MessageHandler, AuthResponse } from "../types/auth";
+import type { MessageHandler, OffscreenMessage, IframeMessage } from "../types/authMessage";
+import type { FirebaseAuthResult, FirebaseError } from "../types/firebaseTypes";
 
 const _URL: string = "https://chukyo-passpal.app/extensions/auth";
 let iframe: HTMLIFrameElement;
@@ -72,7 +73,7 @@ const handleChromeMessages: MessageHandler = (message: OffscreenMessage, _sender
 				return;
 			}
 
-			const parsedData: AuthResponse = typeof data === "string" ? JSON.parse(data) : data;
+			const parsedData: FirebaseAuthResult | FirebaseError = typeof data === "string" ? JSON.parse(data) : data;
 			console.log("Parsed auth response:", parsedData);
 
 			cleanup();

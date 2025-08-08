@@ -1,4 +1,5 @@
-import type { SignInMessage, FirebaseAuthMessage, AuthResponse, FirebaseError, MessageHandler } from "../types/auth";
+import type { FirebaseAuthMessage } from "../types/authMessage";
+import type { FirebaseAuthResult, FirebaseError } from "../types/firebaseTypes";
 
 const OFFSCREEN_DOCUMENT_PATH: string = "/pages/offscreen.html";
 
@@ -38,7 +39,7 @@ async function waitForOffscreenReady(): Promise<void> {
 	});
 }
 
-function getAuth(loginHint?: string): Promise<AuthResponse> {
+function getAuth(loginHint?: string): Promise<FirebaseAuthResult | FirebaseError> {
 	return new Promise(async (resolve, reject) => {
 		const message: FirebaseAuthMessage = {
 			type: "firebase-auth",
@@ -52,7 +53,7 @@ function getAuth(loginHint?: string): Promise<AuthResponse> {
 		}, 360000);
 
 		try {
-			const auth = (await chrome.runtime.sendMessage(message)) as AuthResponse;
+			const auth = (await chrome.runtime.sendMessage(message)) as FirebaseAuthResult | FirebaseError;
 			clearTimeout(timeoutId);
 
 			if (auth && "name" in auth && auth.name === "FirebaseError") {
@@ -67,7 +68,7 @@ function getAuth(loginHint?: string): Promise<AuthResponse> {
 	});
 }
 
-async function firebaseAuth(loginHint: string = ""): Promise<AuthResponse | FirebaseError | void> {
+async function firebaseAuth(loginHint: string = ""): Promise<FirebaseAuthResult | FirebaseError> {
 	try {
 		// offscreenドキュメントを閉じずに再利用
 		await setupOffscreenDocument(OFFSCREEN_DOCUMENT_PATH);

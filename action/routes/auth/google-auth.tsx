@@ -4,8 +4,10 @@ import { Mail } from "lucide-react";
 import { GoogleSignInButton } from "../../components/auth/GoogleLoginButton";
 import TextButton from "../../components/TextButton";
 import { useEffect, useState } from "react";
-import type { AuthResponse, FirebaseError, SignInMessage } from "../../../types/auth";
+import type { SignInMessage } from "../../../types/authMessage";
 import useSettingsStore from "../../store/SettingsStore";
+import { extractUserInfo } from "../../utils/firebaseUtils";
+import type { FirebaseAuthResult, FirebaseError } from "../../../types/firebaseTypes";
 
 const GoogleAuthPage = () => {
 	const [error, setError] = useState<string>("");
@@ -38,7 +40,7 @@ const GoogleAuthPage = () => {
 				loginHint: email,
 			};
 
-			const authData = await new Promise<AuthResponse | FirebaseError>((resolve, reject) => {
+			const authData = await new Promise<FirebaseAuthResult | FirebaseError>((resolve, reject) => {
 				chrome.runtime.sendMessage(message, (response) => {
 					chrome.runtime.lastError ? reject(new Error(chrome.runtime.lastError.message)) : resolve(response);
 				});
@@ -55,8 +57,8 @@ const GoogleAuthPage = () => {
 				console.error("Auth Error:", error);
 				return;
 			}
-			const firebaseToken = "user" in authData ? authData.user?.uid || "" : "";
-			setLoginCredentials({ ...loginCredentials, firebaseToken });
+			const { idToken } = extractUserInfo(authData as FirebaseAuthResult);
+			setLoginCredentials({ ...loginCredentials, firebaseToken: idToken });
 			console.log("Auth Success:", authData);
 			navigate({ to: "/auth/password" });
 		} catch (error: unknown) {
