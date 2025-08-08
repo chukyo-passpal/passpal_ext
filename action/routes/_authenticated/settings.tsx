@@ -40,7 +40,7 @@ const SettingsPage = () => {
 	};
 	return (
 		<div className="w-full h-full flex flex-col gap-5">
-			<div className="flex flex-col gap-4 w-full">
+			<div className="flex flex-col gap-4">
 				<div className="flex items-center gap-2">
 					<button
 						onClick={handleOnClickBack}
@@ -105,7 +105,7 @@ const SettingsPage = () => {
 				</SettingCard>
 			))}
 			<SettingCard title="このアプリについて">
-				<button className="group relative w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
+				<button className="group relative h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
 					<div className="flex items-center gap-3">
 						<span className="text-neutral-gray-600">{<Info size={24} />}</span>
 						<div>
@@ -115,7 +115,7 @@ const SettingsPage = () => {
 						<span className="text-neutral-gray-600 absolute right-4">{<ChevronRight size={20} />}</span>
 					</div>
 				</button>
-				<button className="group relative w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
+				<button className="group relative h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
 					<span className="text-[14px] font-medium text-neutral-black">ライセンス情報</span>
 					<span>
 						<ChevronRight size={20} className="text-neutral-gray-600" />

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/_authenticated")({
 	},
 	component: () => {
 		return (
-			<div className="m-5 p-0">
+			<div className="p-5">
 				<Outlet />
 				<TanStackRouterDevtools />
 			</div>

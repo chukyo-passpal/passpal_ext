@@ -6,7 +6,7 @@ interface ToggleButtonProps extends React.InputHTMLAttributes<HTMLInputElement> 
 
 const ToggleButtonBox: React.FC<ToggleButtonProps> = ({ icon, label, description, ...props }) => {
 	return (
-		<label className="group w-full h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
+		<label className="group w-full p-4 flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer transition hover:border-primary">
 			<div className="flex items-center gap-3">
 				{<span className="text-neutral-gray-600 transition group-has-[input:checked]:text-primary">{icon}</span>}
 				<div>

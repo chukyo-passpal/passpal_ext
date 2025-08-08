@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import AuthHeader from "../../components/AuthHeader";
+import AuthHeader from "../../components/auth/AuthHeader";
 import RadioButtonBox from "../../components/RadioButtonBox";
 import { Check } from "lucide-react";
 import Button from "../../components/Button";

@@ -1,4 +1,4 @@
-interface AuthHeaderProps {
+export interface AuthHeaderProps {
 	title: string;
 	comment: string;
 }

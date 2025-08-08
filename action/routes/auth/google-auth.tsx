@@ -1,7 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import AuthHeader from "../../components/AuthHeader";
+import AuthHeader from "../../components/auth/AuthHeader";
 import { Mail } from "lucide-react";
-import { GoogleSignInButton } from "../../components/GoogleLoginButton";
+import { GoogleSignInButton } from "../../components/auth/GoogleLoginButton";
 import TextButton from "../../components/TextButton";
 import { useEffect, useState } from "react";
 import type { AuthResponse, FirebaseError, SignInMessage } from "../../../types/auth";

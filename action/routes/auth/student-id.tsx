@@ -1,10 +1,9 @@
-import { createFileRoute, useNavigate, useRouteContext } from "@tanstack/react-router";
-import AuthHeader from "../../components/AuthHeader";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import AuthHeader from "../../components/auth/AuthHeader";
 import InputField from "../../components/InputField";
 import { useEffect, useRef, useState } from "react";
 import { User } from "lucide-react";
 import Button from "../../components/Button";
-import { getSetting, setAuthenticationData } from "../../../contents/utils/settings";
 import useSettingsStore from "../../store/SettingsStore";
 
 const StudentIdPage = () => {
@@ -12,13 +11,13 @@ const StudentIdPage = () => {
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
 	const inputRef = useRef<HTMLInputElement>(null);
-	const { setLoginCredentials } = useSettingsStore();
+	const { setLoginCredentials, loginCredentials } = useSettingsStore();
 	const navigate = useNavigate();
 
 	useEffect(() => {
 		const initialize = async () => {
 			try {
-				const loginInfo = await getSetting("loginCredentials");
+				const loginInfo = loginCredentials;
 				// studentIdが入力済みの場合google-authの遷移
 				if (loginInfo.studentId) navigate({ to: "/auth/google-auth" });
 				// firebaseTokenが存在する場合passwordに遷移

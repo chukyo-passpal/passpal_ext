@@ -4,7 +4,7 @@ import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 export const Route = createFileRoute("/auth")({
 	component: () => {
 		return (
-			<div className="m-6 p-0">
+			<div className="p-6">
 				<Outlet />
 				<TanStackRouterDevtools />
 			</div>

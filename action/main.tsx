@@ -1,4 +1,4 @@
-import { StrictMode, useEffect } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
@@ -29,15 +29,26 @@ declare module "@tanstack/react-router" {
 
 const InnerApp = () => {
 	const auth = useAuth();
+	const [isLoading, setIsLoading] = useState(false);
 	const { loadSettings } = useSettingsStore();
 	useEffect(() => {
 		// 設定データ読み込み
 		const initialize = async () => {
-			await loadSettings();
-			console.log("data loaded");
+			setIsLoading(true);
+			try {
+				await loadSettings();
+				console.log("data loaded");
+			} catch (error) {
+				console.log("data load error:", error);
+			} finally {
+				setIsLoading(false);
+			}
 		};
 		initialize();
 	}, []);
+	if (isLoading) {
+		return <h1>Loading...</h1>;
+	}
 
 	return <RouterProvider router={router} context={{ auth }} />;
 };

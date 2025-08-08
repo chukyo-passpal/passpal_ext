@@ -9,8 +9,8 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AuthRouteImport } from "./routes/auth";
 import { Route as AuthenticatedRouteImport } from "./routes/_authenticated";
-import { Route as AuthRouteRouteImport } from "./routes/auth/route";
 import { Route as AuthStudentIdRouteImport } from "./routes/auth/student-id";
 import { Route as AuthPasswordRouteImport } from "./routes/auth/password";
 import { Route as AuthInitSettingRouteImport } from "./routes/auth/init-setting";
@@ -18,34 +18,34 @@ import { Route as AuthGoogleAuthRouteImport } from "./routes/auth/google-auth";
 import { Route as AuthenticatedSettingsRouteImport } from "./routes/_authenticated/settings";
 import { Route as AuthenticatedDashboardRouteImport } from "./routes/_authenticated/dashboard";
 
-const AuthenticatedRoute = AuthenticatedRouteImport.update({
-	id: "/_authenticated",
-	getParentRoute: () => rootRouteImport,
-} as any);
-const AuthRouteRoute = AuthRouteRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
 	id: "/auth",
 	path: "/auth",
+	getParentRoute: () => rootRouteImport,
+} as any);
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+	id: "/_authenticated",
 	getParentRoute: () => rootRouteImport,
 } as any);
 const AuthStudentIdRoute = AuthStudentIdRouteImport.update({
 	id: "/student-id",
 	path: "/student-id",
-	getParentRoute: () => AuthRouteRoute,
+	getParentRoute: () => AuthRoute,
 } as any);
 const AuthPasswordRoute = AuthPasswordRouteImport.update({
 	id: "/password",
 	path: "/password",
-	getParentRoute: () => AuthRouteRoute,
+	getParentRoute: () => AuthRoute,
 } as any);
 const AuthInitSettingRoute = AuthInitSettingRouteImport.update({
 	id: "/init-setting",
 	path: "/init-setting",
-	getParentRoute: () => AuthRouteRoute,
+	getParentRoute: () => AuthRoute,
 } as any);
 const AuthGoogleAuthRoute = AuthGoogleAuthRouteImport.update({
 	id: "/google-auth",
 	path: "/google-auth",
-	getParentRoute: () => AuthRouteRoute,
+	getParentRoute: () => AuthRoute,
 } as any);
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
 	id: "/settings",
@@ -59,7 +59,7 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
 } as any);
 
 export interface FileRoutesByFullPath {
-	"/auth": typeof AuthRouteRouteWithChildren;
+	"/auth": typeof AuthRouteWithChildren;
 	"/dashboard": typeof AuthenticatedDashboardRoute;
 	"/settings": typeof AuthenticatedSettingsRoute;
 	"/auth/google-auth": typeof AuthGoogleAuthRoute;
@@ -68,7 +68,7 @@ export interface FileRoutesByFullPath {
 	"/auth/student-id": typeof AuthStudentIdRoute;
 }
 export interface FileRoutesByTo {
-	"/auth": typeof AuthRouteRouteWithChildren;
+	"/auth": typeof AuthRouteWithChildren;
 	"/dashboard": typeof AuthenticatedDashboardRoute;
 	"/settings": typeof AuthenticatedSettingsRoute;
 	"/auth/google-auth": typeof AuthGoogleAuthRoute;
@@ -78,8 +78,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
 	__root__: typeof rootRouteImport;
-	"/auth": typeof AuthRouteRouteWithChildren;
 	"/_authenticated": typeof AuthenticatedRouteWithChildren;
+	"/auth": typeof AuthRouteWithChildren;
 	"/_authenticated/dashboard": typeof AuthenticatedDashboardRoute;
 	"/_authenticated/settings": typeof AuthenticatedSettingsRoute;
 	"/auth/google-auth": typeof AuthGoogleAuthRoute;
@@ -108,8 +108,8 @@ export interface FileRouteTypes {
 		| "/auth/student-id";
 	id:
 		| "__root__"
-		| "/auth"
 		| "/_authenticated"
+		| "/auth"
 		| "/_authenticated/dashboard"
 		| "/_authenticated/settings"
 		| "/auth/google-auth"
@@ -119,12 +119,19 @@ export interface FileRouteTypes {
 	fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-	AuthRouteRoute: typeof AuthRouteRouteWithChildren;
 	AuthenticatedRoute: typeof AuthenticatedRouteWithChildren;
+	AuthRoute: typeof AuthRouteWithChildren;
 }
 
 declare module "@tanstack/react-router" {
 	interface FileRoutesByPath {
+		"/auth": {
+			id: "/auth";
+			path: "/auth";
+			fullPath: "/auth";
+			preLoaderRoute: typeof AuthRouteImport;
+			parentRoute: typeof rootRouteImport;
+		};
 		"/_authenticated": {
 			id: "/_authenticated";
 			path: "";
@@ -132,40 +139,33 @@ declare module "@tanstack/react-router" {
 			preLoaderRoute: typeof AuthenticatedRouteImport;
 			parentRoute: typeof rootRouteImport;
 		};
-		"/auth": {
-			id: "/auth";
-			path: "/auth";
-			fullPath: "/auth";
-			preLoaderRoute: typeof AuthRouteRouteImport;
-			parentRoute: typeof rootRouteImport;
-		};
 		"/auth/student-id": {
 			id: "/auth/student-id";
 			path: "/student-id";
 			fullPath: "/auth/student-id";
 			preLoaderRoute: typeof AuthStudentIdRouteImport;
-			parentRoute: typeof AuthRouteRoute;
+			parentRoute: typeof AuthRoute;
 		};
 		"/auth/password": {
 			id: "/auth/password";
 			path: "/password";
 			fullPath: "/auth/password";
 			preLoaderRoute: typeof AuthPasswordRouteImport;
-			parentRoute: typeof AuthRouteRoute;
+			parentRoute: typeof AuthRoute;
 		};
 		"/auth/init-setting": {
 			id: "/auth/init-setting";
 			path: "/init-setting";
 			fullPath: "/auth/init-setting";
 			preLoaderRoute: typeof AuthInitSettingRouteImport;
-			parentRoute: typeof AuthRouteRoute;
+			parentRoute: typeof AuthRoute;
 		};
 		"/auth/google-auth": {
 			id: "/auth/google-auth";
 			path: "/google-auth";
 			fullPath: "/auth/google-auth";
 			preLoaderRoute: typeof AuthGoogleAuthRouteImport;
-			parentRoute: typeof AuthRouteRoute;
+			parentRoute: typeof AuthRoute;
 		};
 		"/_authenticated/settings": {
 			id: "/_authenticated/settings";
@@ -184,22 +184,6 @@ declare module "@tanstack/react-router" {
 	}
 }
 
-interface AuthRouteRouteChildren {
-	AuthGoogleAuthRoute: typeof AuthGoogleAuthRoute;
-	AuthInitSettingRoute: typeof AuthInitSettingRoute;
-	AuthPasswordRoute: typeof AuthPasswordRoute;
-	AuthStudentIdRoute: typeof AuthStudentIdRoute;
-}
-
-const AuthRouteRouteChildren: AuthRouteRouteChildren = {
-	AuthGoogleAuthRoute: AuthGoogleAuthRoute,
-	AuthInitSettingRoute: AuthInitSettingRoute,
-	AuthPasswordRoute: AuthPasswordRoute,
-	AuthStudentIdRoute: AuthStudentIdRoute,
-};
-
-const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(AuthRouteRouteChildren);
-
 interface AuthenticatedRouteChildren {
 	AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute;
 	AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute;
@@ -212,8 +196,24 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(AuthenticatedRouteChildren);
 
+interface AuthRouteChildren {
+	AuthGoogleAuthRoute: typeof AuthGoogleAuthRoute;
+	AuthInitSettingRoute: typeof AuthInitSettingRoute;
+	AuthPasswordRoute: typeof AuthPasswordRoute;
+	AuthStudentIdRoute: typeof AuthStudentIdRoute;
+}
+
+const AuthRouteChildren: AuthRouteChildren = {
+	AuthGoogleAuthRoute: AuthGoogleAuthRoute,
+	AuthInitSettingRoute: AuthInitSettingRoute,
+	AuthPasswordRoute: AuthPasswordRoute,
+	AuthStudentIdRoute: AuthStudentIdRoute,
+};
+
+const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren);
+
 const rootRouteChildren: RootRouteChildren = {
-	AuthRouteRoute: AuthRouteRouteWithChildren,
 	AuthenticatedRoute: AuthenticatedRouteWithChildren,
+	AuthRoute: AuthRouteWithChildren,
 };
 export const routeTree = rootRouteImport._addFileChildren(rootRouteChildren)._addFileTypes<FileRouteTypes>();
