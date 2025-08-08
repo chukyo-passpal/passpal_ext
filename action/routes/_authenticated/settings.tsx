@@ -27,6 +27,7 @@ const SettingsPage = () => {
 	};
 
 	const handleOnClickChangePassword = () => {
+		setPassword("");
 		store.setLoginCredentials({ ...store.loginCredentials, password });
 	};
 

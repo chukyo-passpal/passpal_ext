@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 import { getSettings, type ExtensionSettings } from "../../contents/utils/settings";
 import type { LoginCredentials } from "../../contents/utils/settings";
 
@@ -30,77 +31,79 @@ export interface SettingsActions {
 	loadSettings: () => Promise<void>;
 }
 
-export const useSettingsStore = create<ExtensionSettings & SettingsActions>()((set) => ({
-	campusLocation: "nagoya",
+export const useSettingsStore = create<ExtensionSettings & SettingsActions>()(
+	subscribeWithSelector((set) => ({
+		campusLocation: "nagoya",
 
-	// UI設定系
-	darkModeEnabled: false,
-	videoControlsEnabled: false,
+		// UI設定系
+		darkModeEnabled: false,
+		videoControlsEnabled: false,
 
-	// 認証・ログイン系
-	shibLoginEnabled: false,
-	autoReauthEnabled: false,
+		// 認証・ログイン系
+		shibLoginEnabled: false,
+		autoReauthEnabled: false,
 
-	// 自動化系
-	autoPollEnabled: false,
+		// 自動化系
+		autoPollEnabled: false,
 
-	attendanceCallerEnabled: false,
+		attendanceCallerEnabled: false,
 
-	loginCredentials: {},
+		loginCredentials: {},
 
-	// トグル関数の実装
-	toggleCampusLocation: () =>
-		set((state) => ({
-			campusLocation: state.campusLocation === "nagoya" ? "toyota" : "nagoya",
-		})),
+		// トグル関数の実装
+		toggleCampusLocation: () =>
+			set((state) => ({
+				campusLocation: state.campusLocation === "nagoya" ? "toyota" : "nagoya",
+			})),
 
-	toggleDarkMode: () => set((state) => ({ darkModeEnabled: !state.darkModeEnabled })),
+		toggleDarkMode: () => set((state) => ({ darkModeEnabled: !state.darkModeEnabled })),
 
-	toggleVideoControls: () => set((state) => ({ videoControlsEnabled: !state.videoControlsEnabled })),
+		toggleVideoControls: () => set((state) => ({ videoControlsEnabled: !state.videoControlsEnabled })),
 
-	toggleShibLogin: () => set((state) => ({ shibLoginEnabled: !state.shibLoginEnabled })),
+		toggleShibLogin: () => set((state) => ({ shibLoginEnabled: !state.shibLoginEnabled })),
 
-	toggleAutoReauth: () => set((state) => ({ autoReauthEnabled: !state.autoReauthEnabled })),
+		toggleAutoReauth: () => set((state) => ({ autoReauthEnabled: !state.autoReauthEnabled })),
 
-	toggleAutoPoll: () => set((state) => ({ autoPollEnabled: !state.autoPollEnabled })),
+		toggleAutoPoll: () => set((state) => ({ autoPollEnabled: !state.autoPollEnabled })),
 
-	toggleAttendanceCaller: () => set((state) => ({ attendanceCallerEnabled: !state.attendanceCallerEnabled })),
+		toggleAttendanceCaller: () => set((state) => ({ attendanceCallerEnabled: !state.attendanceCallerEnabled })),
 
-	// セット関数の実装
-	setCampusLocation: (location) => set({ campusLocation: location }),
-	setDarkModeEnabled: (enabled) => set({ darkModeEnabled: enabled }),
-	setVideoControlsEnabled: (enabled) => set({ videoControlsEnabled: enabled }),
-	setShibLoginEnabled: (enabled) => set({ shibLoginEnabled: enabled }),
-	setAutoReauthEnabled: (enabled) => set({ autoReauthEnabled: enabled }),
-	setAutoPollEnabled: (enabled) => set({ autoPollEnabled: enabled }),
-	setAttendanceCallerEnabled: (enabled) => set({ attendanceCallerEnabled: enabled }),
-	setLoginCredentials: (loginCredentials) => {
-		set({ loginCredentials });
-	},
-	setRecommendedSettings: () => {
-		set({
-			autoReauthEnabled: true,
-			videoControlsEnabled: true,
-			attendanceCallerEnabled: true,
-			autoPollEnabled: true,
-			shibLoginEnabled: true,
-		});
-	},
+		// セット関数の実装
+		setCampusLocation: (location) => set({ campusLocation: location }),
+		setDarkModeEnabled: (enabled) => set({ darkModeEnabled: enabled }),
+		setVideoControlsEnabled: (enabled) => set({ videoControlsEnabled: enabled }),
+		setShibLoginEnabled: (enabled) => set({ shibLoginEnabled: enabled }),
+		setAutoReauthEnabled: (enabled) => set({ autoReauthEnabled: enabled }),
+		setAutoPollEnabled: (enabled) => set({ autoPollEnabled: enabled }),
+		setAttendanceCallerEnabled: (enabled) => set({ attendanceCallerEnabled: enabled }),
+		setLoginCredentials: (loginCredentials) => {
+			set({ loginCredentials });
+		},
+		setRecommendedSettings: () => {
+			set({
+				autoReauthEnabled: true,
+				videoControlsEnabled: true,
+				attendanceCallerEnabled: true,
+				autoPollEnabled: true,
+				shibLoginEnabled: true,
+			});
+		},
 
-	clearSettings: () =>
-		set({
-			campusLocation: "nagoya",
-			darkModeEnabled: false,
-			videoControlsEnabled: false,
-			shibLoginEnabled: false,
-			autoReauthEnabled: false,
-			autoPollEnabled: false,
-			attendanceCallerEnabled: false,
-			loginCredentials: {},
-		}),
+		clearSettings: () =>
+			set({
+				campusLocation: "nagoya",
+				darkModeEnabled: false,
+				videoControlsEnabled: false,
+				shibLoginEnabled: false,
+				autoReauthEnabled: false,
+				autoPollEnabled: false,
+				attendanceCallerEnabled: false,
+				loginCredentials: {},
+			}),
 
-	loadSettings: async () => set(await getSettings()),
-}));
+		loadSettings: async () => set(await getSettings()),
+	}))
+);
 
 //変更があるたびに保存
 useSettingsStore.subscribe(async (state) => {
@@ -110,5 +113,17 @@ useSettingsStore.subscribe(async (state) => {
 		console.log("Save error:", chrome.runtime.lastError);
 	}
 });
+
+useSettingsStore.subscribe(
+	(state) => state.darkModeEnabled,
+	(darkModeEnabled) => {
+		console.log("darkModeEnabled");
+		if (darkModeEnabled) {
+			document.documentElement.classList.add("dark-mode");
+		} else {
+			document.documentElement.classList.remove("dark-mode");
+		}
+	}
+);
 
 export default useSettingsStore;
