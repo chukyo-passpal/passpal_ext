@@ -92,24 +92,6 @@ export const createAuthResponse = (authResult: FirebaseAuthResult): AuthResponse
 };
 
 /**
- * 認証情報をストレージに保存
- */
-export const storeAuthInfo = async (user: AuthenticatedUser): Promise<void> => {
-	try {
-		// Chrome拡張機能の場合
-		if (typeof chrome !== "undefined" && chrome.storage) {
-			await chrome.storage.local.set({ authUser: user });
-			return;
-		}
-
-		// 通常のWebアプリケーションの場合
-		localStorage.setItem("authUser", JSON.stringify(user));
-	} catch (error) {
-		console.error("Failed to store auth info:", error);
-	}
-};
-
-/**
  * 認証済みAPIリクエストを送信
  */
 export const authenticatedFetch = async (

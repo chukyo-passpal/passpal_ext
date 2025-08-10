@@ -1,9 +1,7 @@
-import { StrictMode, useEffect, useState } from "react";
+import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
-import useSettingsStore from "./store/SettingsStore";
-import { getSettings } from "../contents/utils/settings";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
@@ -23,20 +21,12 @@ declare module "@tanstack/react-router" {
 	}
 }
 
-const InnerApp = () => {
-	const test = async () => {
-		console.log(await getSettings());
-	};
-	test();
-	return <RouterProvider router={router} />;
-};
-
 const rootElement = document.getElementById("popup-root")!;
 if (!rootElement.innerHTML) {
 	const root = ReactDOM.createRoot(rootElement);
 	root.render(
 		<StrictMode>
-			<InnerApp />
+			<RouterProvider router={router} />;
 		</StrictMode>
 	);
 }

@@ -54,8 +54,6 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
 
 			attendanceCallerEnabled: false,
 
-			loginCredentials: {},
-
 			// トグル関数の実装
 			toggleCampusLocation: () =>
 				set((state) => ({
