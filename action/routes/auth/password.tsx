@@ -6,18 +6,21 @@ import TextButton from "../../components/TextButton";
 import { useState } from "react";
 import { Lock } from "lucide-react";
 import useSettingsStore from "../../store/SettingsStore";
+import { useAuthStore } from "../../store/AuthStore";
 
 const PasswordPage = () => {
-	const { auth } = Route.useRouteContext();
-	const [password, setPassword] = useState("");
+	const [tmpPassword, setTmpPassword] = useState("");
 	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
-	const { loginCredentials, clearSettings } = useSettingsStore();
+	const { clearSettings } = useSettingsStore();
+	const { setPassword, setIsAuthenticated } = useAuthStore();
 
 	const handleOnClickButton = async () => {
 		setIsLoading(true);
 		try {
-			auth.login({ ...loginCredentials, password });
+			setPassword(tmpPassword);
+			setIsAuthenticated(true);
+			setIsLoading(true);
 			navigate({ to: "/auth/init-setting" });
 		} catch (error) {
 			console.error("Failed to Login:", error);
@@ -38,11 +41,11 @@ const PasswordPage = () => {
 				icon={<Lock size={20} />}
 				label="パスワード"
 				type="password"
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
+				value={tmpPassword}
+				onChange={(e) => setTmpPassword(e.target.value)}
 				placeholder="パスワードを入力"
 			/>
-			<Button variant="primary" disabled={!password.trim()} onClick={handleOnClickButton}>
+			<Button variant="primary" disabled={!tmpPassword.trim()} onClick={handleOnClickButton}>
 				{isLoading ? "ログイン中..." : "ログイン"}
 			</Button>
 			<TextButton onClick={handleOnClickTextButton}>学籍番号入力に戻る</TextButton>

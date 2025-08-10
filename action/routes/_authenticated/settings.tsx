@@ -1,21 +1,22 @@
-import { createFileRoute, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Info, Key, Lock, LogOut } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 import SettingCard from "../../components/SettingCard";
 import InputField from "../../components/InputField";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Button from "../../components/Button";
 import RadioButtonBox from "../../components/RadioButtonBox";
 import ToggleButtonBox from "../../components/ToggleButtonBox";
-import { defaultSettings, type ExtensionSettings } from "../../../contents/utils/settings";
+import type { ExtensionSettings } from "../../../contents/utils/settings";
 import useSettingsStore from "../../store/SettingsStore";
 import { campusSettings, settingGroups } from "./-settingsConfig";
+import { useAuthStore } from "../../store/AuthStore";
 
 const SettingsPage = () => {
-	const { auth } = Route.useRouteContext();
 	const navigate = useNavigate();
-	const [password, setPassword] = useState("");
+	const [tmpPassword, setTmpPassword] = useState("");
 	const store = useSettingsStore();
+	const { setPassword, clearAuthInfo } = useAuthStore();
 
 	const toggleFunctions: Record<keyof Omit<ExtensionSettings, "campusLocation" | "loginCredentials">, () => void> = {
 		darkModeEnabled: store.toggleDarkMode,
@@ -27,18 +28,20 @@ const SettingsPage = () => {
 	};
 
 	const handleOnClickChangePassword = () => {
-		setPassword("");
-		store.setLoginCredentials({ ...store.loginCredentials, password });
+		setPassword(tmpPassword);
+		setTmpPassword("");
 	};
 
 	const handleOnClickLogout = () => {
-		auth.logout();
+		clearAuthInfo();
+		store.clearSettings();
 		navigate({ to: "/auth/student-id" });
 	};
 
 	const handleOnClickBack = async () => {
 		navigate({ to: "/dashboard" });
 	};
+
 	return (
 		<div className="w-full h-full flex flex-col gap-5">
 			<div className="flex flex-col gap-4">
@@ -64,8 +67,8 @@ const SettingsPage = () => {
 						icon={<Lock size={20} />}
 						label="パスワード"
 						type="password"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
+						value={tmpPassword}
+						onChange={(e) => setTmpPassword(e.target.value)}
 						placeholder="パスワードを入力"
 					/>
 					<Button isSquare={true} className="" onClick={handleOnClickChangePassword}>

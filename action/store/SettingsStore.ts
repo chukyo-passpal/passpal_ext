@@ -1,7 +1,6 @@
 import { create } from "zustand";
 import { subscribeWithSelector } from "zustand/middleware";
 import { getSettings, type ExtensionSettings } from "../../contents/utils/settings";
-import type { LoginCredentials } from "../../contents/utils/settings";
 
 export interface SettingsActions {
 	// トグル
@@ -21,7 +20,6 @@ export interface SettingsActions {
 	setAutoReauthEnabled: (enabled: boolean) => void;
 	setAutoPollEnabled: (enabled: boolean) => void;
 	setAttendanceCallerEnabled: (enabled: boolean) => void;
-	setLoginCredentials: (loginInfo: LoginCredentials) => void;
 	setRecommendedSettings: () => void;
 
 	// データ削除
@@ -76,9 +74,7 @@ export const useSettingsStore = create<ExtensionSettings & SettingsActions>()(
 		setAutoReauthEnabled: (enabled) => set({ autoReauthEnabled: enabled }),
 		setAutoPollEnabled: (enabled) => set({ autoPollEnabled: enabled }),
 		setAttendanceCallerEnabled: (enabled) => set({ attendanceCallerEnabled: enabled }),
-		setLoginCredentials: (loginCredentials) => {
-			set({ loginCredentials });
-		},
+
 		setRecommendedSettings: () => {
 			set({
 				autoReauthEnabled: true,
@@ -98,7 +94,6 @@ export const useSettingsStore = create<ExtensionSettings & SettingsActions>()(
 				autoReauthEnabled: false,
 				autoPollEnabled: false,
 				attendanceCallerEnabled: false,
-				loginCredentials: {},
 			}),
 
 		loadSettings: async () => set(await getSettings()),

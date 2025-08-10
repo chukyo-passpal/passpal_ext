@@ -3,75 +3,45 @@ import AuthHeader from "../../components/auth/AuthHeader";
 import { Mail } from "lucide-react";
 import { GoogleSignInButton } from "../../components/auth/GoogleLoginButton";
 import TextButton from "../../components/TextButton";
-import { useEffect, useState } from "react";
-import type { SignInMessage } from "../../../types/authMessage";
-import useSettingsStore from "../../store/SettingsStore";
-import { extractUserInfo } from "../../utils/firebaseUtils";
-import type { FirebaseAuthResult, FirebaseError } from "../../../types/firebaseTypes";
+import { useState } from "react";
+import { executeFirebaseAuth } from "../../utils/firebaseUtils";
+import { useAuthStore } from "../../store/AuthStore";
 
 const GoogleAuthPage = () => {
 	const [error, setError] = useState<string>("");
 	const [isLoading, setIsLoading] = useState(false);
-	const { loginCredentials, setLoginCredentials, clearSettings } = useSettingsStore();
+	const { setIdToken, clearAuthInfo, studentId, setName } = useAuthStore();
 	// 学籍番号に@m.chukyo-u.ac.jpを付与してメールアドレスを生成
-	const email = `${loginCredentials.studentId}@m.chukyo-u.ac.jp`;
+	const email = `${studentId}@m.chukyo-u.ac.jp`;
 
 	const navigate = useNavigate();
-
-	useEffect(() => {
-		const initializeStudentId = async () => {
-			try {
-				console.log("Restored student ID from sync storage:", loginCredentials.studentId);
-			} catch (error) {
-				console.error("Failed to restore student ID:", error);
-			}
-		};
-
-		initializeStudentId();
-	}, []);
 
 	const handleOnClickSignInButton = async () => {
 		setIsLoading(true);
 		setError("");
-		console.log(email);
+
 		try {
-			const message: SignInMessage = {
-				type: "sign-in",
-				loginHint: email,
-			};
+			const authData = await executeFirebaseAuth(email);
 
-			const authData = await new Promise<FirebaseAuthResult | FirebaseError>((resolve, reject) => {
-				chrome.runtime.sendMessage(message, (response) => {
-					chrome.runtime.lastError ? reject(new Error(chrome.runtime.lastError.message)) : resolve(response);
-				});
-			});
-
-			if (authData && "name" in authData && authData.name === "FirebaseError") {
-				const error = authData as FirebaseError;
-				const isDomainError = error.code === "auth/invalid-domain" || error.message?.includes("chukyo-u.ac.jp");
-				setError(
-					isDomainError
-						? "中京大学のメールアドレスでログインしてください。"
-						: error.message || "認証中にエラーが発生しました"
-				);
-				console.error("Auth Error:", error);
+			if (!authData.success) {
+				setError(authData.error!);
 				return;
 			}
-			const { idToken } = extractUserInfo(authData as FirebaseAuthResult);
-			setLoginCredentials({ ...loginCredentials, firebaseToken: idToken });
-			console.log("Auth Success:", authData);
+
+			const { idToken, displayName } = authData.data!;
+			setIdToken(idToken);
+			setName(displayName);
 			navigate({ to: "/auth/password" });
 		} catch (error: unknown) {
-			const errorMessage = error instanceof Error ? error.message : "認証中にエラーが発生しました";
+			const errorMessage = error instanceof Error ? error.message : "予期しないエラーが発生しました";
 			setError(errorMessage);
-			console.error("Sign in error:", error);
+			console.error("Unexpected error:", error);
 		} finally {
 			setIsLoading(false);
 		}
 	};
 
 	const handleOnClickBackButton = async () => {
-		clearSettings();
 		navigate({ to: "/auth/student-id" });
 	};
 

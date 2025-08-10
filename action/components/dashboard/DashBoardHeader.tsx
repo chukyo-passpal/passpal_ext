@@ -1,9 +1,11 @@
 import { useNavigate } from "@tanstack/react-router";
 import { Settings } from "lucide-react";
 import icon from "../../../images/extension_128.png";
+import { useAuthStore } from "../../store/AuthStore";
 
 const DashBoardHeader = () => {
 	const navigate = useNavigate();
+	const { name } = useAuthStore();
 
 	const getGreetingMessage = (userName: string | null): string => {
 		if (userName) {
@@ -35,7 +37,7 @@ const DashBoardHeader = () => {
 					/>
 				</button>
 			</div>
-			<p className="text-[14px] font-normal text-[#6B7280]">{getGreetingMessage("ゲスト")}</p>
+			<p className="text-[14px] font-normal text-[#6B7280]">{getGreetingMessage(name)}</p>
 		</div>
 	);
 };

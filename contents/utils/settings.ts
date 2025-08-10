@@ -1,3 +1,5 @@
+import useSettingsStore from "../../action/store/SettingsStore";
+
 export interface LoginCredentials {
 	studentId?: string;
 	firebaseToken?: string;
@@ -12,7 +14,6 @@ export interface ExtensionSettings {
 	attendanceCallerEnabled: boolean;
 	autoPollEnabled: boolean;
 	shibLoginEnabled: boolean;
-	loginCredentials: LoginCredentials;
 }
 
 export const defaultSettings: ExtensionSettings = {
@@ -23,7 +24,6 @@ export const defaultSettings: ExtensionSettings = {
 	attendanceCallerEnabled: false,
 	autoPollEnabled: false,
 	shibLoginEnabled: false,
-	loginCredentials: {},
 };
 
 export async function getSettings(): Promise<ExtensionSettings> {

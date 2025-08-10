@@ -1,3 +1,4 @@
+import type { SignInMessage } from "../../types/authMessage";
 import type {
 	FirebaseAuthResult,
 	AuthenticatedUser,
@@ -5,6 +6,7 @@ import type {
 	IdTokenPayload,
 	AuthResponse,
 	GoogleRawUserInfo,
+	FirebaseError,
 } from "../../types/firebaseTypes";
 
 /**
@@ -90,26 +92,6 @@ export const createAuthResponse = (authResult: FirebaseAuthResult): AuthResponse
 };
 
 /**
- * ローカルストレージから認証情報を取得（Chrome拡張機能では使用不可）
- * 代わりにchrome.storageを使用することを推奨
- */
-export const getStoredAuthInfo = async (): Promise<AuthenticatedUser | null> => {
-	try {
-		// Chrome拡張機能の場合
-		if (typeof chrome !== "undefined" && chrome.storage) {
-			const result = await chrome.storage.local.get(["authUser"]);
-			return result.authUser || null;
-		}
-
-		// 通常のWebアプリケーションの場合
-		const stored = localStorage.getItem("authUser");
-		return stored ? JSON.parse(stored) : null;
-	} catch {
-		return null;
-	}
-};
-
-/**
  * 認証情報をストレージに保存
  */
 export const storeAuthInfo = async (user: AuthenticatedUser): Promise<void> => {
@@ -124,24 +106,6 @@ export const storeAuthInfo = async (user: AuthenticatedUser): Promise<void> => {
 		localStorage.setItem("authUser", JSON.stringify(user));
 	} catch (error) {
 		console.error("Failed to store auth info:", error);
-	}
-};
-
-/**
- * 認証情報をストレージから削除
- */
-export const clearAuthInfo = async (): Promise<void> => {
-	try {
-		// Chrome拡張機能の場合
-		if (typeof chrome !== "undefined" && chrome.storage) {
-			await chrome.storage.local.remove(["authUser"]);
-			return;
-		}
-
-		// 通常のWebアプリケーションの場合
-		localStorage.removeItem("authUser");
-	} catch (error) {
-		console.error("Failed to clear auth info:", error);
 	}
 };
 
@@ -189,48 +153,77 @@ export const formatUserForDisplay = (user: AuthenticatedUser) => {
 	};
 };
 
-// Chrome拡張機能での使用例
-export class ChromeAuthManager {
-	private user: AuthenticatedUser | null = null;
+/**
+ * Firebase認証レスポンスがエラーかどうかを判定
+ */
+const isFirebaseError = (authData: FirebaseAuthResult | FirebaseError): authData is FirebaseError => {
+	return authData && "name" in authData && authData.name === "FirebaseError";
+};
 
-	async initialize(): Promise<boolean> {
-		this.user = await getStoredAuthInfo();
+/**
+ * Firebase認証エラーを解析してユーザーフレンドリーなメッセージを生成
+ */
+const parseAuthError = (error: FirebaseError): string => {
+	const isDomainError = error.code === "auth/invalid-domain" || error.message?.includes("chukyo-u.ac.jp");
 
-		if (this.user && !isTokenExpired(this.user.idToken)) {
-			return true;
-		}
-
-		await this.clearAuth();
-		return false;
+	if (isDomainError) {
+		return "中京大学のメールアドレスでログインしてください。";
 	}
 
-	async signIn(): Promise<AuthResponse> {
-		// backgroundスクリプトに認証リクエストを送信
-		return new Promise((resolve) => {
-			chrome.runtime.sendMessage({ type: "sign-in" }, (response) => {
-				if (response.success && response.user) {
-					this.user = response.user;
-					storeAuthInfo(response.user);
+	return error.message || "認証中にエラーが発生しました";
+};
+
+/**
+ * Firebase認証を実行するメイン関数
+ */
+export const executeFirebaseAuth = async (
+	email: string
+): Promise<{
+	success: boolean;
+	data?: { idToken: string; displayName: string };
+	error?: string;
+}> => {
+	try {
+		const message: SignInMessage = {
+			type: "sign-in",
+			loginHint: email,
+		};
+
+		const authData = await new Promise<FirebaseAuthResult | FirebaseError>((resolve, reject) => {
+			chrome.runtime.sendMessage(message, (response) => {
+				if (chrome.runtime.lastError) {
+					reject(new Error(chrome.runtime.lastError.message));
+				} else {
+					resolve(response);
 				}
-				resolve(response);
 			});
 		});
-	}
 
-	async makeAuthenticatedRequest(url: string, options: RequestInit = {}): Promise<Response> {
-		if (!this.user || isTokenExpired(this.user.idToken)) {
-			throw new Error("Not authenticated or token expired");
+		// エラーレスポンスの処理
+		if (isFirebaseError(authData)) {
+			const errorMessage = parseAuthError(authData);
+			console.error("Auth Error:", authData);
+			return {
+				success: false,
+				error: errorMessage,
+			};
 		}
 
-		return authenticatedFetch(url, options, this.user.idToken);
-	}
+		// 成功レスポンスの処理
+		const { idToken, displayName } = extractUserInfo(authData as FirebaseAuthResult);
+		console.log("Auth Success:", authData);
 
-	async clearAuth(): Promise<void> {
-		this.user = null;
-		await clearAuthInfo();
-	}
+		return {
+			success: true,
+			data: { idToken, displayName },
+		};
+	} catch (error: unknown) {
+		const errorMessage = error instanceof Error ? error.message : "認証中にエラーが発生しました";
+		console.error("Sign in error:", error);
 
-	getCurrentUser(): AuthenticatedUser | null {
-		return this.user;
+		return {
+			success: false,
+			error: errorMessage,
+		};
 	}
-}
+};
