@@ -10,10 +10,11 @@ import { useState } from "react";
 
 const InitSettingPage = () => {
 	const navigate = useNavigate();
-	const store = useSettingsStore();
+	const { campusLocation, toggleCampusLocation, setRecommendedSettings } = useSettingsStore();
 	const [agreementCheck, setAgreementCheck] = useState(false);
 
 	const handleOnClick = () => {
+		setRecommendedSettings();
 		navigate({ to: "/dashboard" });
 	};
 
@@ -29,9 +30,9 @@ const InitSettingPage = () => {
 							label={campus.label}
 							description={campus.description}
 							name="campus"
-							checked={campus.value === store.campusLocation}
+							checked={campus.value === campusLocation}
 							value={campus.value}
-							onChange={store.toggleCampusLocation}
+							onChange={toggleCampusLocation}
 						/>
 					))}
 				</div>

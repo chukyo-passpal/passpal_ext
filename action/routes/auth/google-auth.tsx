@@ -42,6 +42,7 @@ const GoogleAuthPage = () => {
 	};
 
 	const handleOnClickBackButton = async () => {
+		clearAuthInfo();
 		navigate({ to: "/auth/student-id" });
 	};
 

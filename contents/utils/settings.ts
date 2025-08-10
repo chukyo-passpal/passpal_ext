@@ -1,86 +1,31 @@
-import useSettingsStore from "../../action/store/SettingsStore";
+import type { SettingsState } from "../../action/store/SettingsStore";
+import { isTokenExpired } from "../../action/utils/firebaseUtils";
+import type { AuthState } from "../../action/store/AuthStore";
 
-export interface LoginCredentials {
-	studentId?: string;
-	firebaseToken?: string;
-	password?: string;
-}
-
-export interface ExtensionSettings {
-	campusLocation: "nagoya" | "toyota";
-	darkModeEnabled: boolean;
-	autoReauthEnabled: boolean;
-	videoControlsEnabled: boolean;
-	attendanceCallerEnabled: boolean;
-	autoPollEnabled: boolean;
-	shibLoginEnabled: boolean;
-}
-
-export const defaultSettings: ExtensionSettings = {
-	campusLocation: "nagoya",
-	darkModeEnabled: false,
-	autoReauthEnabled: false,
-	videoControlsEnabled: false,
-	attendanceCallerEnabled: false,
-	autoPollEnabled: false,
-	shibLoginEnabled: false,
-};
-
-export async function getSettings(): Promise<ExtensionSettings> {
+export async function getSettings(): Promise<SettingsState> {
 	return new Promise((resolve) => {
-		chrome.storage.sync.get(defaultSettings, (result) => {
-			resolve(result as ExtensionSettings);
+		chrome.storage.sync.get("settingsStore", (result) => {
+			resolve(JSON.parse(result.settingsStore).state);
 		});
 	});
 }
 
-export async function getSetting<K extends keyof ExtensionSettings>(key: K): Promise<ExtensionSettings[K]> {
+export async function getSetting<K extends keyof SettingsState>(key: K): Promise<SettingsState[K]> {
 	const settings = await getSettings();
 	return settings[key];
 }
 
-export async function setAuthenticationData(loginCredentials: LoginCredentials): Promise<void> {
+export async function getAuthState(): Promise<AuthState> {
 	return new Promise((resolve) => {
-		chrome.storage.sync.set({ loginCredentials }, () => {
-			resolve();
-		});
-	});
-}
-
-export async function setRecommendedSettings(): Promise<void> {
-	return new Promise((resolve) => {
-		chrome.storage.sync.set(
-			{
-				autoReauthEnabled: true,
-				videControlsEnabled: true,
-				attendanceCallerEnabled: true,
-				autoPollEnabled: true,
-				shibLoginEnabled: true,
-			},
-			() => {
-				resolve();
-			}
-		);
-	});
-}
-
-export async function clearAuthenticationData(): Promise<void> {
-	return new Promise((resolve) => {
-		chrome.storage.sync.remove(["loginCredentials"], () => {
-			resolve();
+		chrome.storage.sync.get("authStore", (result) => {
+			resolve(JSON.parse(result.authStore).state);
 		});
 	});
 }
 
 export async function isUserAuthenticated(): Promise<boolean> {
-	return new Promise((resolve) => {
-		chrome.storage.sync.get(["loginCredentials"], (result) => {
-			const credentials = result.loginCredentials;
-			if (!credentials) {
-				resolve(false);
-				return;
-			}
-			resolve(credentials.studentId && credentials.password && credentials.firebaseToken ? true : false);
-		});
-	});
+	const authState = await getAuthState();
+	return authState.studentId && authState.password && authState.IdToken && !isTokenExpired(authState.IdToken)
+		? true
+		: false;
 }

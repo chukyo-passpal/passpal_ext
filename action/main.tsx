@@ -3,6 +3,7 @@ import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter, createMemoryHistory } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 import useSettingsStore from "./store/SettingsStore";
+import { getSettings } from "../contents/utils/settings";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
@@ -23,27 +24,10 @@ declare module "@tanstack/react-router" {
 }
 
 const InnerApp = () => {
-	const [isLoading, setIsLoading] = useState(false);
-	const { loadSettings } = useSettingsStore();
-	useEffect(() => {
-		// 設定データ読み込み
-		const initialize = async () => {
-			setIsLoading(true);
-			try {
-				await loadSettings();
-				console.log("data loaded");
-			} catch (error) {
-				console.log("data load error:", error);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-		initialize();
-	}, []);
-	if (isLoading) {
-		return <h1>Loading...</h1>;
-	}
-
+	const test = async () => {
+		console.log(await getSettings());
+	};
+	test();
 	return <RouterProvider router={router} />;
 };
 

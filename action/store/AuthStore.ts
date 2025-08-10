@@ -3,13 +3,15 @@ import { createJSONStorage, persist } from "zustand/middleware";
 import { chromeStorage } from "./chromeStorage";
 import { isTokenExpired } from "../utils/firebaseUtils";
 
-interface AuthStore {
+export interface AuthState {
 	isAuthenticated: boolean;
 	studentId: string;
 	IdToken: string;
 	password: string;
 	name: string;
+}
 
+interface AuthActions {
 	setIsAuthenticated: (isAuthenticated: boolean) => void;
 	setStudentId: (studentId: string) => void;
 	setIdToken: (IdToken: string) => void;
@@ -18,7 +20,7 @@ interface AuthStore {
 	clearAuthInfo: () => void;
 }
 
-export const useAuthStore = create<AuthStore>()(
+export const useAuthStore = create<AuthState & AuthActions>()(
 	persist(
 		(set) => ({
 			isAuthenticated: false,
