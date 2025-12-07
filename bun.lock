@@ -6,6 +6,8 @@
       "name": "passpal_ext",
       "dependencies": {
         "@tanstack/react-router": "^1.140.0",
+        "baseline-browser-mapping": "^2.9.4",
+        "caniuse-lite": "^1.0.30001759",
         "lucide-react": "^0.536.0",
         "react": "^19.2.1",
         "react-dom": "^19.2.1",
