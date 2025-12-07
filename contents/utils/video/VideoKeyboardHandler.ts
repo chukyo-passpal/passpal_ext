@@ -40,11 +40,16 @@ export class VideoKeyboardHandler {
                 break;
 
             case " ":
-            case "k":
+            case "k": {
                 const isPaused = targetVideo.paused;
-                isPaused ? targetVideo.play() : targetVideo.pause();
+                if (isPaused) {
+                    targetVideo.play();
+                } else {
+                    targetVideo.pause();
+                }
                 this.feedbackManager.showFeedback(videoWrapper, isPaused ? ICONS.play : ICONS.pause);
                 break;
+            }
 
             case "s":
             case ",":

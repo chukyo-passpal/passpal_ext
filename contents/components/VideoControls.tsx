@@ -206,7 +206,7 @@ export const VideoFeedback: React.FC<{
     );
 };
 
-export const VideoControls: React.FC<VideoControlsProps> = ({ video, onRateChange, onPlayPause }) => {
+export const VideoControls: React.FC<VideoControlsProps> = ({ video }) => {
     return (
         <>
             <VideoSpeedControls video={video} />

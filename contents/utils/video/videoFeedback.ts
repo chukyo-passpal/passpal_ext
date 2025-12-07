@@ -18,6 +18,7 @@ export class VideoFeedbackManager {
         const feedbackContainer = videoWrapper.querySelector(`.${VIDEO_CONFIG.CLASSES.FEEDBACK_CONTAINER}`);
         if (!feedbackContainer) return;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const root = (feedbackContainer as any).__reactRoot;
         if (!root) return;
 
@@ -50,12 +51,15 @@ export class VideoFeedbackManager {
         const button = videoWrapper.querySelector(`[data-vctrl="${key}"]`) as HTMLElement;
         if (!button) return;
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         if ((button as any).highlightTimeout) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
             clearTimeout((button as any).highlightTimeout);
         }
 
         button.classList.add(VIDEO_CONFIG.CLASSES.HIGHLIGHT);
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         (button as any).highlightTimeout = setTimeout(() => {
             button.classList.remove(VIDEO_CONFIG.CLASSES.HIGHLIGHT);
         }, VIDEO_CONFIG.BUTTON_HIGHLIGHT_DURATION);

@@ -3,8 +3,8 @@
 import { getSetting } from "./utils/settings";
 
 export default async function manaboAutoPoll() {
-    const autoPollEnabled = await getSetting('autoPollEnabled');
-    
+    const autoPollEnabled = await getSetting("autoPollEnabled");
+
     if (!autoPollEnabled) {
         return;
     }
@@ -28,7 +28,7 @@ export default async function manaboAutoPoll() {
                 }
             });
             return true;
-        } catch (e) {
+        } catch {
             return false;
         }
     }
