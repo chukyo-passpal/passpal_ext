@@ -25,7 +25,5 @@ export interface OffscreenMessage {
 
 // Chrome Runtime Message Handler Types
 export type MessageSender = chrome.runtime.MessageSender;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type SendResponse = (response?: any) => void;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type MessageHandler = (message: any, sender: MessageSender, sendResponse: SendResponse) => boolean | void;
+export type SendResponse = (response?: unknown) => void;
+export type MessageHandler = (message: unknown, sender: MessageSender, sendResponse: SendResponse) => boolean | void;

@@ -18,6 +18,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { VideoSpeedControls, VideoPiPControls, VideoFeedback, ICONS } from "./components/VideoControls";
 import { VIDEO_CONFIG } from "./utils/constants";
+import type { FeedbackContainer } from "./types/PowerfulSyusseki";
 import { VideoFeedbackManager } from "./utils/video/videoFeedback";
 import { VideoKeyboardHandler } from "./utils/video/VideoKeyboardHandler";
 import { getSetting } from "./utils/settings";
@@ -194,8 +195,7 @@ export class VideoControllerClass {
         parent.appendChild(feedbackContainer);
 
         const feedbackRoot = createRoot(feedbackContainer);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (feedbackContainer as any).__reactRoot = feedbackRoot;
+        (feedbackContainer as FeedbackContainer).__reactRoot = feedbackRoot;
 
         feedbackRoot.render(
             React.createElement(VideoFeedback, {

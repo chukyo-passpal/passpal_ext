@@ -1,7 +1,13 @@
-import type { FirebaseAuthMessage } from "../types/authMessage";
+import type { ChromeExtensionMessage, FirebaseAuthMessage, MessageSender, SendResponse } from "../types/authMessage";
 import type { FirebaseAuthResult, FirebaseError } from "../types/firebaseTypes";
 
 const OFFSCREEN_DOCUMENT_PATH: string = "/pages/offscreen.html";
+
+interface ServiceWorkerScope {
+    clients: {
+        matchAll(): Promise<{ url: string }[]>;
+    };
+}
 
 let creating: Promise<void> | null = null;
 
@@ -9,10 +15,8 @@ async function hasDocument(): Promise<boolean> {
     if (!("clients" in self)) {
         return false;
     }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const matchedClients = await (self as any).clients.matchAll();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return matchedClients.some((c: any) => c.url === chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH));
+    const matchedClients = await (self as unknown as ServiceWorkerScope).clients.matchAll();
+    return matchedClients.some((c) => c.url === chrome.runtime.getURL(OFFSCREEN_DOCUMENT_PATH));
 }
 
 async function setupOffscreenDocument(path: string): Promise<void> {
@@ -90,14 +94,14 @@ async function firebaseAuth(loginHint: string = ""): Promise<FirebaseAuthResult 
     }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const messageHandler = (message: any, _sender: any, _sendResponse: any) => {
-    console.log("Received message:", message.type); // デバッグログ追加
+const messageHandler = (message: unknown, _sender: MessageSender, _sendResponse: SendResponse) => {
+    const msg = message as ChromeExtensionMessage;
+    console.log("Received message:", msg.type); // デバッグログ追加
 
     // 認証リクエスト
-    if (message.type === "sign-in") {
+    if (msg.type === "sign-in") {
         console.log("Processing sign-in request");
-        firebaseAuth(message.loginHint)
+        firebaseAuth(msg.loginHint)
             .then((result) => {
                 console.log("Authentication result:", result);
                 _sendResponse(result);
@@ -109,7 +113,7 @@ const messageHandler = (message: any, _sender: any, _sendResponse: any) => {
         return true;
     }
 
-    console.log("unknown message type", message.type);
+    console.log("unknown message type", msg.type);
     return false;
 };
 

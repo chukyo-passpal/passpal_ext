@@ -5,6 +5,7 @@
 import React from "react";
 import { VideoFeedback, ICONS } from "../../components/VideoControls";
 import { VIDEO_CONFIG } from "../constants";
+import type { FeedbackContainer, HighlightableButton } from "../../types/PowerfulSyusseki";
 
 export class VideoFeedbackManager {
     private feedbackTimeout: NodeJS.Timeout | null = null;
@@ -18,8 +19,7 @@ export class VideoFeedbackManager {
         const feedbackContainer = videoWrapper.querySelector(`.${VIDEO_CONFIG.CLASSES.FEEDBACK_CONTAINER}`);
         if (!feedbackContainer) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        const root = (feedbackContainer as any).__reactRoot;
+        const root = (feedbackContainer as FeedbackContainer).__reactRoot;
         if (!root) return;
 
         root.render(
@@ -48,19 +48,16 @@ export class VideoFeedbackManager {
     highlightButton(videoWrapper: Element | null, key: string): void {
         if (!videoWrapper) return;
 
-        const button = videoWrapper.querySelector(`[data-vctrl="${key}"]`) as HTMLElement;
+        const button = videoWrapper.querySelector(`[data-vctrl="${key}"]`) as HighlightableButton;
         if (!button) return;
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        if ((button as any).highlightTimeout) {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            clearTimeout((button as any).highlightTimeout);
+        if (button.highlightTimeout) {
+            clearTimeout(button.highlightTimeout);
         }
 
         button.classList.add(VIDEO_CONFIG.CLASSES.HIGHLIGHT);
 
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        (button as any).highlightTimeout = setTimeout(() => {
+        button.highlightTimeout = setTimeout(() => {
             button.classList.remove(VIDEO_CONFIG.CLASSES.HIGHLIGHT);
         }, VIDEO_CONFIG.BUTTON_HIGHLIGHT_DURATION);
     }
