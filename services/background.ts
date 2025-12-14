@@ -1,3 +1,4 @@
+import { auth } from "../firebase/firebase";
 import { onMessage, sendMessage } from "../utils/messaging";
 
 const OFFSCREEN_DOCUMENT_PATH: string = "/pages/offscreen.html";
@@ -53,4 +54,10 @@ onMessage("signIn", async ({ data }) => {
     } finally {
         closeOffscreenDocument();
     }
+});
+
+onMessage("checkFirebaseAuth", async () => {
+    await auth.authStateReady();
+    const user = auth.currentUser;
+    return user ? true : false;
 });

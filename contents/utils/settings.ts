@@ -1,5 +1,6 @@
-import type { AuthState } from "../../action/store/AuthStore";
+import { useAuthStore } from "../../action/store/AuthStore";
 import type { SettingsState } from "../../action/store/SettingsStore";
+import { sendMessage } from "../../utils/messaging";
 
 export async function getSettings(): Promise<SettingsState> {
     return new Promise((resolve) => {
@@ -14,15 +15,10 @@ export async function getSetting<K extends keyof SettingsState>(key: K): Promise
     return settings[key];
 }
 
-export async function getAuthState(): Promise<AuthState> {
-    return new Promise((resolve) => {
-        chrome.storage.sync.get("authStore", (result) => {
-            resolve(JSON.parse(result.authStore).state);
-        });
-    });
-}
-
 export async function isUserAuthenticated(): Promise<boolean> {
-    const authState = await getAuthState();
-    return authState.studentId && authState.cuIdPass && authState.firebaseUser ? true : false;
+    const { studentId, cuIdPass } = useAuthStore.getState();
+    const firebaseAuthenticated = await sendMessage("checkFirebaseAuth");
+
+    console.log(studentId, cuIdPass, firebaseAuthenticated);
+    return studentId && cuIdPass && firebaseAuthenticated ? true : false;
 }

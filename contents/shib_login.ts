@@ -1,7 +1,8 @@
 //  Shibbolethログインページで自動的にログインします。
 
+import { useAuthStore } from "../action/store/AuthStore";
 import { SELECTORS } from "./utils/constants";
-import { getAuthState, getSetting, isUserAuthenticated } from "./utils/settings";
+import { getSetting, isUserAuthenticated } from "./utils/settings";
 
 window.addEventListener("load", async () => {
     const shibLoginEnabled = await getSetting("shibLoginEnabled");
@@ -18,14 +19,14 @@ window.addEventListener("load", async () => {
     }
 
     // 保存された認証情報を取得
-    const loginCredentials = await getAuthState();
-    if (!loginCredentials || !loginCredentials.studentId || !loginCredentials.password) {
+    const loginCredentials = useAuthStore.getState();
+    if (!loginCredentials || !loginCredentials.studentId || !loginCredentials.cuIdPass) {
         console.log("No login credentials found, skipping auto-login");
         return;
     }
 
     const USERNAME = loginCredentials.studentId;
-    const PASSWORD = loginCredentials.password;
+    const PASSWORD = loginCredentials.cuIdPass;
 
     const errorMessage = document.querySelector(SELECTORS.SHIBBOLETH.ERROR_MESSAGE);
     if (errorMessage) {
