@@ -3,9 +3,10 @@
  */
 
 import React from "react";
-import { VideoFeedback, ICONS } from "../../components/VideoControls";
-import { VIDEO_CONFIG } from "../constants";
+
+import { ICONS, VideoFeedback } from "../../components/VideoControls";
 import type { FeedbackContainer, HighlightableButton } from "../../types/PowerfulSyusseki";
+import { VIDEO_CONFIG } from "../constants";
 
 export class VideoFeedbackManager {
     private feedbackTimeout: NodeJS.Timeout | null = null;

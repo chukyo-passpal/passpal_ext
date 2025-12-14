@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+
 import type { PowerfulSyussekiButtonProps } from "../types/PowerfulSyusseki";
 
 const PowerfulSyussekiButton: React.FC<PowerfulSyussekiButtonProps> = ({ onButtonClick }) => {
@@ -35,7 +36,9 @@ const PowerfulSyussekiButton: React.FC<PowerfulSyussekiButtonProps> = ({ onButto
             <button className="psc-btn" onClick={handleClick}>
                 <span className="psc-btn-lg">
                     <span className="psc-btn-sl"></span>
-                    <span className="psc-btn-text">{isLoading ? "取得が完了しました！" : "出席ウィンドウの強制取得"}</span>
+                    <span className="psc-btn-text">
+                        {isLoading ? "取得が完了しました！" : "出席ウィンドウの強制取得"}
+                    </span>
                 </span>
             </button>
         </div>

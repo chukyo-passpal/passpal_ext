@@ -1,16 +1,17 @@
+import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Info, Lock, LogOut } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
-import SettingCard from "../../components/SettingCard";
-import InputField from "../../components/InputField";
-import { useState } from "react";
-import Button from "../../components/Button";
-import RadioButtonBox from "../../components/RadioButtonBox";
-import ToggleButtonBox from "../../components/ToggleButtonBox";
+
 import type { ExtensionSettings } from "../../../contents/utils/settings";
+import Button from "../../components/Button";
+import InputField from "../../components/InputField";
+import RadioButtonBox from "../../components/RadioButtonBox";
+import SettingCard from "../../components/SettingCard";
+import ToggleButtonBox from "../../components/ToggleButtonBox";
+import { useAuthStore } from "../../store/AuthStore";
 import useSettingsStore from "../../store/SettingsStore";
 import { campusSettings, settingGroups } from "./-settingsConfig";
-import { useAuthStore } from "../../store/AuthStore";
 
 const SettingsPage = () => {
     const navigate = useNavigate();
@@ -43,23 +44,26 @@ const SettingsPage = () => {
     };
 
     return (
-        <div className="w-full h-full flex flex-col gap-5">
+        <div className="flex h-full w-full flex-col gap-5">
             <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2">
-                    <button onClick={handleOnClickBack} className="cursor-pointer text-neutral-gray-600 hover:text-primary transition-colors">
+                    <button
+                        onClick={handleOnClickBack}
+                        className="text-neutral-gray-600 hover:text-primary cursor-pointer transition-colors"
+                    >
                         <ArrowLeft size={20} />
                     </button>
                     <p className="text-neutral-black text-[18px] font-bold">設定</p>
                 </div>
-                <p className="text-[#6B7280] text-[14px] font-normal">機能の有効/無効を切り替えできます</p>
+                <p className="text-[14px] font-normal text-[#6B7280]">機能の有効/無効を切り替えできます</p>
             </div>
             <SettingCard title="アカウント情報">
                 <div className="flex flex-col gap-1">
-                    <p className="text-[14px] font-medium text-neutral-black">t324016</p>
+                    <p className="text-neutral-black text-[14px] font-medium">t324016</p>
                     <p className="text-[12px] font-normal text-[#6B7280]">t324016@m.chukyo-u.ac.jp</p>
                 </div>
                 <div className="flex flex-col gap-3">
-                    <p className="text-[14px] font-medium text-neutral-black">CU_IDパスワード再入力</p>
+                    <p className="text-neutral-black text-[14px] font-medium">CU_IDパスワード再入力</p>
                     <InputField
                         icon={<Lock size={20} />}
                         label="パスワード"
@@ -71,7 +75,12 @@ const SettingsPage = () => {
                     <Button isSquare={true} className="" onClick={handleOnClickChangePassword}>
                         パスワードを更新
                     </Button>
-                    <Button isSquare={true} leftIcon={<LogOut size={20} />} variant="danger" onClick={handleOnClickLogout}>
+                    <Button
+                        isSquare={true}
+                        leftIcon={<LogOut size={20} />}
+                        variant="danger"
+                        onClick={handleOnClickLogout}
+                    >
                         ログアウト
                     </Button>
                 </div>
@@ -106,18 +115,20 @@ const SettingsPage = () => {
                 </SettingCard>
             ))}
             <SettingCard title="このアプリについて">
-                <button className="group relative h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
+                <button className="group border-neutral-gray-200 hover:border-primary relative flex h-[68px] cursor-pointer items-center justify-between rounded-[8px] border px-4 transition">
                     <div className="flex items-center gap-3">
                         <span className="text-neutral-gray-600">{<Info size={24} />}</span>
                         <div>
-                            <p className="text-[14px] text-left font-medium text-neutral-black">PassPal Chrome Extension</p>
-                            <p className="text-[12px] text-left text-neutral-gray-600">version 1.0.0</p>
+                            <p className="text-neutral-black text-left text-[14px] font-medium">
+                                PassPal Chrome Extension
+                            </p>
+                            <p className="text-neutral-gray-600 text-left text-[12px]">version 1.0.0</p>
                         </div>
                         <span className="text-neutral-gray-600 absolute right-4">{<ChevronRight size={20} />}</span>
                     </div>
                 </button>
-                <button className="group relative h-[68px] flex items-center justify-between border border-neutral-gray-200 rounded-[8px] cursor-pointer px-4 transition hover:border-primary">
-                    <span className="text-[14px] font-medium text-neutral-black">ライセンス情報</span>
+                <button className="group border-neutral-gray-200 hover:border-primary relative flex h-[68px] cursor-pointer items-center justify-between rounded-[8px] border px-4 transition">
+                    <span className="text-neutral-black text-[14px] font-medium">ライセンス情報</span>
                     <span>
                         <ChevronRight size={20} className="text-neutral-gray-600" />
                     </span>

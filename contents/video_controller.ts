@@ -16,12 +16,13 @@
 
 import React from "react";
 import { createRoot } from "react-dom/client";
-import { VideoSpeedControls, VideoPiPControls, VideoFeedback, ICONS } from "./components/VideoControls";
-import { VIDEO_CONFIG } from "./utils/constants";
+
+import { ICONS, VideoFeedback, VideoPiPControls, VideoSpeedControls } from "./components/VideoControls";
 import type { FeedbackContainer } from "./types/PowerfulSyusseki";
+import { VIDEO_CONFIG } from "./utils/constants";
+import { getSetting } from "./utils/settings";
 import { VideoFeedbackManager } from "./utils/video/videoFeedback";
 import { VideoKeyboardHandler } from "./utils/video/VideoKeyboardHandler";
-import { getSetting } from "./utils/settings";
 
 export class VideoControllerClass {
     private focusedVideo: HTMLVideoElement | null = null;
@@ -84,7 +85,10 @@ export class VideoControllerClass {
             e.ctrlKey ||
             e.metaKey ||
             e.altKey ||
-            (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || (activeEl instanceof HTMLElement && activeEl.isContentEditable)))
+            (activeEl &&
+                (activeEl.tagName === "INPUT" ||
+                    activeEl.tagName === "TEXTAREA" ||
+                    (activeEl instanceof HTMLElement && activeEl.isContentEditable)))
         ) {
             return;
         }
@@ -112,12 +116,16 @@ export class VideoControllerClass {
             return this.focusedVideo;
         }
 
-        const allVideos = Array.from(document.querySelectorAll(`video[${VIDEO_CONFIG.INITIALIZED_ATTR}]`)) as HTMLVideoElement[];
+        const allVideos = Array.from(
+            document.querySelectorAll(`video[${VIDEO_CONFIG.INITIALIZED_ATTR}]`)
+        ) as HTMLVideoElement[];
 
         // フルスクリーン中のビデオを優先
         const fsElement = document.fullscreenElement;
         if (fsElement) {
-            const fsVideo = fsElement.matches("video") ? (fsElement as HTMLVideoElement) : (fsElement.querySelector("video") as HTMLVideoElement);
+            const fsVideo = fsElement.matches("video")
+                ? (fsElement as HTMLVideoElement)
+                : (fsElement.querySelector("video") as HTMLVideoElement);
             if (fsVideo) return fsVideo;
         }
 
@@ -252,7 +260,9 @@ export class VideoControllerClass {
                         if (node.nodeType !== Node.ELEMENT_NODE) continue;
 
                         const element = node as Element;
-                        const videos = element.matches("video") ? [element] : element.querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`);
+                        const videos = element.matches("video")
+                            ? [element]
+                            : element.querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`);
 
                         videos.forEach((video) => this.setupVideo(video as HTMLVideoElement));
                     }
@@ -279,7 +289,9 @@ export class VideoControllerClass {
      * 既存のビデオを初期化
      */
     private initializeExistingVideos(): void {
-        document.querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`).forEach((video) => this.setupVideo(video as HTMLVideoElement));
+        document
+            .querySelectorAll(`video:not([${VIDEO_CONFIG.INITIALIZED_ATTR}])`)
+            .forEach((video) => this.setupVideo(video as HTMLVideoElement));
     }
 
     /**

@@ -1,113 +1,66 @@
-import type { MessageHandler, OffscreenMessage, IframeMessage } from "../types/authMessage";
-import type { FirebaseAuthResult, FirebaseError } from "../types/firebaseTypes";
+import { FirebaseError } from "firebase/app";
 
-const _URL: string = "https://chukyo-passpal.app/extensions/auth";
-let iframe: HTMLIFrameElement;
-let isIframeReady = false;
+import type { FirebaseAuthReponse } from "../types/firebaseTypes";
+import { onMessage } from "../utils/messaging";
 
-function createIframe(): Promise<void> {
-    return new Promise((resolve) => {
-        iframe = document.createElement("iframe");
-        iframe.src = _URL;
-        iframe.style.display = "none";
-        iframe.style.width = "100%";
-        iframe.style.height = "100%";
+const AUTH_URL = "https://chukyo-passpal.app/extensions/auth";
+const AUTH_ORIGIN = new URL(AUTH_URL).origin;
+const IFRAME_TIMEOUT = 10000;
 
-        iframe.onload = () => {
-            console.log("Iframe loaded successfully");
-            isIframeReady = true;
-            resolve();
-        };
+let iframe: HTMLIFrameElement | null = null;
 
-        iframe.onerror = (error) => {
-            console.error("Iframe failed to load:", error);
-            isIframeReady = false;
-            resolve(); // エラーでも続行
-        };
+async function createIframe(): Promise<void> {
+    iframe = document.createElement("iframe");
+    iframe.src = AUTH_URL;
+    iframe.style.display = "none";
+    document.documentElement.appendChild(iframe);
 
-        document.documentElement.appendChild(iframe);
+    return new Promise((resolve, reject) => {
+        if (!iframe) return resolve();
 
-        // 追加の読み込み確認
-        setTimeout(() => {
-            if (!isIframeReady) {
-                console.log("Iframe loading timeout, assuming ready");
-                isIframeReady = true;
-                resolve();
-            }
-        }, 10000);
+        iframe.onload = () => resolve();
+        iframe.onerror = () => reject(new FirebaseError("auth/iframe-load-error", "Failed to load auth iframe"));
+        setTimeout(() => reject(new FirebaseError("auth/iframe-load-timeout", "Iframe load timeout")), IFRAME_TIMEOUT);
     });
 }
 
-const handleChromeMessages: MessageHandler = (message: OffscreenMessage, _sender, sendResponse) => {
-    if (message.target !== "offscreen") {
-        return false;
-    }
+function removeIframe(): void {
+    iframe?.remove();
+    iframe = null;
+}
 
-    // iframeの準備ができていない場合は待つ
-    if (!isIframeReady) {
-        console.log("Iframe not ready, waiting...");
-        setTimeout(() => {
-            handleChromeMessages(message, _sender, sendResponse);
-        }, 500);
-        return true;
-    }
-
-    const messageListener = ({ data, origin }: MessageEvent): void => {
-        console.log("Received message from iframe:", { data, origin });
-
-        try {
-            if (typeof data === "string" && data.startsWith("!_{")) {
-                console.log("Ignoring Firebase internal message");
-                return;
-            }
-
-            const parsedData: FirebaseAuthResult | FirebaseError = typeof data === "string" ? JSON.parse(data) : data;
-            console.log("Parsed auth response:", parsedData);
-
-            cleanup();
-            sendResponse(parsedData);
-        } catch (e: unknown) {
-            const error = e as Error;
-            console.error(`JSON parse failed - ${error.message}`, data);
-            // パースエラーでも即座に終了せず、他のメッセージを待つ
-        }
-    };
-
-    // タイムアウト設定（5分）
-    const timeoutId = setTimeout(() => {
-        console.log("Authentication timeout reached");
-        cleanup();
-        sendResponse({ error: "Authentication timeout - please try again" });
-    }, 300000);
-
-    function cleanup() {
-        self.removeEventListener("message", messageListener);
-        clearTimeout(timeoutId);
-    }
-
-    globalThis.addEventListener("message", messageListener, false);
-
-    const initMessage: IframeMessage = {
-        initAuth: true,
-        loginHint: message.loginHint,
-    };
-
-    if (iframe && iframe.contentWindow) {
-        console.log("Sending message to iframe");
-        iframe.contentWindow.postMessage(initMessage, new URL(_URL).origin);
-    } else {
-        cleanup();
-        sendResponse({ error: "Iframe not available" });
-    }
-
+function isAuthMessage(event: MessageEvent): boolean {
+    if (event.origin !== AUTH_ORIGIN) return false;
+    if (typeof event.data === "string" && event.data.startsWith("!_{")) return false;
     return true;
-};
+}
 
-// 初期化
-(async () => {
-    console.log("Initializing offscreen document...");
-    await createIframe();
-    console.log("Offscreen document initialized and ready");
-})();
+async function waitForAuthResponse(loginHint?: string): Promise<FirebaseAuthReponse> {
+    return new Promise((resolve, reject) => {
+        const handleMessage = (event: MessageEvent) => {
+            if (!isAuthMessage(event)) return;
+            const result = typeof event.data === "string" ? JSON.parse(event.data) : event.data;
+            if ((result.code || result.message) && !result.user)
+                reject(new FirebaseError(result.code, result.message, result.customData));
+            resolve(result as FirebaseAuthReponse);
+        };
 
-chrome.runtime.onMessage.addListener(handleChromeMessages);
+        window.addEventListener("message", handleMessage);
+
+        iframe?.contentWindow?.postMessage({ initAuth: true, loginHint }, AUTH_ORIGIN);
+    });
+}
+
+onMessage("firebaseAuth", async ({ data }) => {
+    try {
+        // iframeが存在しない場合は作成
+        if (!iframe || !document.documentElement.contains(iframe)) await createIframe();
+        const result = await waitForAuthResponse(data.loginHint);
+        return result;
+    } catch (error) {
+        console.error("Offscreen Auth Error", error);
+        throw error;
+    } finally {
+        removeIframe();
+    }
+});

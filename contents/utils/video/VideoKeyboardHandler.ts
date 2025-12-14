@@ -3,7 +3,7 @@
  */
 
 import { VIDEO_CONFIG } from "../constants";
-import { VideoFeedbackManager, ICONS } from "./videoFeedback";
+import { ICONS, VideoFeedbackManager } from "./videoFeedback";
 
 export class VideoKeyboardHandler {
     private feedbackManager: VideoFeedbackManager;
@@ -22,7 +22,12 @@ export class VideoKeyboardHandler {
     /**
      * キーボードイベントを処理
      */
-    handleKeydown(e: KeyboardEvent, targetVideo: HTMLVideoElement, videoWrapper: Element, savedScrollPosition: { x: number; y: number }): boolean {
+    handleKeydown(
+        e: KeyboardEvent,
+        targetVideo: HTMLVideoElement,
+        videoWrapper: Element,
+        savedScrollPosition: { x: number; y: number }
+    ): boolean {
         let handled = true;
         const setRate = (rate: number) => {
             targetVideo.playbackRate = this.clamp(rate, VIDEO_CONFIG.MIN_RATE, VIDEO_CONFIG.MAX_RATE);
@@ -35,7 +40,10 @@ export class VideoKeyboardHandler {
                 break;
 
             case "l":
-                targetVideo.currentTime = Math.min(targetVideo.duration, targetVideo.currentTime + VIDEO_CONFIG.SEEK_LARGE);
+                targetVideo.currentTime = Math.min(
+                    targetVideo.duration,
+                    targetVideo.currentTime + VIDEO_CONFIG.SEEK_LARGE
+                );
                 this.feedbackManager.showFeedback(videoWrapper, ICONS.forward, `${VIDEO_CONFIG.SEEK_LARGE}s`);
                 break;
 
@@ -71,7 +79,10 @@ export class VideoKeyboardHandler {
                 break;
 
             case "arrowright":
-                targetVideo.currentTime = Math.min(targetVideo.duration, targetVideo.currentTime + VIDEO_CONFIG.SEEK_SMALL);
+                targetVideo.currentTime = Math.min(
+                    targetVideo.duration,
+                    targetVideo.currentTime + VIDEO_CONFIG.SEEK_SMALL
+                );
                 this.feedbackManager.showFeedback(videoWrapper, ICONS.forward, `${VIDEO_CONFIG.SEEK_SMALL}s`);
                 break;
 
@@ -139,7 +150,9 @@ export class VideoKeyboardHandler {
      */
     private async handlePictureInPicture(video: HTMLVideoElement, wrapper: Element): Promise<void> {
         try {
-            await (document.pictureInPictureElement === video ? document.exitPictureInPicture() : video.requestPictureInPicture());
+            await (document.pictureInPictureElement === video
+                ? document.exitPictureInPicture()
+                : video.requestPictureInPicture());
             this.feedbackManager.highlightButton(wrapper, "p");
         } catch (err) {
             console.error("PiPの切り替えに失敗しました:", err);
@@ -149,7 +162,11 @@ export class VideoKeyboardHandler {
     /**
      * フルスクリーン処理
      */
-    private handleFullscreen(video: HTMLVideoElement, wrapper: Element, savedScrollPosition: { x: number; y: number }): void {
+    private handleFullscreen(
+        video: HTMLVideoElement,
+        wrapper: Element,
+        savedScrollPosition: { x: number; y: number }
+    ): void {
         if (!document.fullscreenElement) {
             savedScrollPosition.x = window.scrollX;
             savedScrollPosition.y = window.scrollY;

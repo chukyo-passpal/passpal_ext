@@ -3,6 +3,7 @@
     "version": "0.0.1",
     "devDependencies": {
         "@eslint/js": "^9.39.1",
+        "@ianvs/prettier-plugin-sort-imports": "^4.7.0",
         "@tailwindcss/postcss": "^4.1.17",
         "@tanstack/react-router-devtools": "^1.140.0",
         "@tanstack/router-cli": "^1.140.0",
@@ -15,6 +16,7 @@
         "node-polyfill-webpack-plugin": "^4.1.0",
         "postcss": "^8.5.6",
         "prettier": "^3.7.4",
+        "prettier-plugin-tailwindcss": "^0.7.2",
         "sass": "^1.94.2",
         "tailwind-merge": "^3.4.0",
         "tailwindcss": "^4.1.17",
@@ -23,8 +25,10 @@
     },
     "dependencies": {
         "@tanstack/react-router": "^1.140.0",
+        "@webext-core/messaging": "^2.3.0",
         "baseline-browser-mapping": "^2.9.4",
         "caniuse-lite": "^1.0.30001759",
+        "firebase": "^12.6.0",
         "lucide-react": "^0.536.0",
         "react": "^19.2.1",
         "react-dom": "^19.2.1",
@@ -37,7 +41,8 @@
         "start": "extension start",
         "build": "bun run gen-routes && extension build",
         "gen-routes": "tsr generate",
-        "lint": "eslint . --ext .ts,.tsx --fix"
+        "lint": "eslint . --ext .ts,.tsx --fix",
+        "format": "prettier --write \"**/*.{ts,tsx,js,jsx,cjs,mjs,md,json,lintstagedrc}\""
     },
     "type": "module"
 }
