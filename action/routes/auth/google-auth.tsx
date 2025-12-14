@@ -11,9 +11,9 @@ import TextButton from "../../components/TextButton";
 import { useAuthStore } from "../../store/AuthStore";
 
 const GoogleAuthPage = () => {
-    const [error, setError] = useState<string>("");
+    const { signIn, studentId, setStudentId } = useAuthStore();
     const [isLoading, setIsLoading] = useState(false);
-    const { setIdToken, clearAuthInfo, studentId, setName } = useAuthStore();
+    const [error, setError] = useState("");
     // 学籍番号に@m.chukyo-u.ac.jpを付与してメールアドレスを生成
     const email = `${studentId}@m.chukyo-u.ac.jp`;
 
@@ -21,26 +21,20 @@ const GoogleAuthPage = () => {
 
     const handleOnClickSignInButton = async () => {
         setIsLoading(true);
-        setError("");
-
         try {
             const authResponse = await sendMessage("signIn", { loginHint: email });
-            const { displayName } = authResponse.user;
-            const { idToken } = authResponse._tokenResponse;
-            setIdToken(idToken);
-            setName(displayName!);
+            console.log(authResponse);
+            await signIn(authResponse._tokenResponse.oauthAccessToken);
             navigate({ to: "/auth/password" });
-        } catch (error: unknown) {
-            const errorMessage = getFirebaseErrorMessage(error as FirebaseError);
-            console.error(error);
-            setError(errorMessage);
+        } catch (e) {
+            setError(getFirebaseErrorMessage(e as FirebaseError));
         } finally {
             setIsLoading(false);
         }
     };
 
     const handleOnClickBackButton = async () => {
-        clearAuthInfo();
+        setStudentId(null);
         navigate({ to: "/auth/student-id" });
     };
 

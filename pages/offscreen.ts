@@ -6,6 +6,7 @@ import { onMessage } from "../utils/messaging";
 const AUTH_URL = "https://chukyo-passpal.app/extensions/auth";
 const AUTH_ORIGIN = new URL(AUTH_URL).origin;
 const IFRAME_TIMEOUT = 10000;
+const IFRAME_DELAY = 100;
 
 let iframe: HTMLIFrameElement | null = null;
 
@@ -47,7 +48,7 @@ async function waitForAuthResponse(loginHint?: string): Promise<FirebaseAuthRepo
 
         window.addEventListener("message", handleMessage);
 
-        iframe?.contentWindow?.postMessage({ initAuth: true, loginHint }, AUTH_ORIGIN);
+        setTimeout(() => iframe?.contentWindow?.postMessage({ initAuth: true, loginHint }, AUTH_ORIGIN), IFRAME_DELAY);
     });
 }
 

@@ -17,11 +17,18 @@ const StudentIdPage = () => {
 
     useEffect(() => {
         try {
-            const { studentId, IdToken } = useAuthStore.getState();
-            // studentIdが入力済みで有効なトークンが存在する場合passwordへ遷移
-            if (studentId && IdToken) navigate({ to: "/auth/password" });
+            const { studentId, firebaseUser } = useAuthStore.getState();
+            console.log(studentId, firebaseUser);
+            // studentIdが入力済みかつfirebaseUserが存在する場合passwordに遷移
+            if (studentId && firebaseUser) {
+                navigate({ to: "/auth/password" });
+                return;
+            }
             // studentIdが入力済みの場合google-authに遷移
-            if (studentId) navigate({ to: "/auth/google-auth" });
+            if (studentId) {
+                navigate({ to: "/auth/google-auth" });
+                return;
+            }
         } catch (error) {
             console.error("Failed to restore:", error);
         }

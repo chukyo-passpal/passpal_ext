@@ -1,9 +1,9 @@
 import { type IconName } from "lucide-react/dynamic";
 
-import type { ExtensionSettings } from "../../../contents/utils/settings";
+import type { SettingsState } from "../../store/SettingsStore";
 
 export interface SettingItem {
-    key: keyof Omit<ExtensionSettings, "campusLocation" | "loginCredentials">;
+    key: keyof Omit<SettingsState, "campusLocation">;
     label: string;
     description: string;
     icon: IconName;

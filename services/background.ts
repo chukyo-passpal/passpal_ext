@@ -49,20 +49,7 @@ onMessage("signIn", async ({ data }) => {
         return user;
     } catch (error) {
         console.error("SignIn Error", error);
-        // Chrome extensionのメッセージングでエラーを正しく伝播させるため、
-        // エラーオブジェクトを明示的にシリアライズして投げる
-        if (error && typeof error === "object" && "code" in error) {
-            throw {
-                code: (error as { code: string; message: string }).code,
-                message: (error as { code: string; message: string }).message,
-                name: "FirebaseError",
-            };
-        }
-        throw {
-            code: "auth/unknown-error",
-            message: "予期しないエラーが発生しました",
-            name: "FirebaseError",
-        };
+        throw error;
     } finally {
         closeOffscreenDocument();
     }

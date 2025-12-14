@@ -24,5 +24,5 @@ export async function getAuthState(): Promise<AuthState> {
 
 export async function isUserAuthenticated(): Promise<boolean> {
     const authState = await getAuthState();
-    return authState.studentId && authState.password && authState.IdToken ? true : false;
+    return authState.studentId && authState.cuIdPass && authState.firebaseUser ? true : false;
 }

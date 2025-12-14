@@ -10,17 +10,16 @@ import { useAuthStore } from "../../store/AuthStore";
 import useSettingsStore from "../../store/SettingsStore";
 
 const PasswordPage = () => {
-    const [tmpPassword, setTmpPassword] = useState("");
+    const [pass, setPass] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
     const { clearSettings } = useSettingsStore();
-    const { setPassword, setIsAuthenticated } = useAuthStore();
+    const { setCuIdPass } = useAuthStore();
 
     const handleOnClickButton = async () => {
         setIsLoading(true);
         try {
-            setPassword(tmpPassword);
-            setIsAuthenticated(true);
+            setCuIdPass(pass);
             setIsLoading(true);
             navigate({ to: "/auth/init-setting" });
         } catch (error) {
@@ -42,11 +41,11 @@ const PasswordPage = () => {
                 icon={<Lock size={20} />}
                 label="パスワード"
                 type="password"
-                value={tmpPassword}
-                onChange={(e) => setTmpPassword(e.target.value)}
+                value={pass}
+                onChange={(e) => setPass(e.target.value)}
                 placeholder="パスワードを入力"
             />
-            <Button variant="primary" disabled={!tmpPassword.trim()} onClick={handleOnClickButton}>
+            <Button variant="primary" disabled={!pass.trim()} onClick={handleOnClickButton}>
                 {isLoading ? "ログイン中..." : "ログイン"}
             </Button>
             <TextButton onClick={handleOnClickTextButton}>学籍番号入力に戻る</TextButton>

@@ -1,13 +1,15 @@
 import { createFileRoute, Outlet, redirect } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
 
+import { initFirebaseUser } from "../../firebase/authHelper";
 import { useAuthStore } from "../store/AuthStore";
 
 export const Route = createFileRoute("/_authenticated")({
-    beforeLoad: () => {
-        const { isAuthenticated } = useAuthStore.getState();
-        console.log("Authenticated:", isAuthenticated);
-        if (!isAuthenticated) {
+    beforeLoad: async () => {
+        await initFirebaseUser();
+        const { studentId, cuIdPass, firebaseUser } = useAuthStore.getState();
+        console.log(studentId, cuIdPass, firebaseUser);
+        if (!(studentId && firebaseUser && cuIdPass)) {
             throw redirect({
                 to: "/auth/student-id",
             });

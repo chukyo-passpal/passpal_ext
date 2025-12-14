@@ -1,8 +1,11 @@
 import { StrictMode } from "react";
 import { createMemoryHistory, createRouter, RouterProvider } from "@tanstack/react-router";
+import { onAuthStateChanged } from "firebase/auth/web-extension";
 import ReactDOM from "react-dom/client";
 
+import { auth } from "../firebase/firebase";
 import { routeTree } from "./routeTree.gen";
+import { useAuthStore } from "./store/AuthStore";
 
 // メモリヒストリーを使用（Chrome拡張に最適）
 const memoryHistory = createMemoryHistory({
@@ -21,6 +24,11 @@ declare module "@tanstack/react-router" {
         router: typeof router;
     }
 }
+
+// 認証状態を監視
+onAuthStateChanged(auth, (user) => {
+    useAuthStore.getState().setFirebaseUser(user);
+});
 
 const rootElement = document.getElementById("popup-root")!;
 if (!rootElement.innerHTML) {

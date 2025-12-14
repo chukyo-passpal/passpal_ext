@@ -3,23 +3,22 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, ChevronRight, Info, Lock, LogOut } from "lucide-react";
 import { DynamicIcon } from "lucide-react/dynamic";
 
-import type { ExtensionSettings } from "../../../contents/utils/settings";
 import Button from "../../components/Button";
 import InputField from "../../components/InputField";
 import RadioButtonBox from "../../components/RadioButtonBox";
 import SettingCard from "../../components/SettingCard";
 import ToggleButtonBox from "../../components/ToggleButtonBox";
 import { useAuthStore } from "../../store/AuthStore";
-import useSettingsStore from "../../store/SettingsStore";
+import useSettingsStore, { type SettingsState } from "../../store/SettingsStore";
 import { campusSettings, settingGroups } from "./-settingsConfig";
 
 const SettingsPage = () => {
     const navigate = useNavigate();
     const [tmpPassword, setTmpPassword] = useState("");
     const store = useSettingsStore();
-    const { setPassword, clearAuthInfo } = useAuthStore();
+    const { setCuIdPass, signOut } = useAuthStore();
 
-    const toggleFunctions: Record<keyof Omit<ExtensionSettings, "campusLocation" | "loginCredentials">, () => void> = {
+    const toggleFunctions: Record<keyof Omit<SettingsState, "campusLocation">, () => void> = {
         darkModeEnabled: store.toggleDarkMode,
         autoReauthEnabled: store.toggleAutoReauth,
         videoControlsEnabled: store.toggleVideoControls,
@@ -29,12 +28,12 @@ const SettingsPage = () => {
     };
 
     const handleOnClickChangePassword = () => {
-        setPassword(tmpPassword);
+        setCuIdPass(tmpPassword);
         setTmpPassword("");
     };
 
-    const handleOnClickLogout = () => {
-        clearAuthInfo();
+    const handleOnClickLogout = async () => {
+        await signOut();
         store.clearSettings();
         navigate({ to: "/auth/student-id" });
     };
