@@ -110,16 +110,4 @@ export const useSettingsStore = create<SettingsState & SettingsActions>()(
     )
 );
 
-useSettingsStore.subscribe(
-    (state) => state.darkModeEnabled,
-    (darkModeEnabled) => {
-        console.log("darkModeEnabled");
-        if (darkModeEnabled) {
-            document.documentElement.classList.add("dark-mode");
-        } else {
-            document.documentElement.classList.remove("dark-mode");
-        }
-    }
-);
-
 export default useSettingsStore;

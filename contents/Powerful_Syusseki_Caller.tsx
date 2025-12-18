@@ -5,10 +5,10 @@ import PowerfulSyussekiButton from "./components/PowerfulSyussekiButton";
 import { executeNotifyCaller } from "./utils/scriptInjection";
 import { getSetting } from "./utils/settings";
 
-(async function () {
+(function () {
     "use strict";
 
-    const attendanceCallerEnabled = await getSetting("attendanceCallerEnabled");
+    const attendanceCallerEnabled = getSetting("attendanceCallerEnabled");
 
     if (!attendanceCallerEnabled) {
         return;

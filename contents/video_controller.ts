@@ -311,8 +311,8 @@ export class VideoControllerClass {
     }
 }
 
-window.addEventListener("load", async () => {
-    const videoControlsEnabled = await getSetting("videoControlsEnabled");
+window.addEventListener("load", () => {
+    const videoControlsEnabled = getSetting("videoControlsEnabled");
 
     if (videoControlsEnabled) {
         new VideoControllerClass();

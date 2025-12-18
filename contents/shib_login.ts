@@ -5,13 +5,13 @@ import { SELECTORS } from "./utils/constants";
 import { getSetting, isUserAuthenticated } from "./utils/settings";
 
 window.addEventListener("load", async () => {
-    const shibLoginEnabled = await getSetting("shibLoginEnabled");
+    const shibLoginEnabled = getSetting("shibLoginEnabled");
 
     if (!shibLoginEnabled) {
         return;
     }
 
-    // 認証状態を確認
+    // 認証状態を確認（非同期）
     const authenticated = await isUserAuthenticated();
     if (!authenticated) {
         console.log("User not authenticated, skipping auto-login");

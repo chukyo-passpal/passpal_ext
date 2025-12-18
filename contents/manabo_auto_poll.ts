@@ -2,8 +2,8 @@
 
 import { getSetting } from "./utils/settings";
 
-export default async function manaboAutoPoll() {
-    const autoPollEnabled = await getSetting("autoPollEnabled");
+export default function manaboAutoPoll() {
+    const autoPollEnabled = getSetting("autoPollEnabled");
 
     if (!autoPollEnabled) {
         return;

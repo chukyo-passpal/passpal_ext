@@ -8,7 +8,7 @@ import { RedirectManager } from "./utils/redirect";
 import { getSetting } from "./utils/settings";
 
 window.addEventListener("load", async () => {
-    const autoReauthEnabled = await getSetting("autoReauthEnabled");
+    const autoReauthEnabled = getSetting("autoReauthEnabled");
 
     if (!autoReauthEnabled) {
         return;
