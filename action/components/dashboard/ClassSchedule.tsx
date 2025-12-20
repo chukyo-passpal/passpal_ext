@@ -1,16 +1,47 @@
 import { BookOpen, Clock, Coffee, Moon, TreePalm } from "lucide-react";
 
+import type { DayOfWeek, Period } from "../../../utils/timetable";
 import useSettingsStore from "../../store/SettingsStore";
-import { getCurrentPeriod, type PeriodType } from "../../utils/classScheduleUtil";
+import useTimetable from "../../store/timetableStore";
+import { getCurrentPeriod, type Campus, type PeriodType } from "../../utils/classScheduleUtil";
 import { calculateTotalTime, timeToString } from "../../utils/dateUtils";
 
 interface ClassScheduleProps {
     currentTime: Date;
 }
 
+/**
+ * 現在の時限を取得
+ * @param currentTime 現在時刻
+ * @param campus キャンパス
+ * @returns 現在の時限（1-7）、授業時間外の場合はnull
+ */
+const getCurrentPeriodNumber = (currentTime: Date, campus: Campus): Period | null => {
+    const periodInfo = getCurrentPeriod(currentTime, campus);
+    if (!periodInfo) return null;
+
+    const { period } = periodInfo.current;
+    if (typeof period === "number" && period >= 1 && period <= 7) {
+        return period.toString() as Period;
+    }
+    return null;
+};
+
 const ClassSchedule: React.FC<ClassScheduleProps> = ({ currentTime }) => {
     const { campusLocation } = useSettingsStore();
+    const { getClass } = useTimetable();
     const periodInfo = getCurrentPeriod(currentTime, campusLocation);
+
+    // 現在の曜日を取得
+    const dayOfWeek: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
+    const currentDay = dayOfWeek[currentTime.getDay()];
+
+    // 現在の時限を取得
+    const currentPeriod = getCurrentPeriodNumber(currentTime, campusLocation);
+
+    // 現在の授業を取得
+    const currentClass = currentPeriod ? getClass(currentDay, currentPeriod) : null;
+
     /**
      * 期間タイプに応じたアイコンを取得
      */
@@ -115,11 +146,21 @@ const ClassSchedule: React.FC<ClassScheduleProps> = ({ currentTime }) => {
                     {renderTimeRange(current.start, current.end)}
                 </div>
 
+                {/* 授業名表示 */}
+                {currentClass && (
+                    <div className="flex flex-col gap-1">
+                        <p className="text-[16px] font-medium text-[#2D2D30]">{currentClass.name}</p>
+                        {currentClass.teacher && (
+                            <p className="text-[14px] text-[#6B7280]">担当: {currentClass.teacher}</p>
+                        )}
+                        {currentClass.classroom && (
+                            <p className="text-[14px] text-[#6B7280]">教室: {currentClass.classroom}</p>
+                        )}
+                    </div>
+                )}
+
                 {/* 進捗バー */}
                 {renderProgressBar(totalTime, remaining)}
-
-                {/* TODO: 授業名表示用（コメントアウト） */}
-                {/* <p className="text-[16px] font-medium text-[#2D2D30]">アルゴリズムとデータ構造</p> */}
 
                 {/* TODO: 外部リンク用（コメントアウト） */}
                 {/* <TextButton className="text-right">Manaboで開く</TextButton> */}

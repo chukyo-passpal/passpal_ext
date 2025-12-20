@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 
+import { sendMessage } from "../../../utils/messaging";
 import AuthHeader from "../../components/auth/AuthHeader";
 import Button from "../../components/Button";
 import InputField from "../../components/InputField";
@@ -9,27 +10,66 @@ import TextButton from "../../components/TextButton";
 import { useAuthStore } from "../../store/AuthStore";
 import useSettingsStore from "../../store/SettingsStore";
 
+const ERROR_MESSAGES = {
+    EMPTY_PASSWORD: "パスワードを入力してください",
+    AUTH_FAILED: "ログインに失敗しました。パスワードを確認してください",
+    UNEXPECTED_ERROR: "ログインに失敗しました。",
+} as const;
+
 const PasswordPage = () => {
     const [pass, setPass] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate();
     const { clearSettings } = useSettingsStore();
-    const { setCuIdPass } = useAuthStore();
+    const { setCuIdPass, studentId } = useAuthStore();
 
-    const handleOnClickButton = async () => {
+    // 学籍番号が未入力の場合、学籍番号入力ページにリダイレクト
+    useEffect(() => {
+        if (!studentId) {
+            navigate({ to: "/auth/student-id", replace: true });
+        }
+    }, [studentId, navigate]);
+
+    const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setPass(e.target.value);
+        if (errorMessage) {
+            setErrorMessage("");
+        }
+    };
+
+    const handleLogin = async () => {
+        if (!pass.trim()) {
+            setErrorMessage(ERROR_MESSAGES.EMPTY_PASSWORD);
+            return;
+        }
+
+        if (!studentId) {
+            return;
+        }
+
+        setErrorMessage("");
         setIsLoading(true);
+
         try {
-            setCuIdPass(pass);
-            setIsLoading(true);
-            navigate({ to: "/auth/init-setting" });
+            const result = await sendMessage("shibbolethTest", { studentId, cuIdPass: pass });
+
+            if (result) {
+                setCuIdPass(pass);
+                await sendMessage("setProvidersUser", { studentId, cuIdPass: pass });
+                navigate({ to: "/auth/init-setting" });
+            } else {
+                setErrorMessage(ERROR_MESSAGES.AUTH_FAILED);
+            }
         } catch (error) {
             console.error("Failed to Login:", error);
+            setErrorMessage(ERROR_MESSAGES.UNEXPECTED_ERROR);
         } finally {
             setIsLoading(false);
         }
     };
 
-    const handleOnClickTextButton = () => {
+    const handleBackToStudentId = () => {
         clearSettings();
         navigate({ to: "/auth/student-id" });
     };
@@ -42,13 +82,14 @@ const PasswordPage = () => {
                 label="パスワード"
                 type="password"
                 value={pass}
-                onChange={(e) => setPass(e.target.value)}
+                onChange={handlePasswordChange}
                 placeholder="パスワードを入力"
+                error={errorMessage}
             />
-            <Button variant="primary" disabled={!pass.trim()} onClick={handleOnClickButton}>
+            <Button variant="primary" disabled={!pass.trim() || isLoading} onClick={handleLogin}>
                 {isLoading ? "ログイン中..." : "ログイン"}
             </Button>
-            <TextButton onClick={handleOnClickTextButton}>学籍番号入力に戻る</TextButton>
+            <TextButton onClick={handleBackToStudentId}>学籍番号入力に戻る</TextButton>
         </div>
     );
 };

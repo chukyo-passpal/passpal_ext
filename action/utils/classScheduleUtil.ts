@@ -1,24 +1,32 @@
-import { isTimeInRange, isWeekend, timeToMinutes } from "./dateUtils";
+import { isTimeInRange, isWeekend, timeToMinutes, type Time } from "./dateUtils";
 
+/** 時限タイプ */
 export type PeriodType = number | "lunch" | "break" | "outside" | "holiday";
 
+/** 授業スケジュールアイテム */
 export interface ClassScheduleItem {
     period: PeriodType;
-    start: [number, number] | null;
-    end: [number, number] | null;
+    start: Time | null;
+    end: Time | null;
     name: string;
 }
 
+/** キャンパス別授業スケジュール */
 export interface ClassSchedules {
     nagoya: ClassScheduleItem[];
     toyota: ClassScheduleItem[];
 }
 
+/** 現在の時限情報 */
 export interface PeriodInfo {
     current: ClassScheduleItem;
     remaining: number | null;
 }
 
+/** キャンパスタイプ */
+export type Campus = "nagoya" | "toyota";
+
+/** キャンパス別授業時間テーブル */
 export const classScheduleTable: ClassSchedules = {
     nagoya: [
         { period: 1, start: [9, 0], end: [10, 30], name: "1限目" },
@@ -39,9 +47,30 @@ export const classScheduleTable: ClassSchedules = {
 };
 
 /**
- * 残り時間を計算（分単位）
+ * キャンパスの時限開始時刻マッピングを取得
+ * @param campus キャンパス
+ * @returns 時限番号と開始時刻のマッピング
  */
-const calcRemainingTime = (currentTime: Date, endTime: [number, number] | null): number | null => {
+export const getPeriodTimeMapping = (campus: Campus): Record<number, Time> => {
+    const schedule = classScheduleTable[campus];
+    const mapping: Record<number, Time> = {};
+
+    for (const item of schedule) {
+        if (typeof item.period === "number" && item.start) {
+            mapping[item.period] = item.start;
+        }
+    }
+
+    return mapping;
+};
+
+/**
+ * 残り時間を計算（分単位）
+ * @param currentTime 現在時刻
+ * @param endTime 終了時刻
+ * @returns 残り時間（分）、終了時刻を過ぎている場合はnull
+ */
+const calculateRemainingTime = (currentTime: Date, endTime: Time | null): number | null => {
     if (!endTime) return null;
 
     const now = timeToMinutes(currentTime.getHours(), currentTime.getMinutes());
@@ -53,6 +82,10 @@ const calcRemainingTime = (currentTime: Date, endTime: [number, number] | null):
 
 /**
  * 休憩時間の情報を取得
+ * @param now 現在時刻（分単位）
+ * @param currentTime 現在時刻のDateオブジェクト
+ * @param schedule 授業スケジュール
+ * @returns 休憩時間情報、休憩時間でない場合はnull
  */
 const getBreakPeriod = (now: number, currentTime: Date, schedule: ClassScheduleItem[]): PeriodInfo | null => {
     for (let i = 0; i < schedule.length - 1; i++) {
@@ -72,7 +105,7 @@ const getBreakPeriod = (now: number, currentTime: Date, schedule: ClassScheduleI
                     start: current.end,
                     end: next.start,
                 },
-                remaining: calcRemainingTime(currentTime, next.start),
+                remaining: calculateRemainingTime(currentTime, next.start),
             };
         }
     }
@@ -81,8 +114,11 @@ const getBreakPeriod = (now: number, currentTime: Date, schedule: ClassScheduleI
 
 /**
  * 現在の授業期間を取得
+ * @param currentTime 現在時刻
+ * @param campus キャンパス（名古屋 or 豊田）
+ * @returns 現在の時限情報
  */
-export const getCurrentPeriod = (currentTime: Date, campus: "nagoya" | "toyota"): PeriodInfo | null => {
+export const getCurrentPeriod = (currentTime: Date, campus: Campus): PeriodInfo | null => {
     // 休日チェック
     if (isWeekend(currentTime)) {
         return {
@@ -104,7 +140,7 @@ export const getCurrentPeriod = (currentTime: Date, campus: "nagoya" | "toyota")
         if (isTimeInRange(now, period.start, period.end)) {
             return {
                 current: period,
-                remaining: calcRemainingTime(currentTime, period.end),
+                remaining: calculateRemainingTime(currentTime, period.end),
             };
         }
     }
