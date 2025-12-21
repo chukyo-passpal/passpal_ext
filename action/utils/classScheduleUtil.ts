@@ -1,4 +1,4 @@
-import { isTimeInRange, isWeekend, timeToMinutes, type Time } from "./dateUtils";
+import { isTimeInRange, isWeekend, timeObjectToMinutes, timeToMinutes, type Time } from "./dateUtils";
 
 /** 時限タイプ */
 export type PeriodType = number | "lunch" | "break" | "outside" | "holiday";
@@ -74,7 +74,7 @@ const calculateRemainingTime = (currentTime: Date, endTime: Time | null): number
     if (!endTime) return null;
 
     const now = timeToMinutes(currentTime.getHours(), currentTime.getMinutes());
-    const end = timeToMinutes(endTime[0], endTime[1]);
+    const end = timeObjectToMinutes(endTime);
     const remaining = end - now;
 
     return remaining > 0 ? remaining : null;
@@ -94,8 +94,8 @@ const getBreakPeriod = (now: number, currentTime: Date, schedule: ClassScheduleI
 
         if (!current.end || !next.start) continue;
 
-        const currentEnd = timeToMinutes(current.end[0], current.end[1]);
-        const nextStart = timeToMinutes(next.start[0], next.start[1]);
+        const currentEnd = timeObjectToMinutes(current.end);
+        const nextStart = timeObjectToMinutes(next.start);
 
         if (now >= currentEnd && now < nextStart) {
             return {

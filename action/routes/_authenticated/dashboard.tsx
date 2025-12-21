@@ -6,7 +6,7 @@ import DashBoardHeader from "../../components/dashboard/DashBoardHeader";
 import DebugTimeControl from "../../components/dashboard/DebugTimeControl";
 import useSettingsStore from "../../store/SettingsStore";
 import useTimetable from "../../store/timetableStore";
-import { formatDate, getDayOfWeek } from "../../utils/dateUtils";
+import { formatDate, getDayOfWeek, resetToNow } from "../../utils/dateUtils";
 
 const UPDATE_INTERVAL = 30000; // 30秒
 const IS_DEBUG = process.env.NODE_ENV === "development";
@@ -55,12 +55,12 @@ const useTimeUpdate = (updateTime: () => void) => {
 
 const DashboardPage = () => {
     const { campusLocation } = useSettingsStore();
-    const [currentTime, setCurrentTime] = useState<Date>(new Date());
+    const [currentTime, setCurrentTime] = useState<Date>(resetToNow());
     const [isDebugMode, setIsDebugMode] = useState(false);
 
     const updateTime = useCallback(() => {
         if (!isDebugMode) {
-            setCurrentTime(new Date());
+            setCurrentTime(resetToNow());
         }
     }, [isDebugMode]);
 
@@ -71,7 +71,7 @@ const DashboardPage = () => {
 
     const handleDebugReset = () => {
         setIsDebugMode(false);
-        setCurrentTime(new Date());
+        setCurrentTime(resetToNow());
     };
 
     useTimetableInitialLoad();

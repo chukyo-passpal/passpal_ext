@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Calendar, ChevronDown, Clock, RotateCcw } from "lucide-react";
 
 import { getPeriodTimeMapping, type Campus } from "../../utils/classScheduleUtil";
-import { DAY_OF_WEEK, formatDateString, formatTimeString } from "../../utils/dateUtils";
+import { DAY_OF_WEEK, formatDateString, formatTimeString, setDayOfWeek, setTime } from "../../utils/dateUtils";
 
 interface DebugTimeControlProps {
     currentTime: Date;
@@ -24,32 +24,28 @@ const DebugTimeControl: React.FC<DebugTimeControlProps> = ({ currentTime, campus
     const toggleExpanded = () => setIsExpanded((prev) => !prev);
 
     const handleDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newDate = new Date(currentTime);
         const [year, month, day] = e.target.value.split("-").map(Number);
+        const newDate = new Date(currentTime);
         newDate.setFullYear(year, month - 1, day);
         onTimeChange(newDate);
     };
 
     const handleTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const newDate = new Date(currentTime);
         const [hours, minutes] = e.target.value.split(":").map(Number);
-        newDate.setHours(hours, minutes, 0, 0);
+        const newDate = setTime(currentTime, hours, minutes);
         onTimeChange(newDate);
     };
 
     const handleDayOfWeekChange = (dayIndex: number) => {
-        const offset = dayIndex - currentTime.getDay();
-        const newDate = new Date(currentTime);
-        newDate.setDate(newDate.getDate() + offset);
+        const newDate = setDayOfWeek(currentTime, dayIndex);
         onTimeChange(newDate);
     };
 
     const handlePeriodChange = (period: number) => {
-        const newDate = new Date(currentTime);
         const timeMapping = periodTimes[period];
         if (timeMapping) {
             const [hours, minutes] = timeMapping;
-            newDate.setHours(hours, minutes, 0, 0);
+            const newDate = setTime(currentTime, hours, minutes);
             onTimeChange(newDate);
         }
     };
@@ -148,17 +144,20 @@ const DayOfWeekSelector: React.FC<{ currentDay: number; onSelect: (dayIndex: num
     <div className="flex flex-col gap-1">
         <label className="text-xs font-medium text-gray-700">曜日</label>
         <div className="grid grid-cols-7 gap-1">
-            {DAY_OF_WEEK.map((day, index) => (
-                <button
-                    key={day}
-                    onClick={() => onSelect(index)}
-                    className={`rounded px-2 py-1 text-xs ${
-                        index === currentDay ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                    }`}
-                >
-                    {day}
-                </button>
-            ))}
+            {DAY_OF_WEEK.map((day, index) => {
+                const isSelected = index === currentDay;
+                return (
+                    <button
+                        key={day}
+                        onClick={() => onSelect(index)}
+                        className={`rounded px-2 py-1 text-xs ${
+                            isSelected ? "bg-blue-600 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                    >
+                        {day}
+                    </button>
+                );
+            })}
         </div>
     </div>
 );

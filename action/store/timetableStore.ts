@@ -84,9 +84,9 @@ const useTimetable = create<TimetableState & TimetableActions>()(
                 const { normalized } = get();
                 if (!normalized) return [];
 
+                const dayMap: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
                 const today = new Date();
                 const dayIndex = today.getDay();
-                const dayMap: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
                 const day = dayMap[dayIndex];
 
                 const periods: Period[] = ["1", "2", "3", "4", "5", "6", "7"];

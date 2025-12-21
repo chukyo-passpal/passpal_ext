@@ -4,7 +4,7 @@ import type { DayOfWeek, Period } from "../../../utils/timetable";
 import useSettingsStore from "../../store/SettingsStore";
 import useTimetable from "../../store/timetableStore";
 import { getCurrentPeriod, type Campus } from "../../utils/classScheduleUtil";
-import { calculateTotalTime, timeToString } from "../../utils/dateUtils";
+import { calculateTotalTime, getDayOfWeekIndex, timeObjectToString, type Time } from "../../utils/dateUtils";
 import { ClassInfo } from "./ClassInfo";
 import { ClassProgressBar } from "./ClassProgressBar";
 import { ClassScheduleIcon } from "./ClassScheduleIcon";
@@ -34,14 +34,10 @@ const getCurrentPeriodNumber = (currentTime: Date, campus: Campus): Period | nul
 /**
  * 時間範囲の表示コンポーネント
  */
-const TimeRange: React.FC<{ start: [number, number] | null; end: [number, number] | null }> = ({ start, end }) => {
+const TimeRange: React.FC<{ start: Time | null; end: Time | null }> = ({ start, end }) => {
     if (!start || !end) return null;
 
-    return (
-        <p className="text-[16px] text-[#6B7280]">
-            {`${timeToString(start[0], start[1])} ～ ${timeToString(end[0], end[1])}`}
-        </p>
-    );
+    return <p className="text-[16px] text-[#6B7280]">{`${timeObjectToString(start)} ～ ${timeObjectToString(end)}`}</p>;
 };
 
 const ClassSchedule: React.FC<ClassScheduleProps> = ({ currentTime }) => {
@@ -51,7 +47,8 @@ const ClassSchedule: React.FC<ClassScheduleProps> = ({ currentTime }) => {
 
     // 現在の曜日を取得
     const dayOfWeek: DayOfWeek[] = ["日", "月", "火", "水", "木", "金", "土"];
-    const currentDay = dayOfWeek[currentTime.getDay()];
+    const currentDayIndex = getDayOfWeekIndex(currentTime);
+    const currentDay = dayOfWeek[currentDayIndex];
 
     // 現在の時限を取得
     const currentPeriod = getCurrentPeriodNumber(currentTime, campusLocation);
