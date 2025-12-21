@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Lock } from "lucide-react";
 
+import { ERROR_MESSAGES } from "../../../utils/errorMessages";
 import { sendMessage } from "../../../utils/messaging";
 import AuthHeader from "../../components/auth/AuthHeader";
 import Button from "../../components/Button";
@@ -9,12 +10,6 @@ import InputField from "../../components/InputField";
 import TextButton from "../../components/TextButton";
 import { useAuthStore } from "../../store/AuthStore";
 import useSettingsStore from "../../store/SettingsStore";
-
-const ERROR_MESSAGES = {
-    EMPTY_PASSWORD: "パスワードを入力してください",
-    AUTH_FAILED: "ログインに失敗しました。パスワードを確認してください",
-    UNEXPECTED_ERROR: "ログインに失敗しました。",
-} as const;
 
 const PasswordPage = () => {
     const [pass, setPass] = useState("");
@@ -40,7 +35,7 @@ const PasswordPage = () => {
 
     const handleLogin = async () => {
         if (!pass.trim()) {
-            setErrorMessage(ERROR_MESSAGES.EMPTY_PASSWORD);
+            setErrorMessage(ERROR_MESSAGES.AUTH.EMPTY_PASSWORD);
             return;
         }
 
@@ -59,11 +54,11 @@ const PasswordPage = () => {
                 await sendMessage("setProvidersUser", { studentId, cuIdPass: pass });
                 navigate({ to: "/auth/init-setting" });
             } else {
-                setErrorMessage(ERROR_MESSAGES.AUTH_FAILED);
+                setErrorMessage(ERROR_MESSAGES.AUTH.AUTH_FAILED);
             }
         } catch (error) {
             console.error("Failed to Login:", error);
-            setErrorMessage(ERROR_MESSAGES.UNEXPECTED_ERROR);
+            setErrorMessage(ERROR_MESSAGES.AUTH.UNEXPECTED_ERROR);
         } finally {
             setIsLoading(false);
         }
