@@ -1,10 +1,12 @@
 import { Clock } from "lucide-react";
 
 import type { DayOfWeek, Period } from "../../../utils/timetable";
+import { MANABO_URLS } from "../../../utils/urls";
 import useSettingsStore from "../../store/SettingsStore";
 import useTimetable from "../../store/timetableStore";
 import { getCurrentPeriod, type Campus } from "../../utils/classScheduleUtil";
 import { calculateTotalTime, getDayOfWeekIndex, timeObjectToString, type Time } from "../../utils/dateUtils";
+import TextButton from "../TextButton";
 import { ClassInfo } from "./ClassInfo";
 import { ClassProgressBar } from "./ClassProgressBar";
 import { ClassScheduleIcon } from "./ClassScheduleIcon";
@@ -91,8 +93,19 @@ const ClassSchedule: React.FC<ClassScheduleProps> = ({ currentTime }) => {
                 {/* 進捗バー */}
                 <ClassProgressBar totalTime={totalTime} remaining={remaining} />
 
-                {/* TODO: 外部リンク用（コメントアウト） */}
-                {/* <TextButton className="text-right">Manaboで開く</TextButton> */}
+                {/* Manaboで開くボタン */}
+                {currentClass?.manaboUrl && (
+                    <TextButton
+                        className="text-right"
+                        onClick={() => {
+                            if (currentClass.manaboUrl) {
+                                chrome.tabs.create({ url: new URL(currentClass.manaboUrl, MANABO_URLS.base).href });
+                            }
+                        }}
+                    >
+                        Manaboで開く
+                    </TextButton>
+                )}
             </div>
         </div>
     );
